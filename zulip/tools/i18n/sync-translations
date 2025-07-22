@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+# See https://zulip.readthedocs.io/en/latest/translating/internationalization.html
+# for background on this subsystem.
+
+set -e
+set -x
+
+git fetch weblate
+git cherry-pick weblate/main ^upstream/main || true
+
+# Normalize to Unicode Normalization Form C.
+files="$(find locale -type f -name '*.json' -o -name '*.po')"
+mapfile -t files <<<"$files"
+for file in "${files[@]}"; do
+    uconv -x any-nfc "$file" | sponge -- "$file"
+done
+
+./tools/i18n/update-for-legacy-translations
+
+./manage.py compilemessages --ignore='*'
