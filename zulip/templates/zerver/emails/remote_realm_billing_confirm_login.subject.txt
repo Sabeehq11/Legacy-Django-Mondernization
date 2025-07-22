@@ -1,1 +1,0 @@
-{% trans %}Confirm email for Zulip plan management{% endtrans %}
