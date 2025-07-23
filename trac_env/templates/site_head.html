@@ -1,111 +1,16 @@
-<!-- Modern Trac Theme - Site Head Template -->
+<!-- Trac Modern UI - Complete Professional Redesign -->
+<link rel="stylesheet" href="/trac_env/chrome/site/trac-modern-ui.css" />
+<script src="/trac_env/chrome/site/trac-complete-ui-replacement.js"></script>
+<script src="/trac_env/chrome/site/trac-ui-init.js"></script>
 
-<!-- Google Fonts for modern typography -->
+<!-- Google Fonts (optional but recommended for better typography) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<!-- Professional Theme CSS -->
-<link rel="stylesheet" type="text/css" href="/trac_env/chrome/site/professional-theme.css" />
-
-<!-- Wiki Modern Redesign CSS - Orange Gradient UI -->
-<link rel="stylesheet" type="text/css" href="/trac_env/chrome/site/wiki-modern-redesign.css" />
-
-<!-- Viewport meta tag for responsive design -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!-- Theme color for mobile browsers -->
-<meta name="theme-color" content="#3b82f6">
-
-<!-- Favicon and Apple touch icon -->
-<link rel="apple-touch-icon" sizes="180x180" href="${chrome.htdocs_location}site/apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="${chrome.htdocs_location}site/favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="${chrome.htdocs_location}site/favicon-16x16.png">
-
-<!-- Professional Theme JavaScript -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Wait a bit for any other scripts to run first
-    setTimeout(function() {
-        try {
-            // Update navigation labels only
-            const navLinks = document.querySelectorAll('#mainnav a');
-            navLinks.forEach(function(link) {
-                const text = link.textContent.trim();
-                if (text === 'Wiki') link.textContent = 'Dashboard';
-                else if (text === 'Roadmap') link.textContent = 'Milestones';
-                else if (text === 'View Tickets') link.textContent = 'Tickets';
-                // Keep Timeline and Search as they are for now
-                
-                // Add active state
-                if (window.location.pathname.includes(link.getAttribute('href'))) {
-                    link.parentElement.classList.add('active');
-                }
-            });
-        } catch (e) {
-            console.error('Navigation update error:', e);
-        }
-    }, 200);
-    
-    // Debug: Check if navigation clicks are being prevented
-    setTimeout(function() {
-        document.querySelectorAll('#mainnav a').forEach(function(link) {
-            link.addEventListener('click', function(e) {
-                console.log('Navigation clicked:', this.href);
-                // Don't prevent default - let the link work normally
-            }, true); // Use capture phase
-        });
-    }, 500);
-    
-    // Enhance form interactions
-    const inputs = document.querySelectorAll('input, textarea, select');
-    inputs.forEach(input => {
-        input.addEventListener('focus', function() {
-            this.parentElement.classList.add('focused');
-        });
-        input.addEventListener('blur', function() {
-            this.parentElement.classList.remove('focused');
-        });
-    });
-    
-            // Smooth scrolling for anchor links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-    });
-</script>
-
-<!-- Modern UI Injection for Wiki Pages -->
-<script src="/trac_env/chrome/site/trac-modern-injection.js"></script>
-
-<!-- Wiki Gradient Design Injection -->
-<script src="/trac_env/chrome/site/wiki-gradient-injection.js"></script>
-
-<!-- NEW TICKET button functionality -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Temporarily disabled to debug navigation issues
-    /*
-    setTimeout(function() {
-        var metanav = document.querySelector('#metanav');
-        if (metanav) {
-            metanav.style.cursor = 'pointer';
-            metanav.addEventListener('click', function(e) {
-                if (e.target === metanav || window.getComputedStyle(metanav, '::before').content) {
-                    window.location.href = '/trac_env/newticket';
-                }
-            });
-        }
-    }, 100);
-    */
-});
-</script> 
+<style>
+    /* Override font-family if Inter loads successfully */
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
+</style> 

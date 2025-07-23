@@ -1,0 +1,549 @@
+<!-- Modern Trac Theme - Site Head Template -->
+
+<!-- Google Fonts for modern typography -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Firebase Config (Auto-generated from .env) -->
+<script src="/trac_env/chrome/site/firebase-config.js"></script>
+
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+  import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+  
+  // Wait for config to load, then initialize Firebase
+  function initFirebase() {
+    if (typeof window.FIREBASE_CONFIG === 'undefined') {
+      console.error('❌ Firebase config not loaded yet, retrying...');
+      setTimeout(initFirebase, 500);
+      return;
+    }
+
+    try {
+      // Initialize Firebase with config from .env
+      const app = initializeApp(window.FIREBASE_CONFIG);
+      const auth = getAuth(app);
+      
+      // Make Firebase available globally
+      window.firebaseAuth = auth;
+      window.firebaseSignIn = signInWithEmailAndPassword;
+      window.firebaseSignUp = createUserWithEmailAndPassword;
+      window.firebaseSignOut = signOut;
+      window.firebaseOnAuthStateChanged = onAuthStateChanged;
+      
+      console.log('✅ Firebase initialized successfully!');
+    } catch (error) {
+      console.error('❌ Firebase initialization failed:', error);
+    }
+  }
+  
+  // Start initialization
+  initFirebase();
+</script>
+
+<!-- Professional Theme CSS -->
+<link rel="stylesheet" type="text/css" href="/trac_env/chrome/site/professional-theme.css" />
+
+<!-- Wiki Modern Redesign CSS - Orange Gradient UI -->
+<link rel="stylesheet" type="text/css" href="/trac_env/chrome/site/wiki-modern-redesign.css" />
+
+<!-- Viewport meta tag for responsive design -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Theme color for mobile browsers -->
+<meta name="theme-color" content="#3b82f6">
+
+<!-- Favicon and Apple touch icon -->
+<link rel="apple-touch-icon" sizes="180x180" href="${chrome.htdocs_location}site/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="${chrome.htdocs_location}site/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="${chrome.htdocs_location}site/favicon-16x16.png">
+
+<!-- Firebase Authentication Integration -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Wait for Firebase to load
+    setTimeout(function() {
+        if (typeof window.firebaseAuth === 'undefined') {
+            console.error('Firebase not loaded yet, retrying...');
+            return;
+        }
+        
+        initializeFirebaseAuth();
+    }, 1000);
+});
+
+function initializeFirebaseAuth() {
+    const auth = window.firebaseAuth;
+    
+    // Monitor authentication state
+    window.firebaseOnAuthStateChanged(auth, (user) => {
+        updateUI(user);
+    });
+    
+    // Replace login links with Firebase login
+    document.querySelectorAll('a[href*="login"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLoginModal();
+        });
+    });
+    
+    // Handle logout links
+    document.querySelectorAll('a[href*="logout"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            firebaseLogout();
+        });
+    });
+}
+
+function updateUI(user) {
+    const loginLinks = document.querySelectorAll('a[href*="login"]');
+    const logoutLinks = document.querySelectorAll('a[href*="logout"]');
+    
+    if (user) {
+        // User is signed in
+        loginLinks.forEach(link => {
+            link.textContent = user.email.split('@')[0]; // Show username
+            link.href = '#';
+            link.style.color = '#FF6A00';
+            link.style.fontWeight = '600';
+        });
+        
+        // Add logout functionality
+        loginLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                showUserMenu(user);
+            });
+        });
+        
+        // Store user info for Trac
+        sessionStorage.setItem('tracUser', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName || user.email.split('@')[0]
+        }));
+        
+    } else {
+        // User is signed out
+        loginLinks.forEach(link => {
+            link.textContent = 'Login';
+            link.style.color = '#FF6A00';
+            link.style.fontWeight = '500';
+        });
+        
+        sessionStorage.removeItem('tracUser');
+    }
+}
+
+function showLoginModal() {
+    // Create login modal
+    const modal = document.createElement('div');
+    modal.className = 'firebase-modal';
+    modal.innerHTML = `
+        <div class="firebase-modal-content">
+            <div class="firebase-modal-header">
+                <h2>Sign In to Trac</h2>
+                <button class="firebase-close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</button>
+            </div>
+            <div class="firebase-modal-body">
+                <div class="firebase-tabs">
+                    <button class="firebase-tab active" onclick="showSignInTab()">Sign In</button>
+                    <button class="firebase-tab" onclick="showSignUpTab()">Sign Up</button>
+                </div>
+                
+                <div id="signin-form" class="firebase-form">
+                    <input type="email" id="signin-email" placeholder="Email" required>
+                    <input type="password" id="signin-password" placeholder="Password" required>
+                    <button onclick="handleSignIn()" class="firebase-submit">Sign In</button>
+                </div>
+                
+                <div id="signup-form" class="firebase-form" style="display: none;">
+                    <input type="email" id="signup-email" placeholder="Email" required>
+                    <input type="password" id="signup-password" placeholder="Password (min 6 chars)" required>
+                    <button onclick="handleSignUp()" class="firebase-submit">Create Account</button>
+                </div>
+                
+                <div id="firebase-error" class="firebase-error"></div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function showSignInTab() {
+    document.getElementById('signin-form').style.display = 'block';
+    document.getElementById('signup-form').style.display = 'none';
+    document.querySelectorAll('.firebase-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+function showSignUpTab() {
+    document.getElementById('signin-form').style.display = 'none';
+    document.getElementById('signup-form').style.display = 'block';
+    document.querySelectorAll('.firebase-tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+}
+
+function handleSignIn() {
+    const email = document.getElementById('signin-email').value;
+    const password = document.getElementById('signin-password').value;
+    const errorDiv = document.getElementById('firebase-error');
+    
+    window.firebaseSignIn(window.firebaseAuth, email, password)
+        .then((userCredential) => {
+            // Signed in successfully
+            document.querySelector('.firebase-modal').remove();
+            showSuccessMessage('Welcome back!');
+        })
+        .catch((error) => {
+            errorDiv.textContent = error.message;
+        });
+}
+
+function handleSignUp() {
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-password').value;
+    const errorDiv = document.getElementById('firebase-error');
+    
+    window.firebaseSignUp(window.firebaseAuth, email, password)
+        .then((userCredential) => {
+            // Account created successfully
+            document.querySelector('.firebase-modal').remove();
+            showSuccessMessage('Account created successfully!');
+        })
+        .catch((error) => {
+            errorDiv.textContent = error.message;
+        });
+}
+
+function showUserMenu(user) {
+    const menu = document.createElement('div');
+    menu.className = 'firebase-user-menu';
+    menu.innerHTML = `
+        <div class="firebase-menu-content">
+            <div class="firebase-user-info">
+                <strong>${user.email}</strong>
+                <small>Signed in with Firebase</small>
+            </div>
+            <button onclick="firebaseLogout()" class="firebase-logout">Sign Out</button>
+            <button onclick="this.parentElement.parentElement.remove()" class="firebase-close-menu">Close</button>
+        </div>
+    `;
+    
+    // Remove existing menu
+    const existing = document.querySelector('.firebase-user-menu');
+    if (existing) existing.remove();
+    
+    document.body.appendChild(menu);
+}
+
+function firebaseLogout() {
+    window.firebaseSignOut(window.firebaseAuth).then(() => {
+        // Remove user menu if open
+        const userMenu = document.querySelector('.firebase-user-menu');
+        if (userMenu) userMenu.remove();
+        
+        showSuccessMessage('Signed out successfully');
+    });
+}
+
+function showSuccessMessage(message) {
+    const toast = document.createElement('div');
+    toast.className = 'firebase-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 100);
+    
+    setTimeout(() => {
+        toast.remove();
+    }, 3000);
+}
+
+// Professional Theme JavaScript
+setTimeout(function() {
+    try {
+        // Update navigation labels only
+        const navLinks = document.querySelectorAll('#mainnav a');
+        navLinks.forEach(function(link) {
+            const text = link.textContent.trim();
+            if (text === 'Wiki') link.textContent = 'Dashboard';
+            else if (text === 'Roadmap') link.textContent = 'Milestones';
+            else if (text === 'View Tickets') link.textContent = 'Tickets';
+            
+            // Add active state
+            if (window.location.pathname.includes(link.getAttribute('href'))) {
+                link.parentElement.classList.add('active');
+            }
+        });
+    } catch (e) {
+        console.error('Navigation update error:', e);
+    }
+}, 200);
+
+// Debug: Check if navigation clicks are being prevented
+setTimeout(function() {
+    document.querySelectorAll('#mainnav a').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            console.log('Navigation clicked:', this.href);
+        }, true);
+    });
+}, 500);
+
+// Fix New Ticket button functionality
+setTimeout(function() {
+    var metanav = document.querySelector('#metanav');
+    if (metanav) {
+        metanav.addEventListener('click', function(e) {
+            // Check if clicked on the CSS ::after pseudo-element area (NEW TICKET button)
+            var rect = metanav.getBoundingClientRect();
+            var clickX = e.clientX - rect.left;
+            var clickY = e.clientY - rect.top;
+            
+            // The ::after element (NEW TICKET) is positioned on the right side
+            if (clickX > rect.width - 140 && clickY < 50) {
+                e.preventDefault();
+                e.stopPropagation();
+                // Navigate to new ticket page with correct base URL
+                window.location.href = window.location.origin + '/trac_env/newticket';
+            }
+        });
+    }
+}, 300);
+
+// Enhance form interactions
+const inputs = document.querySelectorAll('input, textarea, select');
+inputs.forEach(input => {
+    input.addEventListener('focus', function() {
+        this.parentElement.classList.add('focused');
+    });
+    input.addEventListener('blur', function() {
+        this.parentElement.classList.remove('focused');
+    });
+});
+
+// Smooth scrolling for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
+
+<!-- Firebase Auth CSS Styles -->
+<style>
+.firebase-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+.firebase-modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.firebase-modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.firebase-modal-header h2 {
+    margin: 0;
+    color: #1a1a1a;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.firebase-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b7280;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.firebase-modal-body {
+    padding: 1.5rem;
+}
+
+.firebase-tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.firebase-tab {
+    flex: 1;
+    padding: 0.75rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: #6b7280;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.firebase-tab.active {
+    color: #FF6A00;
+    border-bottom-color: #FF6A00;
+}
+
+.firebase-form input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+}
+
+.firebase-form input:focus {
+    outline: none;
+    border-color: #FF6A00;
+    box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.1);
+}
+
+.firebase-submit {
+    width: 100%;
+    padding: 0.75rem;
+    background: #FF6A00;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.firebase-submit:hover {
+    background: #e55a00;
+}
+
+.firebase-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background: #fef2f2;
+    border-radius: 4px;
+    display: none;
+}
+
+.firebase-error:not(:empty) {
+    display: block;
+}
+
+.firebase-user-menu {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 10000;
+}
+
+.firebase-menu-content {
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    border: 1px solid #e2e8f0;
+    min-width: 200px;
+}
+
+.firebase-user-info {
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.firebase-user-info strong {
+    display: block;
+    color: #1a1a1a;
+    margin-bottom: 0.25rem;
+}
+
+.firebase-user-info small {
+    color: #6b7280;
+}
+
+.firebase-logout, .firebase-close-menu {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.25rem 0;
+    background: none;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.firebase-logout:hover {
+    background: #fef2f2;
+    border-color: #ef4444;
+    color: #ef4444;
+}
+
+.firebase-close-menu:hover {
+    background: #f8f9fa;
+}
+
+.firebase-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #10b981;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 10001;
+    transform: translateX(400px);
+    transition: transform 0.3s ease;
+}
+
+.firebase-toast.show {
+    transform: translateX(0);
+}
+</style>
+
+<!-- Modern UI Injection for Wiki Pages -->
+<script src="/trac_env/chrome/site/trac-modern-injection.js"></script>
+
+<!-- Wiki Gradient Design Injection -->
+<script src="/trac_env/chrome/site/wiki-gradient-injection.js"></script> 
