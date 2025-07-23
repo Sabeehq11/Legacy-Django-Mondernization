@@ -14,6 +14,7 @@
     const isTimelinePage = path.includes('/timeline');
     const isBrowserPage = path.includes('/browser');
     const isTicketsPage = path.includes('/report') || path.includes('/ticket');
+    const isNewTicketPage = path.includes('/newticket');
     
     // Only load the complete UI replacement on the homepage
     if (isHomepage) {
@@ -36,6 +37,9 @@
                 if (isTicketsPage) {
                     enhanceTicketsPage();
                 }
+                if (isNewTicketPage) {
+                    enhanceNewTicketPage();
+                }
             });
         } else {
             createNavigation();
@@ -51,6 +55,9 @@
             }
             if (isTicketsPage) {
                 enhanceTicketsPage();
+            }
+            if (isNewTicketPage) {
+                enhanceNewTicketPage();
             }
         }
     }
@@ -1287,5 +1294,356 @@
                 console.log('Search:', this.value);
             });
         }
+    }
+
+    function enhanceNewTicketPage() {
+        // Add new ticket class to body and content area
+        document.body.classList.add('newticket-page');
+        const content = document.getElementById('content');
+        if (content) {
+            content.classList.add('newticket');
+            
+            // Wait for Trac's form to load
+            setTimeout(() => {
+                // Get the existing Trac form - try multiple selectors
+                const tracForm = document.querySelector('form#propertyform') || 
+                               document.querySelector('form[name="propertyform"]') ||
+                               document.querySelector('form.newticket') ||
+                               document.querySelector('#ticket') ||
+                               document.querySelector('form');
+                if (!tracForm) {
+                    console.log('No form found on new ticket page');
+                    return;
+                }
+                
+                // Create modern container
+                const modernContainer = document.createElement('div');
+                modernContainer.className = 'newticket-container';
+                
+                // Create header
+                const header = document.createElement('div');
+                header.className = 'newticket-header';
+                header.innerHTML = `
+                    <h1 class="newticket-title">Create New Ticket</h1>
+                    <p class="newticket-subtitle">Report an issue, request a feature, or track a task</p>
+                `;
+                
+                // Create form card
+                const formCard = document.createElement('div');
+                formCard.className = 'newticket-form-card';
+                
+                // Move the form into the card
+                tracForm.parentNode.insertBefore(modernContainer, tracForm);
+                modernContainer.appendChild(header);
+                modernContainer.appendChild(formCard);
+                formCard.appendChild(tracForm);
+                
+                // Enhance form fields
+                enhanceFormFields(tracForm);
+                
+                // Create submit button
+                const submitArea = document.createElement('div');
+                submitArea.className = 'newticket-form-footer';
+                submitArea.innerHTML = `
+                    <div class="privacy-notice">
+                        <input type="checkbox" class="modern-checkbox" id="privacy-check" checked>
+                        <label for="privacy-check">I have reviewed the <a href="/trac_env/wiki/TracTickets">ticket guidelines</a></label>
+                    </div>
+                    <button type="submit" class="newticket-submit-btn">Create Ticket</button>
+                `;
+                formCard.appendChild(submitArea);
+                
+                // Hide original submit buttons
+                const originalButtons = tracForm.querySelector('.buttons');
+                if (originalButtons) {
+                    originalButtons.style.display = 'none';
+                }
+                
+                // Add event listener to our submit button
+                const submitBtn = formCard.querySelector('.newticket-submit-btn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        tracForm.submit();
+                    });
+                }
+            }, 100);
+        }
+    }
+    
+    function enhanceFormFields(form) {
+        // Get key fields from Trac form
+        const summaryField = form.querySelector('#field-summary');
+        const reporterField = form.querySelector('#field-reporter');
+        const descriptionField = form.querySelector('#field-description');
+        const typeField = form.querySelector('#field-type');
+        const priorityField = form.querySelector('#field-priority');
+        const componentField = form.querySelector('#field-component');
+        const versionField = form.querySelector('#field-version');
+        const milestoneField = form.querySelector('#field-milestone');
+        const ownerField = form.querySelector('#field-owner');
+        const ccField = form.querySelector('#field-cc');
+        const keywordsField = form.querySelector('#field-keywords');
+        
+        // Create modern form groups
+        const formGroups = document.createElement('div');
+        formGroups.className = 'modern-form-groups';
+        
+        // First row - Summary and Reporter
+        if (summaryField || reporterField) {
+            const row1 = document.createElement('div');
+            row1.className = 'modern-form-group half';
+            
+            if (summaryField) {
+                const summaryGroup = createFormGroup('Summary', summaryField, 'Enter a brief title', true);
+                row1.appendChild(summaryGroup);
+            }
+            
+            if (reporterField) {
+                const reporterGroup = createFormGroup('Reporter', reporterField, 'Your name or username', true);
+                row1.appendChild(reporterGroup);
+            }
+            
+            formGroups.appendChild(row1);
+        }
+        
+        // CC field (if exists)
+        if (ccField) {
+            const ccRow = document.createElement('div');
+            ccRow.className = 'modern-form-group';
+            const ccGroup = createFormGroup('CC', ccField, 'Comma-separated list of email addresses');
+            ccRow.appendChild(ccGroup);
+            formGroups.appendChild(ccRow);
+        }
+        
+        // Second row - Type and Priority
+        if (typeField || priorityField) {
+            const row2 = document.createElement('div');
+            row2.className = 'modern-form-group half';
+            
+            if (typeField) {
+                const typeGroup = createFormGroup('Type', typeField, 'Select ticket type');
+                row2.appendChild(typeGroup);
+            }
+            
+            if (priorityField) {
+                const priorityGroup = createFormGroup('Priority', priorityField, 'Select priority');
+                row2.appendChild(priorityGroup);
+            }
+            
+            formGroups.appendChild(row2);
+        }
+        
+        // Third row - Component and Milestone
+        if (componentField || milestoneField) {
+            const row3 = document.createElement('div');
+            row3.className = 'modern-form-group half';
+            
+            if (componentField) {
+                const componentGroup = createFormGroup('Component', componentField, 'Select component');
+                row3.appendChild(componentGroup);
+            }
+            
+            if (milestoneField) {
+                const milestoneGroup = createFormGroup('Milestone', milestoneField, 'Target milestone');
+                row3.appendChild(milestoneGroup);
+            }
+            
+            formGroups.appendChild(row3);
+        }
+        
+        // Fourth row - Version (if exists and not already shown)
+        if (versionField) {
+            const versionRow = document.createElement('div');
+            versionRow.className = 'modern-form-group';
+            const versionGroup = createFormGroup('Version', versionField, 'Affected version');
+            versionRow.appendChild(versionGroup);
+            formGroups.appendChild(versionRow);
+        }
+        
+        // Keywords field
+        if (keywordsField) {
+            const keywordsRow = document.createElement('div');
+            keywordsRow.className = 'modern-form-group';
+            const keywordsGroup = createFormGroup('Keywords', keywordsField, 'Space-separated keywords');
+            keywordsRow.appendChild(keywordsGroup);
+            formGroups.appendChild(keywordsRow);
+        }
+        
+        // Description
+        if (descriptionField) {
+            const descGroup = createFormGroup('Description', descriptionField, 'Provide a detailed description of the issue...', true);
+            formGroups.appendChild(descGroup);
+        }
+        
+        // Insert the modern form groups
+        form.insertBefore(formGroups, form.firstChild);
+        
+        // Hide original fieldset
+        const originalFieldset = form.querySelector('fieldset#properties');
+        if (originalFieldset) {
+            originalFieldset.style.display = 'none';
+        }
+        
+        // Handle action section (radio buttons)
+        const actionFieldset = form.querySelector('fieldset.radio');
+        if (actionFieldset) {
+            // Create modern action section
+            const actionSection = document.createElement('div');
+            actionSection.className = 'newticket-action-section';
+            
+            const actionTitle = document.createElement('h3');
+            actionTitle.className = 'newticket-action-title';
+            actionTitle.textContent = 'Action';
+            actionSection.appendChild(actionTitle);
+            
+            const actionGroup = document.createElement('div');
+            actionGroup.className = 'newticket-action-group';
+            
+            // Find radio buttons and their labels
+            const radios = actionFieldset.querySelectorAll('input[type="radio"]');
+            radios.forEach(radio => {
+                const actionItem = document.createElement('div');
+                actionItem.className = 'newticket-action-item';
+                
+                // Clone the radio button
+                const newRadio = radio.cloneNode(true);
+                actionItem.appendChild(newRadio);
+                
+                // Create content wrapper
+                const content = document.createElement('div');
+                content.className = 'newticket-action-content';
+                
+                // Get the label text
+                const labelText = radio.parentElement.textContent.trim();
+                const label = document.createElement('div');
+                label.className = 'newticket-action-label';
+                
+                if (radio.value === 'create') {
+                    label.textContent = 'create';
+                    const desc = document.createElement('div');
+                    desc.className = 'newticket-action-description';
+                    desc.textContent = "The status will be 'new'.";
+                    content.appendChild(label);
+                    content.appendChild(desc);
+                } else if (radio.value === 'create_and_assign') {
+                    label.innerHTML = 'assign to ';
+                    
+                    // Find the owner field in this context
+                    const ownerInput = actionFieldset.querySelector('input#action_create_and_assign_reassign_owner') || 
+                                      actionFieldset.querySelector('input[name*="owner"]');
+                    if (ownerInput) {
+                        const ownerField = document.createElement('span');
+                        ownerField.className = 'newticket-owner-field';
+                        const newOwnerInput = ownerInput.cloneNode(true);
+                        newOwnerInput.value = ownerInput.value || '< default >';
+                        ownerField.appendChild(newOwnerInput);
+                        label.appendChild(ownerField);
+                        
+                        // Sync changes
+                        newOwnerInput.addEventListener('change', () => {
+                            ownerInput.value = newOwnerInput.value;
+                        });
+                        newOwnerInput.addEventListener('input', () => {
+                            ownerInput.value = newOwnerInput.value;
+                        });
+                    }
+                    
+                    const desc = document.createElement('div');
+                    desc.className = 'newticket-action-description';
+                    desc.textContent = "The owner will be the specified user. The status will be 'assigned'.";
+                    content.appendChild(label);
+                    content.appendChild(desc);
+                }
+                
+                actionItem.appendChild(content);
+                actionGroup.appendChild(actionItem);
+                
+                // Sync radio selection
+                newRadio.addEventListener('change', () => {
+                    radio.checked = newRadio.checked;
+                });
+                
+                // Set initial checked state
+                if (radio.checked) {
+                    newRadio.checked = true;
+                }
+            });
+            
+            actionSection.appendChild(actionGroup);
+            formGroups.appendChild(actionSection);
+            
+            // Hide original action fieldset
+            actionFieldset.style.display = 'none';
+        }
+        
+        // Handle file attachment checkbox
+        const attachmentCheckbox = form.querySelector('input[name="attachment"]') || 
+                                 form.querySelector('input[type="checkbox"][id*="attachment"]');
+        if (attachmentCheckbox) {
+            const fileCheckDiv = document.createElement('div');
+            fileCheckDiv.className = 'newticket-file-checkbox';
+            
+            const newCheckbox = attachmentCheckbox.cloneNode(true);
+            const label = document.createElement('label');
+            label.textContent = 'I have files to attach to this ticket';
+            label.setAttribute('for', newCheckbox.id);
+            
+            fileCheckDiv.appendChild(newCheckbox);
+            fileCheckDiv.appendChild(label);
+            
+            formGroups.appendChild(fileCheckDiv);
+            
+            // Sync checkbox state
+            newCheckbox.addEventListener('change', () => {
+                attachmentCheckbox.checked = newCheckbox.checked;
+            });
+            
+            // Hide original
+            const originalCheckboxContainer = attachmentCheckbox.parentElement;
+            if (originalCheckboxContainer) {
+                originalCheckboxContainer.style.display = 'none';
+            }
+        }
+    }
+    
+    function createFormGroup(label, originalField, placeholder, required = false) {
+        const group = document.createElement('div');
+        group.className = 'modern-form-group';
+        
+        const labelEl = document.createElement('label');
+        labelEl.className = 'modern-form-label' + (required ? ' required' : '');
+        labelEl.textContent = label;
+        group.appendChild(labelEl);
+        
+        if (originalField) {
+            // Clone the field
+            const newField = originalField.cloneNode(true);
+            
+            // Apply modern styling classes
+            if (newField.tagName === 'INPUT') {
+                newField.className = 'modern-form-input';
+            } else if (newField.tagName === 'SELECT') {
+                newField.className = 'modern-form-select';
+            } else if (newField.tagName === 'TEXTAREA') {
+                newField.className = 'modern-form-textarea';
+            }
+            
+            if (placeholder) {
+                newField.setAttribute('placeholder', placeholder);
+            }
+            
+            // Sync changes back to original field
+            newField.addEventListener('change', () => {
+                originalField.value = newField.value;
+            });
+            newField.addEventListener('input', () => {
+                originalField.value = newField.value;
+            });
+            
+            group.appendChild(newField);
+        }
+        
+        return group;
     }
 })(); 
