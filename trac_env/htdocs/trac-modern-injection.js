@@ -63,7 +63,7 @@
           <h3>Manage Tickets</h3>
           <p>Create, assign, and close issues in one place with our intuitive ticket system.</p>
         </div>
-        <div class="feature-card feature-card-orange">
+        <div class="feature-card feature-card-coral">
           <div class="feature-icon">📈</div>
           <h3>View Timeline</h3>
           <p>Follow changes and milestones with ease using our visual timeline dashboard.</p>
@@ -191,12 +191,12 @@
         }
 
         .hero-card {
-          background: linear-gradient(135deg, #FF6A00 0%, #FF8534 100%) !important;
+          background: linear-gradient(135deg, #FF6B9D 0%, #FF8FA3 100%) !important;
           border-radius: 24px !important;
           padding: 40px !important;
           width: 100%;
           max-width: 400px;
-          box-shadow: 0 20px 40px rgba(255, 106, 0, 0.3) !important;
+          box-shadow: 0 20px 40px rgba(255, 107, 157, 0.3) !important;
           position: relative;
           overflow: hidden;
         }
@@ -258,14 +258,14 @@
           box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
         }
 
-        .feature-card-orange {
-          background: #FF6A00 !important;
+        .feature-card-coral {
+          background: #FF6B9D !important;
           color: white !important;
           border: none !important;
         }
 
-        .feature-card-orange h3,
-        .feature-card-orange p {
+        .feature-card-coral h3,
+        .feature-card-coral p {
           color: white !important;
         }
 

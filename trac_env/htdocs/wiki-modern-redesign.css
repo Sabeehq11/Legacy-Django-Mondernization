@@ -3,7 +3,7 @@
    Inspired by WordWise AI vibrant gradient UI
    ============================================== */
 
-/* Wiki Content Section - Modern Orange Gradient Design */
+/* Wiki Content Section - Modern Coral Pink Gradient Design */
 #wiki-content {
   /* Remove default container styling */
   background: transparent !important;
@@ -12,19 +12,16 @@
   padding: 0 !important;
   margin: 0 !important;
   
-  /* Full-width gradient background */
+  /* Full-width gradient background - properly centered */
   position: relative;
-  width: 100vw;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  overflow-x: hidden;
+  width: 100% !important;
+  max-width: none !important;
+  overflow-x: hidden !important;
 }
 
 /* Gradient Background Section */
 .wiki-gradient-section {
-  background: linear-gradient(135deg, #FF6A00 0%, #FFA726 25%, #FFB74D 50%, #FFD54F 75%, #FFF9C4 100%);
+  background: linear-gradient(135deg, #1E293B 0%, #334155 25%, #FF6B9D 50%, #FF8FA3 75%, #FF6B9D 100%);
   background-size: 400% 400%;
   animation: gradientShift 15s ease infinite;
   padding: 80px 20px 100px 20px;
@@ -51,6 +48,8 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 40px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Modern Typography */
@@ -59,7 +58,7 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
   font-size: 56px !important;
   font-weight: 800 !important;
-  color: #FFFFFF !important;
+  color: #FF6B9D !important;
   text-align: center !important;
   margin: 0 0 24px 0 !important;
   line-height: 1.2 !important;
@@ -75,7 +74,7 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
   font-size: 20px !important;
   font-weight: 500 !important;
-  color: rgba(255, 255, 255, 0.95) !important;
+  color: #FF6B9D !important;
   text-align: center !important;
   margin: 0 auto 48px auto !important;
   max-width: 700px !important;
@@ -89,7 +88,7 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
   font-size: 16px !important;
   line-height: 1.8 !important;
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: #FF6B9D !important;
   margin: 0 0 24px 0 !important;
   font-weight: 400 !important;
 }
@@ -100,7 +99,7 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif !important;
   font-size: 32px !important;
   font-weight: 700 !important;
-  color: #FFFFFF !important;
+  color: #FF6B9D !important;
   margin: 56px 0 24px 0 !important;
   text-align: left !important;
   border: none !important;
@@ -126,7 +125,7 @@
 /* Links with modern hover effect */
 .wiki-gradient-section a,
 #wiki-content .wikipage a {
-  color: #FFFFFF !important;
+  color: #FF6B9D !important;
   text-decoration: none !important;
   font-weight: 600 !important;
   position: relative !important;
@@ -290,7 +289,7 @@
 .wiki-cta-button {
   display: inline-block !important;
   background: rgba(255, 255, 255, 0.95) !important;
-  color: #FF6A00 !important;
+  color: #FF6B9D !important;
   padding: 16px 32px !important;
   border-radius: 50px !important;
   font-weight: 700 !important;
@@ -449,7 +448,7 @@
   #wiki-content .wikipage p,
   #wiki-content .wikipage a,
   #wiki-content .wikipage li {
-    color: black !important;
+    color: #FF6B9D !important;
     text-shadow: none !important;
   }
   
@@ -531,4 +530,54 @@
 .wiki-content-wrapper {
   position: relative;
   z-index: 1;
-} 
+}
+
+/* Hide any resize/expand controls */
+.ui-resizable-handle,
+.ui-resizable-se,
+.resize-handle,
+.expand-handle,
+.corner-resize,
+*[class*="resize"],
+*[class*="expand"],
+*[style*="resize"],
+textarea.wiki-edit,
+.ui-resizable-corner,
+.ui-icon-gripsmall-diagonal-se {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Center the main content */
+.wikipage {
+  text-align: center !important;
+  max-width: 800px !important;
+  margin: 0 auto !important;
+  padding: 2rem !important;
+}
+
+#content.wiki .wikipage {
+  text-align: center !important;
+  max-width: 800px !important;
+  margin: 0 auto !important;
+  padding: 2rem !important;
+}
+
+/* Selective coral pink text for main content */
+.wikipage h1:first-child,
+.wiki-gradient-section h1,
+#wiki-content .wikipage h1:first-child {
+  color: #FF6B9D !important;
+}
+
+.wikipage h1 + p,
+.wiki-gradient-section h1:first-child + p,
+#wiki-content .wikipage h1:first-child + p {
+  color: #FF6B9D !important;
+}
+
+.wikipage p:not(.wikipage h1 + p),
+.wiki-gradient-section p:not(.wiki-gradient-section h1:first-child + p),
+#wiki-content .wikipage p:not(#wiki-content .wikipage h1:first-child + p) {
+  color: #FF6B9D !important;
+}

@@ -39,8 +39,14 @@
   pointer-events: auto !important;
 }
 
-#mainnav a:hover {
-  color: #FF6A00 !important;
+#mainnav a:hover:not(.active) {
+  color: #FF6B9D !important;
+}
+
+#mainnav li.active a,
+#mainnav li.active a:hover,
+#mainnav li.active a:focus {
+  color: #1E293B !important;
 }
 
 /* Remove any absolute positioned elements that might overlap */

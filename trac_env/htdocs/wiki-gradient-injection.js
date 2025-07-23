@@ -1,6 +1,6 @@
 /**
  * Wiki Gradient Injection
- * Applies the modern orange gradient design to wiki documentation pages
+ * Applies the modern coral pink gradient design to wiki documentation pages
  */
 
 (function() {

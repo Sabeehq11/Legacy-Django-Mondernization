@@ -2,9 +2,9 @@
 
 /* Override Trac's existing styles */
 body {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, #1E293B 0%, #334155 100%) !important;
   background-attachment: fixed !important;
-  color: #ffffff !important;
+  color: #F8FAFC !important;
   margin: 0 !important;
   padding: 0 !important;
 }
@@ -117,20 +117,25 @@ div.trac-content {
 #mainnav li:hover {
   transform: translateY(-3px) !important;
   box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1) !important;
-  border-color: rgba(79, 172, 254, 0.6) !important;
-  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 107, 157, 0.6) !important;
+  background: rgba(255, 107, 157, 0.15) !important;
 }
 
 #mainnav li.active {
-  background: linear-gradient(135deg, #4facfe 0%, #00d4ff 100%) !important;
-  border-color: #4facfe !important;
-  box-shadow: 0 0 20px rgba(79, 172, 254, 0.4), 0 8px 25px rgba(0, 0, 0, 0.2) !important;
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8FA3 100%) !important;
+  border-color: #FF6B9D !important;
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.4), 0 8px 25px rgba(0, 0, 0, 0.2) !important;
   transform: translateY(-2px) !important;
 }
 
-#mainnav li.active a {
-  color: #ffffff !important;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+#mainnav li.active a,
+#mainnav li.active a:link,
+#mainnav li.active a:visited,
+#mainnav li.active a:hover,
+#mainnav li.active a:focus {
+  color: #1E293B !important;
+  text-shadow: none !important;
+  font-weight: 600 !important;
 }
 
 /* Enhanced timeline specific overrides */
@@ -287,8 +292,8 @@ input, select, textarea {
 
 input:focus, select:focus, textarea:focus {
   outline: none !important;
-  border-color: #4facfe !important;
-  box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.2), 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  border-color: #FF6B9D !important;
+  box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2), 0 8px 25px rgba(0, 0, 0, 0.15) !important;
   background: rgba(255, 255, 255, 0.2) !important;
   transform: translateY(-1px) !important;
 }
@@ -315,8 +320,8 @@ input::placeholder, textarea::placeholder {
 
 #search input[type="text"]:focus {
   outline: none !important;
-  border-color: #4facfe !important;
-  box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.2) !important;
+  border-color: #FF6B9D !important;
+  box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2) !important;
   transform: translateY(-1px) !important;
   background: rgba(255, 255, 255, 0.25) !important;
 }
@@ -327,7 +332,7 @@ input::placeholder, textarea::placeholder {
 }
 
 #search input[type="submit"] {
-  background: linear-gradient(135deg, #4facfe 0%, #00d4ff 100%) !important;
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8FA3 100%) !important;
   border: none !important;
   border-radius: 16px !important;
   color: #ffffff !important;
@@ -336,15 +341,15 @@ input::placeholder, textarea::placeholder {
   font-weight: 700 !important;
   cursor: pointer !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(255, 107, 157, 0.3) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
 }
 
 #search input[type="submit"]:hover {
   transform: translateY(-3px) !important;
-  box-shadow: 0 12px 35px rgba(79, 172, 254, 0.4) !important;
-  background: linear-gradient(135deg, #00d4ff 0%, #4facfe 100%) !important;
+  box-shadow: 0 12px 35px rgba(255, 107, 157, 0.4) !important;
+  background: linear-gradient(135deg, #FF8FA3 0%, #FF6B9D 100%) !important;
 }
 
 /* Enhanced button overrides */
@@ -352,7 +357,7 @@ input[type="submit"],
 input[type="button"], 
 .trac-button,
 button {
-  background: linear-gradient(135deg, #4facfe 0%, #00d4ff 100%) !important;
+  background: linear-gradient(135deg, #FF6B9D 0%, #FF8FA3 100%) !important;
   border: 2px solid rgba(255, 255, 255, 0.2) !important;
   color: #ffffff !important;
   font-weight: 700 !important;

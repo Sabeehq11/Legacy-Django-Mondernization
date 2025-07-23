@@ -7,36 +7,40 @@
 /* Import Inter font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
-/* CSS Variables - Modern Orange Theme */
+/* CSS Variables - Modern Coral Pink & Navy Theme */
 :root {
-  /* Colors from Raul design */
-  --orange-primary: #FF6A00;
-  --orange-hover: #E55A00;
-  --orange-light: #FFF4ED;
-  --gradient-start: #FF6A00;
-  --gradient-end: #FF3D00;
+  /* Colors - Coral Pink & Deep Navy */
+  --coral-pink-primary: #FF6B9D;
+  --coral-pink-hover: #FF8FA3;
+  --coral-pink-light: #FFF0F5;
+  --gradient-start: #FF6B9D;
+  --gradient-end: #FF8FA3;
   
-  /* Neutrals */
-  --bg-primary: #FAFAFA;
-  --bg-secondary: #FFFFFF;
-  --bg-tertiary: #F5F5F5;
-  --text-primary: #1A1A1A;
-  --text-secondary: #666666;
-  --text-muted: #999999;
-  --border-light: #E5E5E5;
-  --border-medium: #CCCCCC;
+  /* Navy Backgrounds */
+  --bg-primary: #1E293B;
+  --bg-secondary: #334155;
+  --bg-tertiary: #475569;
+  --text-primary: #F8FAFC;
+  --text-secondary: #CBD5E1;
+  --text-muted: #94A3B8;
+  --border-light: #475569;
+  --border-medium: #64748B;
   
-  /* Shadows */
-  --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-  --shadow-orange: 0 4px 14px 0 rgba(255, 106, 0, 0.25);
+  /* Shadows with coral pink tint */
+  --shadow-sm: 0 2px 4px rgba(255,107,157,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(255,107,157,0.1), 0 2px 4px -1px rgba(255,107,157,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(255,107,157,0.1), 0 4px 6px -2px rgba(255,107,157,0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(255,107,157,0.1), 0 10px 10px -5px rgba(255,107,157,0.04);
+  --shadow-coral: 0 4px 14px 0 rgba(255, 107, 157, 0.25);
 }
 
 /* ==============================================
    GLOBAL STYLES
    ============================================== */
+
+html {
+  overflow-x: hidden !important;
+}
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
@@ -46,6 +50,7 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   font-size: 15px !important;
+  overflow-x: hidden !important;
 }
 
 /* Remove all old styles */
@@ -99,7 +104,7 @@ body {
   display: inline-flex !important;
   width: 42px !important;
   height: 42px !important;
-  background: #FF6A00 !important;
+  background: #FF6B9D !important;
   border-radius: 10px !important;
   align-items: center !important;
   justify-content: center !important;
@@ -179,7 +184,7 @@ body {
 }
 
 #mainnav li a:hover {
-  color: #FF6A00 !important;
+  color: #FF6B9D !important;
   background: none !important;
 }
 
@@ -187,7 +192,7 @@ body {
 #mainnav li.active a:link,
 #mainnav li.active a:visited,
 #mainnav li:first-child a[href*="/wiki"] {
-  color: #FF6A00 !important;
+  color: #FF6B9D !important;
   font-weight: 600 !important;
   background: none !important;
 }
@@ -213,7 +218,7 @@ body {
   pointer-events: auto !important;
 }
 
-/* NEW TICKET button - Right side */
+/* Meta navigation - Show both links AND New Ticket button */
 #metanav {
   position: relative !important;
   margin: 0 !important;
@@ -222,12 +227,48 @@ body {
   border: none !important;
   flex: 0 0 auto !important;
   z-index: 5 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
 }
 
-#metanav::before {
+/* Show meta navigation links */
+#metanav ul {
+  display: flex !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 1rem !important;
+  align-items: center !important;
+}
+
+#metanav li {
+  display: inline-block !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+#metanav a {
+  display: inline-block !important;
+  color: #FF6B9D !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 0.75rem !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+#metanav a:hover {
+  color: #FF8FA3 !important;
+  background: rgba(255, 107, 157, 0.1) !important;
+}
+
+/* NEW TICKET button - After the links */
+#metanav::after {
   content: 'NEW TICKET' !important;
   display: inline-block !important;
-  background: #FF6A00 !important;
+  background: #FF6B9D !important;
   color: white !important;
   padding: 0.75rem 2rem !important;
   border-radius: 50px !important;
@@ -236,31 +277,55 @@ body {
   letter-spacing: 0.5px !important;
   cursor: pointer !important;
   transition: all 0.2s ease !important;
-  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
   position: relative !important;
   z-index: 5 !important;
 }
 
-#metanav:hover::before {
-  background: #e55a00 !important;
+#metanav:hover::after {
+  background: #FF8FA3 !important;
   transform: scale(1.02) !important;
-  box-shadow: 0 4px 12px rgba(255, 106, 0, 0.3) !important;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3) !important;
 }
 
-/* Meta navigation - Hide old links */
-#metanav ul {
-  display: none !important;
-}
-
-#metanav li,
-#metanav a {
-  display: none !important;
-}
-
-/* Search box - Hide from header (demo doesn't have it) */
+/* Search box - Style for header */
 #banner #search,
 #header #search {
-  display: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+#search input[type="text"] {
+  background: #f8f9fa !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 6px !important;
+  padding: 0.5rem 0.75rem !important;
+  font-size: 14px !important;
+  width: 200px !important;
+  transition: all 0.2s ease !important;
+}
+
+#search input[type="text"]:focus {
+  outline: none !important;
+  border-color: #FF6B9D !important;
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1) !important;
+}
+
+#search input[type="submit"] {
+  background: #FF6B9D !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+#search input[type="submit"]:hover {
+  background: #FF8FA3 !important;
 }
 
 /* ==============================================
@@ -289,7 +354,7 @@ body {
   width: 100% !important;
   padding: 4rem 0 !important;
   margin: -2rem -2rem 3rem -2rem !important;
-  background: linear-gradient(135deg, #fff 0%, #fff 50%, var(--orange-light) 100%) !important;
+  background: linear-gradient(135deg, #fff 0%, #fff 50%, var(--coral-pink-light) 100%) !important;
   text-align: center !important;
 }
 
@@ -335,7 +400,7 @@ div.wiki {
 .timeline dt:hover {
   box-shadow: var(--shadow-md) !important;
   transform: translateY(-2px) !important;
-  border-color: var(--orange-primary) !important;
+  border-color: var(--coral-pink-primary) !important;
 }
 
 .timeline dd {
@@ -381,14 +446,14 @@ p {
 }
 
 a {
-  color: var(--orange-primary) !important;
+  color: var(--coral-pink-primary) !important;
   text-decoration: none !important;
   transition: all 0.3s ease !important;
   border: none !important;
 }
 
 a:hover {
-  color: var(--orange-hover) !important;
+  color: var(--coral-pink-hover) !important;
   text-decoration: underline !important;
 }
 
@@ -401,7 +466,7 @@ input[type="button"],
 button,
 .buttons input,
 .inlinebuttons input {
-  background: var(--orange-primary) !important;
+  background: var(--coral-pink-primary) !important;
   color: white !important;
   border: none !important;
   border-radius: 50px !important;
@@ -410,7 +475,7 @@ button,
   font-size: 14px !important;
   cursor: pointer !important;
   transition: all 0.3s ease !important;
-  box-shadow: var(--shadow-orange) !important;
+  box-shadow: var(--shadow-coral) !important;
   text-transform: uppercase !important;
   letter-spacing: 0.5px !important;
 }
@@ -418,9 +483,9 @@ button,
 input[type="submit"]:hover,
 input[type="button"]:hover,
 button:hover {
-  background: var(--orange-hover) !important;
+  background: var(--coral-pink-hover) !important;
   transform: translateY(-2px) scale(1.05) !important;
-  box-shadow: 0 6px 20px rgba(255, 106, 0, 0.35) !important;
+  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.35) !important;
 }
 
 /* Secondary buttons */
@@ -462,8 +527,8 @@ input[type="email"]:focus,
 textarea:focus,
 select:focus {
   outline: none !important;
-  border-color: var(--orange-primary) !important;
-  box-shadow: 0 0 0 3px rgba(255, 106, 0, 0.1) !important;
+  border-color: var(--coral-pink-primary) !important;
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1) !important;
   background: white !important;
 }
 
@@ -523,7 +588,7 @@ code {
   padding: 0.2rem 0.4rem !important;
   border-radius: 4px !important;
   font-size: 0.9em !important;
-  color: var(--orange-primary) !important;
+  color: var(--coral-pink-primary) !important;
 }
 
 /* Lists */
@@ -540,7 +605,7 @@ li {
 /* Add arrow bullets to lists */
 ul li::marker {
   content: '→ ' !important;
-  color: var(--orange-primary) !important;
+  color: var(--coral-pink-primary) !important;
   font-weight: 600 !important;
 }
 
@@ -624,8 +689,8 @@ ul li::marker {
 
 /* Clean up old styling artifacts */
 .trac-help {
-  background: var(--orange-light) !important;
-  border: 1px solid var(--orange-primary) !important;
+  background: var(--coral-pink-light) !important;
+  border: 1px solid var(--coral-pink-primary) !important;
   border-radius: 8px !important;
   padding: 1rem !important;
   margin: 1rem 0 !important;
@@ -687,29 +752,7 @@ select {
   border-bottom: none !important;
 }
 
-/* Add "NEW TICKET" button to header */
-#header::after {
-  content: 'NEW TICKET' !important;
-  position: absolute !important;
-  right: 2rem !important;
-  top: 50% !important;
-  transform: translateY(-50%) !important;
-  background: var(--orange-primary) !important;
-  color: white !important;
-  padding: 0.75rem 2rem !important;
-  border-radius: 50px !important;
-  font-weight: 600 !important;
-  font-size: 14px !important;
-  box-shadow: var(--shadow-orange) !important;
-  cursor: pointer !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-}
-
-/* Fix header layout for new button */
-#header {
-  position: relative !important;
-} 
+/* Left NEW TICKET button removed - using right meta nav button instead */ 
 
 /* Footer Redesign */
 #footer {
@@ -751,4 +794,110 @@ select {
   h3 { font-size: 1.25rem !important; }
 }
 
- 
+/* Hide all possible resize/expand controls */
+.ui-resizable-handle,
+.ui-resizable-se,
+.ui-resizable-e,
+.ui-resizable-s,
+.ui-resizable-n,
+.ui-resizable-w,
+.ui-resizable-corner,
+.resize-handle,
+.expand-handle,
+.corner-resize,
+.grip,
+.ui-icon-gripsmall-diagonal-se,
+*[class*="resize"]:not(.resize-none),
+*[class*="expand"]:not(.expand-none),
+textarea[style*="resize"],
+div[style*="resize"],
+.resizable-handle {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Ensure wiki content is centered and has coral pink text */
+.wikipage,
+#content.wiki .wikipage,
+.trac-content {
+  color: #FF6B9D !important;
+  text-align: center !important;
+}
+
+.wikipage h1,
+.wikipage h2,
+.wikipage h3,
+.wikipage p,
+.wikipage ul,
+.wikipage ol,
+.wikipage li {
+  color: #FF6B9D !important;
+}
+
+/* Restore proper text colors for UI elements */
+.feature-card h3,
+.hero-card h2,
+.card-title,
+.stats-title {
+  color: #1a1a1a !important;
+}
+
+.feature-card p,
+.card-description,
+.stats-subtitle {
+  color: #666 !important;
+}
+
+/* Coral card should have white text */
+.feature-card-coral h3,
+.feature-card-coral p {
+  color: white !important;
+}
+
+/* Button text should remain readable */
+button,
+.btn,
+input[type="submit"],
+input[type="button"],
+.button,
+.trac-button {
+  color: #ffffff !important;
+}
+
+/* Navigation and UI links */
+#mainnav a,
+#ctxtnav a,
+.nav-link {
+  color: inherit !important;
+}
+
+/* General links should have good contrast */
+a:not(.wikipage a):not(#mainnav a):not(#ctxtnav a) {
+  color: #FF6B9D !important;
+}
+
+a:not(.wikipage a):not(#mainnav a):not(#ctxtnav a):hover {
+  color: #FF8FA3 !important;
+}
+
+/* Ensure list items and other elements have reasonable colors */
+li:not(.wikipage li) {
+  color: inherit !important;
+}
+
+/* Form elements should be readable */
+label,
+input,
+select,
+textarea {
+  color: #333 !important;
+}
+
+/* Table content should be readable */
+table,
+th,
+td {
+  color: #333 !important;
+}
