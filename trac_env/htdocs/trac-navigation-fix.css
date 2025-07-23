@@ -1,0 +1,55 @@
+/* Navigation Fix - Ensure links are clickable */
+
+/* Reset banner positioning that might block navigation */
+#banner::before,
+#banner::after {
+  pointer-events: none !important;
+}
+
+/* Reset any problematic styles on navigation */
+#mainnav {
+  position: relative !important;
+  z-index: 999 !important;
+  pointer-events: auto !important;
+}
+
+#mainnav ul {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+#mainnav li {
+  pointer-events: auto !important;
+  position: relative !important;
+  z-index: 999 !important;
+}
+
+/* Make absolutely sure navigation links are clickable */
+#mainnav a,
+#mainnav a:link,
+#mainnav a:visited {
+  display: inline-block !important;
+  padding: 0.625rem 1.25rem !important;
+  text-decoration: none !important;
+  color: #6b7280 !important;
+  cursor: pointer !important;
+  z-index: 9999 !important;
+  position: relative !important;
+  pointer-events: auto !important;
+}
+
+#mainnav a:hover {
+  color: #FF6A00 !important;
+}
+
+/* Remove any absolute positioned elements that might overlap */
+#header::before,
+#header::after {
+  pointer-events: none !important;
+}
+
+/* Debug - add visible border to links */
+#mainnav a {
+  /* border: 1px solid red !important; */
+} 

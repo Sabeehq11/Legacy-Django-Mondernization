@@ -1,0 +1,711 @@
+2025-07-22 18:08:16,130 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 18:08:16,270 Trac[env] INFO: Wrote sample configuration file with the new settings and their default values: /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/conf/trac.ini.sample
+2025-07-22 18:08:16,284 Trac[admin] INFO: Installing default wiki pages
+2025-07-22 18:08:16,284 Trac[admin] INFO: CamelCase imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/CamelCase
+2025-07-22 18:08:16,284 Trac[admin] INFO: InterMapTxt imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/InterMapTxt
+2025-07-22 18:08:16,284 Trac[admin] INFO: InterTrac imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/InterTrac
+2025-07-22 18:08:16,284 Trac[admin] INFO: InterWiki imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/InterWiki
+2025-07-22 18:08:16,285 Trac[admin] INFO: PageTemplates imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/PageTemplates
+2025-07-22 18:08:16,285 Trac[admin] INFO: RecentChanges imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/RecentChanges
+2025-07-22 18:08:16,285 Trac[admin] INFO: SandBox imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/SandBox
+2025-07-22 18:08:16,285 Trac[admin] INFO: TicketQuery imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TicketQuery
+2025-07-22 18:08:16,285 Trac[admin] INFO: TitleIndex imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TitleIndex
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracAccessibility imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracAccessibility
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracAdmin imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracAdmin
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracBackup imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracBackup
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracBatchModify imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracBatchModify
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracBrowser imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracBrowser
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracCgi imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracCgi
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracChangeLog imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracChangeLog
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracChangeset imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracChangeset
+2025-07-22 18:08:16,285 Trac[admin] INFO: TracEnvironment imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracEnvironment
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracFastCgi imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracFastCgi
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracFineGrainedPermissions imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracFineGrainedPermissions
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracGuide imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracGuide
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracImport imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracImport
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracIni imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracIni
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracInstall imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracInstall
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracInterfaceCustomization imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracInterfaceCustomization
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracLinks imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracLinks
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracLogging imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracLogging
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracModPython imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracModPython
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracModWSGI imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracModWSGI
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracNavigation imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracNavigation
+2025-07-22 18:08:16,286 Trac[admin] INFO: TracNotification imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracNotification
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracPermissions imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracPermissions
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracPlugins imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracPlugins
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracQuery imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracQuery
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracReports imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracReports
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracRepositoryAdmin imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracRepositoryAdmin
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracRevisionLog imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracRevisionLog
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracRoadmap imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracRoadmap
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracRss imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracRss
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracSearch imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracSearch
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracStandalone imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracStandalone
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracSupport imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracSupport
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracSyntaxColoring imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracSyntaxColoring
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracTickets imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracTickets
+2025-07-22 18:08:16,287 Trac[admin] INFO: TracTicketsCustomFields imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracTicketsCustomFields
+2025-07-22 18:08:16,288 Trac[admin] INFO: TracTimeline imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracTimeline
+2025-07-22 18:08:16,288 Trac[admin] INFO: TracUnicode imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracUnicode
+2025-07-22 18:08:16,288 Trac[admin] INFO: TracUpgrade imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracUpgrade
+2025-07-22 18:08:16,288 Trac[admin] INFO: TracWiki imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracWiki
+2025-07-22 18:08:16,288 Trac[admin] INFO: TracWorkflow imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/TracWorkflow
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiDeletePage imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiDeletePage
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiFormatting imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiFormatting
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiHtml imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiHtml
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiMacros imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiMacros
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiNewPage imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiNewPage
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiPageNames imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiPageNames
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiProcessors imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiProcessors
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiRestructuredText imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiRestructuredText
+2025-07-22 18:08:16,288 Trac[admin] INFO: WikiRestructuredTextLinks imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiRestructuredTextLinks
+2025-07-22 18:08:16,289 Trac[admin] INFO: WikiStart imported from /Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/default-pages/WikiStart
+2025-07-22 18:09:53,719 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 18:10:19,841 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 18:10:19,972 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:10:19,972 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env'
+2025-07-22 18:10:24,581 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:10:24,581 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 18:10:25,574 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:10:25,575 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 18:12:13,610 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:12:13,610 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 18:12:14,445 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:12:14,445 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 18:12:15,231 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:12:15,246 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 18:12:15,853 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:12:15,853 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 18:12:15,880 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:12:15,880 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 18:14:34,829 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:14:34,834 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 18:14:34,916 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:14:34,916 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 18:14:35,507 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:14:35,507 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 18:14:35,538 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 18:14:35,538 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:08:21,403 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:08:21,403 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:08:21,468 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:08:21,469 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:15:42,033 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:15:42,033 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:15:42,082 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:15:42,082 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:15:58,174 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:15:58,185 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:15:58,227 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:15:58,227 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:16:13,279 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:16:13,280 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 19:16:31,765 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:16:31,765 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:16:46,706 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:16:46,706 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/search'
+2025-07-22 19:17:34,784 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:17:34,789 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/prefs'
+2025-07-22 19:17:49,749 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:17:49,749 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki/TracGuide'
+2025-07-22 19:18:03,870 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:18:03,871 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/about'
+2025-07-22 19:23:59,431 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:23:59,431 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:32:57,865 Trac[chrome] WARNING: File site/modern-theme.css not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 19:32:57,866 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/modern-theme.css not found), <RequestWithSession "GET '/chrome/common/site/modern-theme.css'">, referrer None
+2025-07-22 19:33:44,791 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:33:44,791 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:33:44,829 Trac[chrome] WARNING: File site/modern-theme-overrides.css not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 19:33:44,829 Trac[chrome] WARNING: File site/modern-theme.css not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 19:33:44,829 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/modern-theme-overrides.css not found), <RequestWithSession "GET '/chrome/common/site/modern-theme-overrides.css'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:33:44,829 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/modern-theme.css not found), <RequestWithSession "GET '/chrome/common/site/modern-theme.css'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:33:44,953 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:33:44,953 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:33:49,911 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:33:49,911 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:33:49,953 Trac[chrome] WARNING: File site/modern-theme.css not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 19:33:49,954 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/modern-theme.css not found), <RequestWithSession "GET '/chrome/common/site/modern-theme.css'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:33:49,955 Trac[chrome] WARNING: File site/modern-theme-overrides.css not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 19:33:49,956 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/modern-theme-overrides.css not found), <RequestWithSession "GET '/chrome/common/site/modern-theme-overrides.css'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:33:50,000 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:33:50,000 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:34:14,265 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 19:34:14,323 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 19:34:40,048 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:34:40,048 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:34:40,136 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:34:40,136 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:35:40,297 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:35:40,297 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:35:50,488 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:35:50,488 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:35:52,873 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:35:52,873 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:36:47,809 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:36:47,810 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:36:47,831 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:36:47,831 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:36:49,328 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:36:49,328 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 19:36:50,465 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:36:50,465 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:36:51,421 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:36:51,421 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/search'
+2025-07-22 19:36:52,479 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:36:52,492 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:38:02,693 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:38:02,693 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:38:02,800 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:38:02,801 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:38:10,121 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:38:10,121 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:38:11,791 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:38:11,791 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:40:50,808 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:40:50,809 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:40:50,829 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:40:50,829 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:40:52,829 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:40:52,831 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:40:52,863 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:40:52,863 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:41:02,717 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:41:02,717 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 19:41:02,766 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:41:02,766 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 19:41:04,772 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:41:04,773 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:41:04,806 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:41:04,806 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:42:22,182 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:42:22,182 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:42:22,201 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:42:22,201 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:42:36,279 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:42:36,279 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:42:36,307 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:42:36,307 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:53:40,175 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:53:40,175 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:53:40,252 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:53:40,252 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:53:42,191 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:53:42,191 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:53:42,268 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:53:42,268 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:53:48,395 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:53:48,417 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 19:53:48,451 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:53:48,451 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 19:53:50,503 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:53:50,503 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:54:26,081 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:54:26,081 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:54:26,105 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:54:26,105 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:55:01,808 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 19:55:01,861 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 19:55:07,647 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:07,647 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:55:10,767 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:10,767 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:55:11,493 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:11,495 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 19:55:12,500 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:12,501 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:55:16,121 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:16,122 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 19:55:16,564 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:16,565 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 19:55:17,306 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:17,306 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 19:55:18,009 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:18,009 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/search'
+2025-07-22 19:55:19,160 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:19,161 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:55:30,523 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:30,529 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 19:55:32,637 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 19:55:32,656 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 20:06:00,640 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 20:06:00,697 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 20:06:00,752 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:06:00,752 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:06:00,968 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:06:00,968 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:06:04,097 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:06:04,097 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:06:04,115 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:06:04,115 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:06:05,333 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:06:05,333 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:06:05,333 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:06:05,333 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:11:17,938 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:11:17,938 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 20:11:18,021 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:11:18,021 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 20:11:18,768 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:11:18,768 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:18:29,317 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:18:29,317 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:18:29,386 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:18:29,386 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:18:30,845 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:18:30,845 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:18:54,231 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:18:54,231 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:23:19,523 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 20:23:19,575 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 20:23:23,827 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/templates/wiki_view.html", line 11, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:23:27,681 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/templates/wiki_view.html", line 11, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:23:39,141 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/templates/wiki_view.html", line 11, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:25:40,564 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 20:25:40,625 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 20:25:44,547 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/templates/wiki_view.html", line 11, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:25:48,556 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/templates/wiki_view.html", line 11, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:27:33,540 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 20:27:33,594 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 20:27:33,614 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/templates/wiki_view.html", line 11, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:27:42,794 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/templates/wiki_view.html", line 11, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:27:42,802 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:27:42,802 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:27:45,142 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/wiki/templates/wiki_view.html", line 11, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:27:45,161 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:27:45,161 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:27:47,340 Trac[chrome] ERROR: Jinja2 TemplateSyntaxError error while rendering XML/HTML template 
+Traceback (most recent call last):
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/web/chrome.py", line 1572, in iterable_content
+    for chunk in stream:
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1667, in __next__
+    return self._next()  # type: ignore
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1644, in _buffered_generator
+    c = next(self._gen)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 1348, in generate
+    yield self.environment.handle_exception()
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/timeline/templates/timeline.html", line 12, in top-level template code
+    # extends 'layout.html'
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/venv/lib/python3.10/site-packages/jinja2/environment.py", line 942, in handle_exception
+    raise rewrite_traceback_stack(source=source)
+  File "/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/templates/layout.html", line 40, in template
+    #banner, #header {
+TemplateSyntaxError: Encountered unknown tag 'banner'. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+2025-07-22 20:27:47,352 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:27:47,353 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 20:35:11,545 Trac[env] INFO: Reloading environment due to configuration change
+2025-07-22 20:35:11,549 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 20:35:11,569 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 20:35:11,628 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:35:11,628 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:35:11,692 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:35:11,692 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:35:12,654 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:35:12,654 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:35:16,632 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:35:16,632 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 20:35:17,369 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:35:17,369 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:35:22,677 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:35:22,677 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:35:22,689 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:35:22,689 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:41:42,753 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:41:42,753 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:41:42,769 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:41:42,769 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:41:47,547 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:41:47,547 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:43:28,289 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:43:28,289 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 20:43:28,320 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:43:28,320 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 20:43:29,741 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:43:29,742 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:44:11,094 Trac[chrome] WARNING: File site/apple-touch-icon.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 20:44:11,094 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/apple-touch-icon.png not found), <RequestWithSession "GET '/chrome/common/site/apple-touch-icon.png'">, referrer None
+2025-07-22 20:44:11,095 Trac[chrome] WARNING: File site/favicon-16x16.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 20:44:11,115 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/favicon-16x16.png not found), <RequestWithSession "GET '/chrome/common/site/favicon-16x16.png'">, referrer None
+2025-07-22 20:44:11,116 Trac[chrome] WARNING: File site/favicon-32x32.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 20:44:11,117 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/favicon-32x32.png not found), <RequestWithSession "GET '/chrome/common/site/favicon-32x32.png'">, referrer None
+2025-07-22 20:47:09,888 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:47:09,892 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:47:52,346 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 20:47:52,403 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 20:48:23,238 Trac[chrome] WARNING: File trac-modern-injection.js not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 20:48:23,238 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File trac-modern-injection.js not found), <RequestWithSession "GET '/chrome/common/trac-modern-injection.js'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:48:23,239 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:48:23,239 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:48:23,275 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:48:23,275 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:48:47,365 Trac[chrome] WARNING: File trac-modern-injection.js not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 20:48:47,371 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File trac-modern-injection.js not found), <RequestWithSession "GET '/chrome/common/trac-modern-injection.js'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:48:47,373 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:48:47,380 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:54:12,594 Trac[env] INFO: -------------------------------- environment startup [Trac 1.7.1.dev0] --------------------------------
+2025-07-22 20:54:12,649 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-22 20:54:12,713 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:54:12,713 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:54:12,866 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:54:12,866 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:54:22,650 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:54:22,650 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 20:55:32,101 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:32,101 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki/WikiStart'
+2025-07-22 20:55:32,128 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:32,129 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki/WikiStart'
+2025-07-22 20:55:32,206 Trac[chrome] WARNING: File site/favicon-32x32.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 20:55:32,206 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/favicon-32x32.png not found), <RequestWithSession "GET '/chrome/common/site/favicon-32x32.png'">, referrer 'http://localhost:8000/trac_env/wiki/WikiStart'
+2025-07-22 20:55:32,206 Trac[chrome] WARNING: File site/favicon-16x16.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac/trac/htdocs']
+2025-07-22 20:55:32,207 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File site/favicon-16x16.png not found), <RequestWithSession "GET '/chrome/common/site/favicon-16x16.png'">, referrer 'http://localhost:8000/trac_env/wiki/WikiStart'
+2025-07-22 20:55:33,325 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:33,325 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 20:55:33,366 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:33,366 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 20:55:34,518 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:34,518 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 20:55:34,535 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:34,535 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 20:55:35,121 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:35,121 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 20:55:35,789 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:35,789 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/search'
+2025-07-22 20:55:36,497 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 20:55:36,513 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:02:25,168 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:02:25,168 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:02:42,806 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:02:42,806 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:02:42,848 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:02:42,848 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:04:01,665 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Trac Error (No viewable repositories), <RequestWithSession "HEAD '/browser'">, referrer None
+2025-07-22 21:05:12,518 Trac[main] WARNING: [127.0.0.1] HTTPForbidden: 403 Forbidden (TICKET_CREATE privileges are required to perform this operation. You don't have the required permissions.), <RequestWithSession "HEAD '/newticket'">, referrer None
+2025-07-22 21:05:58,529 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:05:58,529 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:06:05,186 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:06:05,186 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:06:05,227 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:06:05,227 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:06:17,925 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:06:17,932 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:07:10,538 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:07:10,538 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:07:10,559 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:07:10,559 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:09:58,187 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:09:58,187 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:10:00,946 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:00,946 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:10:01,651 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:01,651 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 21:10:02,464 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:02,465 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 21:10:02,934 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:02,934 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 21:10:03,482 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:03,482 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/search'
+2025-07-22 21:10:06,815 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:06,815 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:10:11,883 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:11,884 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:10:11,915 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:11,915 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:10:13,929 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:13,929 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:10:14,453 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:14,454 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:10:14,482 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:10:14,482 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:12:41,846 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:12:41,846 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:12:44,433 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:12:44,433 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:12:45,095 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:12:45,096 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:12:46,081 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:12:46,081 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:14:03,212 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:14:03,212 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:14:03,294 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:14:03,294 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:14:13,621 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:14:13,621 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:14:13,704 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:14:13,705 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:14:14,839 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:14:14,839 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:14:14,877 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:14:14,877 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:14:15,378 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:14:15,379 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:15:29,519 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:15:29,519 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:15:29,556 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:15:29,556 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:17:21,134 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:21,135 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:17:21,201 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:21,202 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:17:21,879 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:21,879 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 21:17:21,928 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:21,928 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 21:17:24,821 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:24,821 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:17:26,424 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:26,424 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 21:17:29,329 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:29,329 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 21:17:29,355 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:29,355 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 21:17:29,990 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:29,990 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/search'
+2025-07-22 21:17:31,287 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:31,287 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 21:17:34,290 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:34,290 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:17:34,357 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:17:34,357 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:22:40,868 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:22:40,868 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:22:57,552 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:22:57,553 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:22:57,596 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:22:57,596 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:24:17,399 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:24:17,400 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:33:19,216 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:33:19,220 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:34:03,044 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:34:03,044 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:35:14,896 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:35:14,896 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:35:14,975 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:35:14,976 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:42:09,922 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:42:09,926 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:42:38,558 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:42:38,558 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:42:56,563 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:42:56,564 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:42:56,596 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:42:56,596 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:43:03,733 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:43:03,734 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:43:03,782 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:43:03,782 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:43:04,633 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:43:04,633 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:43:07,537 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:43:07,541 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 21:43:12,699 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:43:12,699 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:52:30,916 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:52:30,916 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:53:30,593 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:53:30,599 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:54:11,324 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:54:11,328 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:54:19,921 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:54:19,921 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 21:54:19,960 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 21:54:19,960 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 22:01:27,848 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:01:27,849 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 22:01:42,895 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:01:42,895 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 22:01:42,995 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:01:42,995 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 22:08:21,587 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:08:21,587 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 22:08:21,622 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:08:21,622 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 22:09:13,401 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:13,402 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 22:09:13,460 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:13,460 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 22:09:16,295 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:16,296 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 22:09:16,321 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:16,321 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 22:09:21,393 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:21,394 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/search'
+2025-07-22 22:09:23,207 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:23,208 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 22:09:23,696 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:23,696 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 22:09:24,244 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:24,245 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 22:09:24,283 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:24,283 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 22:09:24,767 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:24,767 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 22:09:27,360 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:27,360 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'
+2025-07-22 22:09:57,535 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:57,536 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 22:09:57,551 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:09:57,552 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline'
+2025-07-22 22:10:01,253 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:10:01,253 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline?from=07%2F22%2F2025&daysback=30&authors=&milestone=on&ticket=on&ticket_details=on&changeset=on&wiki=on&update=Update'
+2025-07-22 22:10:05,698 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:10:05,698 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/timeline?from=07%2F22%2F2025&daysback=30&authors=&milestone=on&ticket=on&ticket_details=on&changeset=on&wiki=on&update=Update'
+2025-07-22 22:10:08,244 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:10:08,244 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap'
+2025-07-22 22:10:09,310 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:10:09,310 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap?'
+2025-07-22 22:10:13,512 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:10:13,513 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap?show=completed&show=noduedate'
+2025-07-22 22:10:15,949 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:10:15,949 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/roadmap?show=completed'
+2025-07-22 22:10:18,807 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:10:18,807 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/report'
+2025-07-22 22:10:20,593 Trac[chrome] WARNING: File your_project_logo.png not found in any of ['/Users/sabeehqureshi/Desktop/github projects/Legacy-Django-Mondernization/trac_env/htdocs']
+2025-07-22 22:10:20,593 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File your_project_logo.png not found), <RequestWithSession "GET '/chrome/site/your_project_logo.png'">, referrer 'http://localhost:8000/trac_env/wiki'

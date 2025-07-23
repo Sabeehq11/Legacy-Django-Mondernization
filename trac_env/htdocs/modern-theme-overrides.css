@@ -1,0 +1,525 @@
+/* Additional overrides for specific Trac elements */
+
+/* Override Trac's existing styles */
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background-attachment: fixed !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Enhanced main content area */
+#main {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 2rem 4rem 2rem !important;
+  min-height: calc(100vh - 200px) !important;
+}
+
+#content {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 24px !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06) !important;
+  padding: 3rem !important;
+  margin: 3rem 0 !important;
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Fix for Trac's existing main content styles */
+div.trac-content {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 24px !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.06) !important;
+  padding: 3rem !important;
+  margin: 2rem 0 !important;
+}
+
+/* Enhanced banner and navigation */
+#banner {
+  background: rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+  padding: 1.5rem 0 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 1000 !important;
+  margin-bottom: 0 !important;
+}
+
+#header {
+  max-width: 1200px !important;
+  margin: 0 auto !important;
+  padding: 0 2rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+/* Navigation overrides */
+#mainnav {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 24px !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+  margin: 2rem auto !important;
+  max-width: 1200px !important;
+  padding: 0.5rem !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+}
+
+#mainnav ul {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+#mainnav li {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 20px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+#mainnav li a {
+  display: block !important;
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-decoration: none !important;
+  padding: 1rem 2rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  transition: inherit !important;
+  border-bottom: none !important;
+}
+
+#mainnav li:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 15px 35px rgba(50, 50, 93, 0.2), 0 5px 15px rgba(0, 0, 0, 0.1) !important;
+  border-color: rgba(79, 172, 254, 0.6) !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+#mainnav li.active {
+  background: linear-gradient(135deg, #4facfe 0%, #00d4ff 100%) !important;
+  border-color: #4facfe !important;
+  box-shadow: 0 0 20px rgba(79, 172, 254, 0.4), 0 8px 25px rgba(0, 0, 0, 0.2) !important;
+  transform: translateY(-2px) !important;
+}
+
+#mainnav li.active a {
+  color: #ffffff !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Enhanced timeline specific overrides */
+.timeline h2 {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 20px !important;
+  color: #ffffff !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2) !important;
+  padding: 1.5rem 2rem !important;
+  margin: 3rem 0 2rem 0 !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+.timeline dl {
+  margin: 0 0 3rem 0 !important;
+}
+
+.timeline dt {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 18px !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  padding: 1.5rem !important;
+  margin-bottom: 1rem !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.timeline dt a {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-decoration: none !important;
+  display: block !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+  border-bottom: none !important;
+}
+
+.timeline dt:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 15px 40px rgba(79, 172, 254, 0.25), 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+  border-color: rgba(79, 172, 254, 0.5) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.timeline dd {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) !important;
+  padding: 1.5rem !important;
+  margin: 0 0 2rem 0 !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  line-height: 1.6 !important;
+  font-weight: 400 !important;
+}
+
+/* Wiki content overrides */
+.wikipage h1,
+.wikipage h2,
+.wikipage h3,
+.wikipage h4,
+.wikipage h5,
+.wikipage h6 {
+  color: #ffffff !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.18) !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.wikipage p {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Form overrides */
+form {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37) !important;
+  padding: 2rem !important;
+}
+
+/* Enhanced context navigation */
+#ctxtnav {
+  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 20px !important;
+  padding: 1rem 2rem !important;
+  margin: 2rem 0 3rem 0 !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+#ctxtnav ul {
+  display: flex !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 1.5rem !important;
+  justify-content: center !important;
+}
+
+#ctxtnav li {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+#ctxtnav a {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-decoration: none !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 16px !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-weight: 600 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+#ctxtnav a:hover {
+  color: #ffffff !important;
+  border-color: rgba(79, 172, 254, 0.6) !important;
+  background: rgba(79, 172, 254, 0.2) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 20px rgba(79, 172, 254, 0.2) !important;
+}
+
+/* Enhanced input overrides */
+input, select, textarea {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 16px !important;
+  color: #ffffff !important;
+  padding: 0.875rem 1.25rem !important;
+  font-family: inherit !important;
+  font-weight: 500 !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none !important;
+  border-color: #4facfe !important;
+  box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.2), 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+  transform: translateY(-1px) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 400 !important;
+}
+
+/* Enhanced search box */
+#search input[type="text"] {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 16px !important;
+  color: #ffffff !important;
+  padding: 0.875rem 1.25rem !important;
+  font-size: 0.95rem !important;
+  width: 250px !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  font-weight: 500 !important;
+}
+
+#search input[type="text"]:focus {
+  outline: none !important;
+  border-color: #4facfe !important;
+  box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.2) !important;
+  transform: translateY(-1px) !important;
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+#search input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-weight: 400 !important;
+}
+
+#search input[type="submit"] {
+  background: linear-gradient(135deg, #4facfe 0%, #00d4ff 100%) !important;
+  border: none !important;
+  border-radius: 16px !important;
+  color: #ffffff !important;
+  padding: 0.875rem 1.75rem !important;
+  margin-left: 0.75rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+#search input[type="submit"]:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 12px 35px rgba(79, 172, 254, 0.4) !important;
+  background: linear-gradient(135deg, #00d4ff 0%, #4facfe 100%) !important;
+}
+
+/* Enhanced button overrides */
+input[type="submit"], 
+input[type="button"], 
+.trac-button,
+button {
+  background: linear-gradient(135deg, #4facfe 0%, #00d4ff 100%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  padding: 0.875rem 1.75rem !important;
+  border-radius: 16px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  font-size: 0.9rem !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+input[type="submit"]:hover, 
+input[type="button"]:hover, 
+.trac-button:hover,
+button:hover {
+  background: linear-gradient(135deg, #43e97b 0%, #00d4ff 100%) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 0 15px 40px rgba(67, 233, 123, 0.4), 0 8px 20px rgba(0, 0, 0, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Table overrides */
+table {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37) !important;
+  overflow: hidden !important;
+}
+
+th {
+  background: rgba(79, 172, 254, 0.2) !important;
+  color: #ffffff !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+td {
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+tr:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Link overrides */
+a:link, a:visited {
+  color: #4facfe !important;
+  border-bottom: 1px solid transparent !important;
+  text-decoration: none !important;
+}
+
+a:hover {
+  color: #43e97b !important;
+  border-bottom-color: #43e97b !important;
+}
+
+/* Code overrides */
+pre, code {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 12px !important;
+  color: #43e97b !important;
+}
+
+/* Enhanced footer overrides */
+#footer {
+  background: rgba(0, 0, 0, 0.3) !important;
+  border-top: 2px solid rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  padding: 2rem 0 !important;
+  margin-top: 4rem !important;
+  text-align: center !important;
+  box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+#footer a {
+  color: rgba(255, 255, 255, 0.9) !important;
+  text-decoration: none !important;
+  border-bottom: 1px solid transparent !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+#footer a:hover {
+  color: #4facfe !important;
+  border-bottom-color: #4facfe !important;
+}
+
+/* Responsive design improvements */
+@media (max-width: 768px) {
+  #header {
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+    text-align: center !important;
+    padding: 0 1rem !important;
+  }
+  
+  #search {
+    order: 2 !important;
+  }
+  
+  #search input[type="text"] {
+    width: 200px !important;
+  }
+  
+  #mainnav {
+    margin: 1.5rem 1rem !important;
+    padding: 0.25rem !important;
+  }
+  
+  #mainnav ul {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  
+  #mainnav li {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+  
+  #mainnav li a {
+    padding: 0.875rem 1.5rem !important;
+  }
+  
+  #content, div.trac-content {
+    padding: 2rem 1.5rem !important;
+    margin: 2rem 1rem !important;
+    border-radius: 20px !important;
+  }
+  
+  #main {
+    padding: 0 1rem 3rem 1rem !important;
+  }
+  
+  #ctxtnav {
+    margin: 1.5rem 0 2rem 0 !important;
+    padding: 1rem !important;
+  }
+  
+  #ctxtnav ul {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  
+  h1 {
+    font-size: 2rem !important;
+  }
+  
+  .timeline h2 {
+    padding: 1rem 1.5rem !important;
+    margin: 2rem 0 1.5rem 0 !important;
+  }
+  
+  .timeline dt {
+    padding: 1rem !important;
+  }
+  
+  .timeline dd {
+    padding: 1rem !important;
+  }
+} 

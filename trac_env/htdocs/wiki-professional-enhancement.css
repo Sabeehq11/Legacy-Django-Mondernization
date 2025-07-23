@@ -1,0 +1,540 @@
+/* ==============================================
+   WIKI PROFESSIONAL ENHANCEMENT
+   Modern, Production-Ready Wiki Interface
+   Building on Professional Theme Base
+   ============================================== */
+
+/* Import Inter font family */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* ==============================================
+   WIKI CONTENT LAYOUT & STRUCTURE
+   ============================================== */
+
+/* Main Wiki Content Container */
+#content.wiki {
+  max-width: 1000px !important;
+  margin: 4rem auto !important;
+  background: var(--surface-primary) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-xl) !important;
+  box-shadow: var(--shadow-lg) !important;
+  padding: 3rem !important;
+  position: relative !important;
+}
+
+/* Content centering and breathing room */
+#main {
+  max-width: 1280px !important;
+  margin: 0 auto !important;
+  padding: 4rem var(--space-xl) 6rem var(--space-xl) !important;
+  min-height: calc(100vh - 200px) !important;
+}
+
+/* ==============================================
+   ENHANCED NAVIGATION TABS (PILL STYLE)
+   ============================================== */
+
+#ctxtnav {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 0 2rem 0 !important;
+  margin: -1rem 0 2rem 0 !important;
+  box-shadow: none !important;
+}
+
+#ctxtnav ul {
+  display: flex !important;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: var(--space-sm) !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+}
+
+#ctxtnav li {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+#ctxtnav a {
+  display: inline-block !important;
+  color: var(--text-secondary) !important;
+  text-decoration: none !important;
+  padding: var(--space-sm) var(--space-lg) !important;
+  border-radius: 24px !important;
+  background: var(--bg-tertiary) !important;
+  border: 1px solid var(--border-medium) !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  transition: var(--transition-fast) !important;
+  white-space: nowrap !important;
+}
+
+#ctxtnav a:hover {
+  color: var(--text-primary) !important;
+  background: var(--surface-primary) !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: var(--shadow-sm) !important;
+  transform: translateY(-1px) !important;
+}
+
+#ctxtnav a.active,
+#ctxtnav li.active a {
+  background: var(--accent-primary) !important;
+  color: var(--text-inverse) !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* ==============================================
+   ENHANCED TYPOGRAPHY SYSTEM
+   ============================================== */
+
+/* Override font family for Wiki pages */
+.wikipage,
+.wikipage * {
+  font-family: 'Inter', var(--font-sans) !important;
+}
+
+/* Wiki page title styling */
+#content.wiki h1,
+.wikipage h1 {
+  font-family: 'Inter', var(--font-sans) !important;
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  text-align: center !important;
+  margin: 0 0 2rem 0 !important;
+  padding-bottom: var(--space-lg) !important;
+  border-bottom: 2px solid var(--border-light) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -0.02em !important;
+}
+
+/* Section headings */
+.wikipage h2 {
+  font-family: 'Inter', var(--font-sans) !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin: 2rem 0 1rem 0 !important;
+  padding-bottom: var(--space-sm) !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  line-height: 1.3 !important;
+}
+
+.wikipage h3 {
+  font-family: 'Inter', var(--font-sans) !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin: 1.5rem 0 1rem 0 !important;
+  line-height: 1.3 !important;
+}
+
+/* Body text enhancement */
+.wikipage p {
+  font-family: 'Inter', var(--font-sans) !important;
+  font-size: 15px !important;
+  line-height: 1.6 !important;
+  color: var(--text-primary) !important;
+  margin-bottom: 1rem !important;
+}
+
+/* Links styling */
+.wikipage a {
+  color: var(--accent-primary) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  border-bottom: 1px solid transparent !important;
+  transition: var(--transition-fast) !important;
+}
+
+.wikipage a:hover {
+  color: var(--accent-primary-hover) !important;
+  border-bottom-color: var(--accent-primary-hover) !important;
+}
+
+/* ==============================================
+   WELCOME CARD & CONTENT ENHANCEMENT
+   ============================================== */
+
+/* Main Wiki content area */
+.wikipage .trac-content {
+  background: var(--surface-primary) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--space-2xl) !important;
+  margin: 0 !important;
+  position: relative !important;
+  box-shadow: none !important;
+}
+
+/* Add accent bar to content */
+.wikipage .trac-content::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 4px !important;
+  height: 100% !important;
+  background: var(--accent-primary) !important;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg) !important;
+}
+
+/* Enhanced lists styling */
+.wikipage ul {
+  margin: var(--space-lg) 0 !important;
+  padding: 0 !important;
+}
+
+.wikipage li {
+  list-style: none !important;
+  position: relative !important;
+  padding: var(--space-sm) 0 var(--space-sm) var(--space-xl) !important;
+  margin-bottom: var(--space-xs) !important;
+  border-bottom: 1px solid var(--border-light) !important;
+  transition: var(--transition-fast) !important;
+}
+
+.wikipage li:last-child {
+  border-bottom: none !important;
+}
+
+.wikipage li::before {
+  content: '→' !important;
+  position: absolute !important;
+  left: var(--space-md) !important;
+  top: var(--space-sm) !important;
+  color: var(--accent-primary) !important;
+  font-weight: 600 !important;
+}
+
+.wikipage li:hover {
+  background: var(--bg-tertiary) !important;
+  padding-left: calc(var(--space-xl) + var(--space-xs)) !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* Two-column layout for Starting Points */
+@media (min-width: 900px) {
+  .wikipage ul {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: var(--space-md) !important;
+    margin: var(--space-lg) 0 !important;
+  }
+
+  .wikipage li {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* ==============================================
+   ENHANCED SEARCH UI
+   ============================================== */
+
+#search {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-sm) !important;
+  margin: 0 !important;
+}
+
+#search input[type="text"] {
+  background: var(--surface-primary) !important;
+  border: 2px solid var(--border-medium) !important;
+  border-radius: 12px !important;
+  color: var(--text-primary) !important;
+  padding: var(--space-sm) var(--space-lg) !important;
+  font-size: 14px !important;
+  font-family: 'Inter', var(--font-sans) !important;
+  width: 320px !important;
+  transition: var(--transition-fast) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+#search input[type="text"]:focus {
+  outline: none !important;
+  border-color: var(--accent-primary) !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), var(--shadow-md) !important;
+  background: var(--surface-primary) !important;
+}
+
+#search input[type="text"]::placeholder {
+  color: var(--text-muted) !important;
+  font-style: italic !important;
+}
+
+#search input[type="submit"] {
+  background: var(--accent-primary) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  color: var(--text-inverse) !important;
+  padding: var(--space-sm) var(--space-xl) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', var(--font-sans) !important;
+  cursor: pointer !important;
+  transition: var(--transition-fast) !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+#search input[type="submit"]:hover {
+  background: var(--accent-primary-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* ==============================================
+   PAGE MODIFICATION METADATA
+   ============================================== */
+
+.trac-modifiedby {
+  background: var(--bg-tertiary) !important;
+  border-radius: var(--radius-md) !important;
+  padding: var(--space-md) var(--space-lg) !important;
+  margin: var(--space-lg) 0 0 0 !important;
+  border-left: 3px solid var(--accent-primary) !important;
+  font-size: 13px !important;
+  color: var(--text-secondary) !important;
+}
+
+.trac-modifiedby a {
+  color: var(--accent-primary) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+}
+
+/* ==============================================
+   ENHANCED BUTTONS & ACTIONS
+   ============================================== */
+
+.buttons {
+  margin: var(--space-2xl) 0 0 0 !important;
+  padding: var(--space-lg) 0 0 0 !important;
+  border-top: 1px solid var(--border-light) !important;
+  display: flex !important;
+  gap: var(--space-md) !important;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
+}
+
+.buttons form {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.buttons input[type="submit"] {
+  background: var(--accent-primary) !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  color: var(--text-inverse) !important;
+  padding: var(--space-sm) var(--space-lg) !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  font-family: 'Inter', var(--font-sans) !important;
+  cursor: pointer !important;
+  transition: var(--transition-fast) !important;
+  text-transform: none !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.buttons input[type="submit"]:hover {
+  background: var(--accent-primary-hover) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+/* Secondary button style for less prominent actions */
+.buttons input[type="submit"]:not(:first-child) {
+  background: var(--surface-primary) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-medium) !important;
+}
+
+.buttons input[type="submit"]:not(:first-child):hover {
+  background: var(--bg-tertiary) !important;
+  border-color: var(--accent-primary) !important;
+  color: var(--accent-primary) !important;
+}
+
+/* ==============================================
+   VERSION INFO & TABLES
+   ============================================== */
+
+#info {
+  background: var(--surface-primary) !important;
+  border: 1px solid var(--border-light) !important;
+  border-radius: var(--radius-lg) !important;
+  box-shadow: var(--shadow-sm) !important;
+  margin: 0 0 var(--space-xl) 0 !important;
+  overflow: hidden !important;
+}
+
+#info th {
+  background: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', var(--font-sans) !important;
+  font-weight: 600 !important;
+  padding: var(--space-lg) !important;
+  border-bottom: 1px solid var(--border-medium) !important;
+}
+
+#info td {
+  padding: var(--space-lg) !important;
+  color: var(--text-primary) !important;
+  font-family: 'Inter', var(--font-sans) !important;
+  line-height: 1.6 !important;
+}
+
+/* ==============================================
+   VISUAL DIVIDERS & SECTIONS
+   ============================================== */
+
+/* Section dividers */
+.wikipage hr {
+  border: none !important;
+  height: 1px !important;
+  background: linear-gradient(to right, transparent, var(--border-medium), transparent) !important;
+  margin: var(--space-2xl) 0 !important;
+}
+
+/* Add subtle separation between major sections */
+.wikipage > div + div {
+  margin-top: var(--space-2xl) !important;
+  padding-top: var(--space-2xl) !important;
+  border-top: 1px solid var(--border-light) !important;
+}
+
+/* ==============================================
+   RESPONSIVE DESIGN ENHANCEMENTS
+   ============================================== */
+
+@media (max-width: 1200px) {
+  #content.wiki {
+    max-width: 900px !important;
+    margin: 2rem auto !important;
+    padding: 2rem !important;
+  }
+  
+  #main {
+    padding: 2rem var(--space-lg) 4rem var(--space-lg) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  #content.wiki {
+    max-width: none !important;
+    margin: 1rem !important;
+    padding: 1.5rem !important;
+    border-radius: var(--radius-lg) !important;
+  }
+  
+  #main {
+    padding: 1rem var(--space-md) 2rem var(--space-md) !important;
+  }
+  
+  #content.wiki h1,
+  .wikipage h1 {
+    font-size: 24px !important;
+    text-align: left !important;
+  }
+  
+  .wikipage ul {
+    display: block !important;
+  }
+  
+  #ctxtnav ul {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: var(--space-xs) !important;
+  }
+  
+  #ctxtnav a {
+    padding: var(--space-sm) var(--space-lg) !important;
+    text-align: center !important;
+  }
+  
+  .buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+  
+  .buttons input[type="submit"] {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+  
+  #search input[type="text"] {
+    width: 200px !important;
+  }
+}
+
+/* ==============================================
+   ACCESSIBILITY & POLISH
+   ============================================== */
+
+/* Focus states for keyboard navigation */
+.wikipage a:focus,
+#ctxtnav a:focus,
+.buttons input:focus {
+  outline: 2px solid var(--accent-primary) !important;
+  outline-offset: 2px !important;
+  border-radius: var(--radius-sm) !important;
+}
+
+/* Improved contrast for better accessibility */
+.wikipage {
+  color: var(--text-primary) !important;
+}
+
+/* Loading states */
+.loading-wiki {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.loading-wiki::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.1), transparent) !important;
+  animation: shimmer 2s infinite !important;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ==============================================
+   PRINT STYLES
+   ============================================== */
+
+@media print {
+  #ctxtnav,
+  .buttons {
+    display: none !important;
+  }
+  
+  #content.wiki {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+  
+  .wikipage .trac-content::before {
+    display: none !important;
+  }
+} 

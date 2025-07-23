@@ -1,0 +1,46 @@
+/* Modern Theme Active Indicator */
+
+body::before {
+  content: "✨ Modern Theme Active";
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(79, 172, 254, 0.9);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 10000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  animation: fadeInScale 0.5s ease-out;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Hide the indicator after 3 seconds */
+body::before {
+  animation: fadeInScale 0.5s ease-out, fadeOut 0.5s ease-in 3s forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+} 

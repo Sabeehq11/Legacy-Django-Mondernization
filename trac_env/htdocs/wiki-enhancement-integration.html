@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wiki Professional Enhancement - Integration Guide</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 2rem;
+            color: #1e293b;
+            background: #f8fafc;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 { color: #1e293b; border-bottom: 2px solid #e2e8f0; padding-bottom: 0.5rem; }
+        h1 { font-size: 2rem; text-align: center; }
+        h2 { font-size: 1.5rem; margin-top: 2rem; }
+        h3 { color: #3b82f6; font-size: 1.2rem; margin-top: 1.5rem; }
+        code { background: #f1f5f9; padding: 0.2rem 0.4rem; border-radius: 4px; font-family: monospace; }
+        pre { background: #f1f5f9; padding: 1rem; border-radius: 8px; overflow-x: auto; border-left: 4px solid #3b82f6; }
+        .feature-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin: 1rem 0; }
+        .feature-card { background: #f8fafc; padding: 1rem; border-radius: 8px; border-left: 3px solid #3b82f6; }
+        .step { background: #f0f9ff; padding: 1rem; margin: 1rem 0; border-radius: 8px; border-left: 4px solid #0ea5e9; }
+        .warning { background: #fef3c7; padding: 1rem; border-radius: 8px; border-left: 4px solid #f59e0b; margin: 1rem 0; }
+        .success { background: #dcfce7; padding: 1rem; border-radius: 8px; border-left: 4px solid #10b981; margin: 1rem 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 Wiki Professional Enhancement</h1>
+        <p><em>Transform your Trac Wiki pages into a modern, professional web application interface</em></p>
+
+        <h2>✨ Enhancement Features</h2>
+        <div class="feature-list">
+            <div class="feature-card">
+                <h3>🏗️ Modern Layout</h3>
+                <p>Centered content with 1000px max-width, generous padding, and professional card styling</p>
+            </div>
+            <div class="feature-card">
+                <h3>🧭 Pill Navigation</h3>
+                <p>Clean horizontal tabs (Start Page, Index, History) with smooth hover effects</p>
+            </div>
+            <div class="feature-card">
+                <h3>📝 Enhanced Typography</h3>
+                <p>Inter font family with proper hierarchy (28px titles, 15px body text, 1.6 line-height)</p>
+            </div>
+            <div class="feature-card">
+                <h3>🎯 Accent Elements</h3>
+                <p>Blue accent bars, improved lists with arrows, and visual section dividers</p>
+            </div>
+            <div class="feature-card">
+                <h3>🔍 Enhanced Search</h3>
+                <p>Rounded search bar with "Search Wiki…" placeholder and accent button styling</p>
+            </div>
+            <div class="feature-card">
+                <h3>📱 Responsive Design</h3>
+                <p>Mobile-first approach with touch-friendly buttons and adaptive layouts</p>
+            </div>
+        </div>
+
+        <h2>🚀 Integration Instructions</h2>
+
+        <div class="step">
+            <h3>Step 1: CSS File Placement</h3>
+            <p>The enhancement file <code>wiki-professional-enhancement.css</code> should be placed in your Trac environment's htdocs directory:</p>
+            <pre>trac_env/htdocs/wiki-professional-enhancement.css</pre>
+        </div>
+
+        <div class="step">
+            <h3>Step 2: Update Trac Configuration</h3>
+            <p>Add the CSS file to your <code>trac_env/conf/trac.ini</code> configuration:</p>
+            <pre>[inherit]
+htdocs_dir = /path/to/trac_env/htdocs
+
+[project]
+name = Your Project Name
+
+# Add to existing CSS includes or create new section
+[theme]
+htdocs_location = 
+css = professional-theme.css, wiki-professional-enhancement.css</pre>
+        </div>
+
+        <div class="step">
+            <h3>Step 3: Template Customization (Optional)</h3>
+            <p>For the search placeholder text, you can customize the search input in your templates:</p>
+            <pre>&lt;input type="text" name="q" placeholder="Search Wiki…" /&gt;</pre>
+        </div>
+
+        <div class="step">
+            <h3>Step 4: Browser Cache</h3>
+            <p>Clear your browser cache and restart Trac to see the changes:</p>
+            <pre># Restart Trac server
+sudo systemctl restart apache2  # or your web server</pre>
+        </div>
+
+        <h2>🎨 Design System</h2>
+        
+        <h3>Color Palette</h3>
+        <pre>Primary Background: #f8fafc (slate-50)
+Surface: #ffffff (white)  
+Text Primary: #1e293b (slate-800)
+Text Secondary: #64748b (slate-500)
+Accent: #3b82f6 (blue-500)
+Borders: #e2e8f0 (slate-200)</pre>
+
+        <h3>Typography Scale</h3>
+        <pre>H1 (Page Title): 28px bold, center-aligned
+H2 (Sections): 20px semi-bold, subtle underline
+H3 (Subsections): 18px semi-bold
+Body Text: 15px regular, 1.6 line-height
+All using Inter font family</pre>
+
+        <h3>Spacing System</h3>
+        <pre>--space-xs: 0.5rem (8px)
+--space-sm: 0.75rem (12px) 
+--space-md: 1rem (16px)
+--space-lg: 1.5rem (24px)
+--space-xl: 2rem (32px)
+--space-2xl: 3rem (48px)</pre>
+
+        <h2>🔧 Customization Options</h2>
+
+        <h3>Adjust Content Width</h3>
+        <p>To change the max-width of Wiki content:</p>
+        <pre>#content.wiki {
+  max-width: 1200px !important; /* Default: 1000px */
+}</pre>
+
+        <h3>Modify Color Scheme</h3>
+        <p>The enhancement uses CSS variables from the professional theme. You can override specific colors:</p>
+        <pre>:root {
+  --accent-primary: #6366f1; /* Change from blue to indigo */
+  --text-primary: #0f172a;   /* Darker text */
+}</pre>
+
+        <h3>Typography Adjustments</h3>
+        <p>Fine-tune typography sizes:</p>
+        <pre>.wikipage h1 {
+  font-size: 32px !important; /* Default: 28px */
+}
+
+.wikipage p {
+  font-size: 16px !important; /* Default: 15px */
+}</pre>
+
+        <div class="warning">
+            <h3>⚠️ Important Notes</h3>
+            <ul>
+                <li>This enhancement builds on the existing <code>professional-theme.css</code></li>
+                <li>Ensure the professional theme is loaded <strong>before</strong> this enhancement</li>
+                <li>The Inter font is loaded from Google Fonts (requires internet access)</li>
+                <li>All styles use <code>!important</code> to override Trac's default styles</li>
+            </ul>
+        </div>
+
+        <div class="success">
+            <h3>✅ Expected Results</h3>
+            <p>After successful integration, your Wiki pages will feature:</p>
+            <ul>
+                <li>Centered, card-style content with professional shadows</li>
+                <li>Clean pill-style navigation tabs with hover effects</li>
+                <li>Modern Inter typography with proper hierarchy</li>
+                <li>Enhanced lists with arrow bullets and two-column layout</li>
+                <li>Improved search bar with rounded corners and accent button</li>
+                <li>Responsive design that works on all device sizes</li>
+                <li>Accessibility improvements with proper focus states</li>
+            </ul>
+        </div>
+
+        <h2>🐛 Troubleshooting</h2>
+        
+        <h3>Styles Not Applying</h3>
+        <ul>
+            <li>Check that the CSS file path is correct in <code>trac.ini</code></li>
+            <li>Verify file permissions allow web server access</li>
+            <li>Clear browser cache and hard refresh (Ctrl+F5)</li>
+            <li>Check browser developer tools for CSS loading errors</li>
+        </ul>
+
+        <h3>Layout Issues</h3>
+        <ul>
+            <li>Ensure the professional theme base is loaded first</li>
+            <li>Check for CSS conflicts with custom themes</li>
+            <li>Verify viewport meta tag for responsive behavior</li>
+        </ul>
+
+        <h3>Font Issues</h3>
+        <ul>
+            <li>Confirm internet access for Google Fonts loading</li>
+            <li>Consider self-hosting Inter font for offline environments</li>
+            <li>Check browser console for font loading errors</li>
+        </ul>
+
+        <p style="text-align: center; margin-top: 3rem; color: #64748b; font-size: 14px;">
+            <em>This enhancement transforms your Trac Wiki into a modern, professional interface suitable for software development teams and startups.</em>
+        </p>
+    </div>
+</body>
+</html> 
