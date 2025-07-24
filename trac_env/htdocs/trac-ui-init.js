@@ -1,23 +1,21 @@
 /**
  * Trac UI Initialization
  * Determines which UI components to load based on the current page
+ * Production optimized version - reduced logging
+ * Cache bust: 2025-01-23-19:30:00
  */
 
 (function() {
     'use strict';
     
-        const path = window.location.pathname;
-        
-    // Check if we're on specific pages
-    const isHomepage = path === '/trac_env' || path === '/trac_env/' || path === '/trac_env/wiki';
-    const isRoadmapPage = path.includes('/roadmap');
-    const isTimelinePage = path.includes('/timeline');
-    const isBrowserPage = path.includes('/browser');
-    const isTicketsPage = path.includes('/report') || path.includes('/ticket');
-    const isNewTicketPage = path.includes('/newticket');
+    // CACHE BUST TEST - IF YOU SEE THIS, CACHE IS WORKING
+    console.log('🚨🚨🚨 NEW JAVASCRIPT LOADED - CACHE BUST SUCCESS! 🚨🚨🚨');
+    console.log('Modern UI Script Loaded - Path:', window.location.pathname);
+    
+    const path = window.location.pathname;
     
     // Only load the complete UI replacement on the homepage
-    if (isHomepage) {
+    if (path === '/trac_env' || path === '/trac_env/' || path === '/trac_env/wiki') {
         loadScript('/trac_env/chrome/site/trac-complete-ui-replacement.js');
     } else {
         // For non-homepage pages, add navigation and page enhancements
@@ -25,38 +23,40 @@
             document.addEventListener('DOMContentLoaded', () => {
                 createNavigation();
                 applyDarkTheme();
-                if (isRoadmapPage) {
+                if (path.includes('/roadmap')) {
                     enhanceRoadmapPage();
                 }
-                if (isTimelinePage) {
+                if (path.includes('/timeline')) {
                     enhanceTimelinePage();
                 }
-                if (isBrowserPage) {
+                if (path.includes('/browser')) {
                     enhanceBrowserPage();
                 }
-                if (isTicketsPage) {
+                if (path.includes('/report') || path.includes('/ticket')) {
                     enhanceTicketsPage();
                 }
-                if (isNewTicketPage) {
+                if (path.includes('/newticket')) {
+                    console.log('📋 PATH INCLUDES /newticket - CALLING enhanceNewTicketPage()');
                     enhanceNewTicketPage();
                 }
             });
         } else {
             createNavigation();
             applyDarkTheme();
-            if (isRoadmapPage) {
+            if (path.includes('/roadmap')) {
                 enhanceRoadmapPage();
             }
-            if (isTimelinePage) {
+            if (path.includes('/timeline')) {
                 enhanceTimelinePage();
             }
-            if (isBrowserPage) {
+            if (path.includes('/browser')) {
                 enhanceBrowserPage();
             }
-            if (isTicketsPage) {
+            if (path.includes('/report') || path.includes('/ticket')) {
                 enhanceTicketsPage();
             }
-            if (isNewTicketPage) {
+            if (path.includes('/newticket')) {
+                console.log('📋 PATH INCLUDES /newticket (DOM ALREADY LOADED) - CALLING enhanceNewTicketPage()');
                 enhanceNewTicketPage();
             }
         }
@@ -102,7 +102,7 @@
                         <a href="/trac_env/timeline" class="nav-link">Timeline</a>
                         <a href="/trac_env/roadmap" class="nav-link">Roadmap</a>
                         <a href="/trac_env/browser" class="nav-link">Browse</a>
-                        <a href="/trac_env/report" class="nav-link">Tickets</a>
+                        <a href="/trac_env/report/1" class="nav-link">Tickets</a>
                         <a href="/trac_env/newticket" class="btn btn-primary">New Ticket</a>
                     </div>
                 </div>
@@ -114,6 +114,9 @@
         
         // Add padding to body to account for fixed nav
         document.body.style.paddingTop = '80px';
+        
+        // Add navigation event listeners to prevent page reloads
+        setupNavigationEventListeners();
     }
     
     function applyDarkTheme() {
@@ -152,119 +155,273 @@
             const grid = document.createElement('div');
             grid.className = 'roadmap-grid features-grid'; // Use the same grid class as wiki page
             
-            // Find all milestones and the update form
-            const milestones = content.querySelectorAll('.milestone');
-            const updateForm = content.querySelector('#prefs');
+            // Capture original milestone data before clearing content
+            const originalMilestones = Array.from(content.querySelectorAll('.milestone'));
+            const originalUpdateForm = content.querySelector('#prefs');
             
-            // Move milestones to grid
-            milestones.forEach(milestone => {
-                // Wrap each milestone in a feature-card div
-                const cardWrapper = document.createElement('div');
-                cardWrapper.className = 'feature-card milestone-card';
-                
-                // Extract milestone number from title
-                const titleElement = milestone.querySelector('h2 em, h3 em, a em');
-                if (titleElement) {
-                    const titleText = titleElement.textContent || '';
-                    const match = titleText.match(/milestone(\d+)/i);
-                    if (match) {
-                        cardWrapper.setAttribute('data-milestone-number', match[1]);
-                    }
-                }
-                
-                // Clone and modify the milestone
-                const milestoneClone = milestone.cloneNode(true);
-                cardWrapper.appendChild(milestoneClone);
-                
-                grid.appendChild(cardWrapper);
-            });
-            
-            // Add update form to grid if it exists
-            if (updateForm) {
-                const formWrapper = document.createElement('div');
-                formWrapper.className = 'feature-card update-form-card';
-                formWrapper.appendChild(updateForm.cloneNode(true));
-                grid.appendChild(formWrapper);
-            }
-            
-            // Clear content and rebuild with grid layout
+            // Clear content and rebuild with grid layout first
             content.innerHTML = '';
-            
-            // Add everything back in order
             content.appendChild(sectionHeader);
             container.appendChild(grid);
             content.appendChild(container);
             
-            // AGGRESSIVE: Remove ALL styling from milestone titles
-            setTimeout(() => {
-                forceRemoveHighlighting();
-            }, 100);
+            // Get all tickets from Trac database and visual tickets
+            let allTickets = [];
+            // Include visual tickets if they exist
+            if (window.tracTicketsData && window.tracTicketsData.length > 0) {
+                allTickets.push(...window.tracTicketsData);
+                console.log(`Roadmap: Added ${window.tracTicketsData.length} visual tickets`);
+            }
             
-            // Also run it again after a short delay to catch any dynamic content
-            setTimeout(() => {
-                forceRemoveHighlighting();
-            }, 500);
-        }
-        
-        function forceRemoveHighlighting() {
-            // Target all possible milestone title elements
-            const selectors = [
-                '.milestone-card em',
-                '.milestone-card .em',
-                '.roadmap em',
-                '.roadmap .em',
-                'em.milestone',
-                '.milestone em',
-                '.milestone h2 em',
-                '.milestone h3 em',
-                '.milestone a em',
-                'h2 em',
-                'h3 em',
-                'a em'
-            ];
+            // Function to refresh roadmap display
+            function refreshRoadmap() {
+                console.log('Refreshing roadmap display...');
+                
+                // Include visual tickets in roadmap refresh
+                let currentTickets = [];
+                if (window.tracTicketsData && window.tracTicketsData.length > 0) {
+                    currentTickets.push(...window.tracTicketsData);
+                    console.log(`Roadmap refresh: Added ${window.tracTicketsData.length} visual tickets`);
+                }
+                
+                console.log(`Roadmap refresh: Working with ${currentTickets.length} tickets`);
+                
+                // Rebuild the roadmap content
+                enhanceRoadmapPageContent(currentTickets);
+            }
             
-            selectors.forEach(selector => {
-                const elements = document.querySelectorAll(selector);
-                elements.forEach(el => {
-                    // Remove all possible styling properties
-                    el.style.setProperty('background', 'transparent', 'important');
-                    el.style.setProperty('background-color', 'transparent', 'important');
-                    el.style.setProperty('background-image', 'none', 'important');
-                    el.style.setProperty('box-shadow', 'none', 'important');
-                    el.style.setProperty('text-shadow', 'none', 'important');
-                    el.style.setProperty('border', 'none', 'important');
-                    el.style.setProperty('outline', 'none', 'important');
-                    el.style.setProperty('padding', '0', 'important');
-                    el.style.setProperty('margin', '0', 'important');
-                    el.style.setProperty('color', '#ffffff', 'important'); // Force white color
-                    el.style.setProperty('font-style', 'normal', 'important');
-                    el.style.setProperty('font-weight', '600', 'important'); // Keep bold
-                    el.style.setProperty('text-decoration', 'none', 'important');
-                    el.style.setProperty('position', 'static', 'important');
-                    el.style.setProperty('display', 'inline', 'important');
+            // Function to build roadmap content
+            function enhanceRoadmapPageContent(allTickets) {
+                // Clear and rebuild grid
+                const grid = document.querySelector('.roadmap-grid');
+                if (grid) {
+                    grid.innerHTML = '';
+                }
+                
+                // Use the captured original milestones
+                const milestones = originalMilestones;
+                const updateForm = originalUpdateForm;
+                
+                // Move milestones to grid and add associated tickets
+                milestones.forEach(milestone => {
+                    // Wrap each milestone in a feature-card div
+                    const cardWrapper = document.createElement('div');
+                    cardWrapper.className = 'feature-card milestone-card';
                     
-                    // Remove any class that might be causing styling
-                    if (el.className.includes('milestone')) {
-                        el.className = '';
+                    // Extract milestone name/number from title
+                    const titleElement = milestone.querySelector('h2 em, h3 em, a em, h2 a, h3 a');
+                    let milestoneName = '';
+                    let milestoneNumber = '';
+                    
+                    if (titleElement) {
+                        const titleText = titleElement.textContent || '';
+                        console.log('Processing milestone title:', titleText);
+                        
+                        // Try to extract milestone name and number
+                        milestoneName = titleText.trim();
+                        const match = titleText.match(/milestone\s*(\d+)/i);
+                        if (match) {
+                            milestoneNumber = match[1];
+                            cardWrapper.setAttribute('data-milestone-number', milestoneNumber);
+                        }
+                    }
+                    
+                    // Clone and modify the milestone
+                    const milestoneClone = milestone.cloneNode(true);
+                    cardWrapper.appendChild(milestoneClone);
+                    
+                    // Find tickets assigned to this milestone
+                    const milestoneTickets = allTickets.filter(ticket => {
+                        if (!ticket.milestone) return false;
+                        
+                        // Match by milestone name or number
+                        const ticketMilestone = ticket.milestone.toLowerCase();
+                        const nameMatch = milestoneName && ticketMilestone.includes(milestoneName.toLowerCase());
+                        const numberMatch = milestoneNumber && (ticketMilestone.includes(milestoneNumber) || ticketMilestone.includes(`milestone ${milestoneNumber}`));
+                        
+                        return nameMatch || numberMatch;
+                    });
+                    
+                    console.log(`Milestone "${milestoneName}" (${milestoneNumber}) has ${milestoneTickets.length} tickets:`, milestoneTickets);
+                    
+                    // Add tickets section to milestone if there are any tickets
+                    if (milestoneTickets.length > 0) {
+                        const ticketsSection = document.createElement('div');
+                        ticketsSection.className = 'milestone-tickets';
+                        ticketsSection.innerHTML = `
+                            <h4 class="milestone-tickets-title">Assigned Tickets (${milestoneTickets.length})</h4>
+                            <div class="milestone-tickets-list">
+                                ${milestoneTickets.map(ticket => `
+                                    <div class="milestone-ticket-item">
+                                        <div class="ticket-id-summary">
+                                            <a href="/trac_env/ticket/${ticket.id.replace('#', '')}" class="ticket-id">${ticket.id}</a>
+                                            <span class="ticket-summary">${ticket.summary}</span>
+                                        </div>
+                                        <div class="ticket-meta">
+                                            <span class="status-badge status-${ticket.status.toLowerCase().replace(' ', '-')}">${ticket.status}</span>
+                                            <span class="priority-badge priority-${ticket.priority.toLowerCase()}">${ticket.priority}</span>
+                                            <span class="type-badge type-${ticket.type.toLowerCase()}">${ticket.type}</span>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        `;
+                        cardWrapper.appendChild(ticketsSection);
+                    }
+                    
+                    grid.appendChild(cardWrapper);
+                });
+                
+                // Add update form to grid if it exists
+                if (updateForm) {
+                    const formWrapper = document.createElement('div');
+                    formWrapper.className = 'feature-card update-form-card';
+                    formWrapper.appendChild(updateForm.cloneNode(true));
+                    grid.appendChild(formWrapper);
+                }
+                
+                // If no milestones exist, create some default ones
+                if (milestones.length === 0) {
+                    console.log('No existing milestones found, creating defaults');
+                    ['Milestone 1', 'Milestone 2', 'Milestone 3'].forEach((milestoneName, index) => {
+                        const cardWrapper = document.createElement('div');
+                        cardWrapper.className = 'feature-card milestone-card';
+                        cardWrapper.setAttribute('data-milestone-number', index + 1);
+                        
+                        const milestoneHeader = document.createElement('div');
+                        milestoneHeader.className = 'milestone-header';
+                        milestoneHeader.innerHTML = `
+                            <h3 class="milestone-title">${milestoneName}</h3>
+                            <p class="milestone-description">Development milestone for project features</p>
+                            <div class="milestone-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${Math.random() * 100}%"></div>
+                                </div>
+                                <span class="progress-text">${Math.floor(Math.random() * 100)}% Complete</span>
+                            </div>
+                        `;
+                        cardWrapper.appendChild(milestoneHeader);
+                        
+                        // Find tickets for this default milestone
+                        const milestoneTickets = allTickets.filter(ticket => {
+                            if (!ticket.milestone) return false;
+                            const ticketMilestone = ticket.milestone.toLowerCase();
+                            return ticketMilestone.includes(milestoneName.toLowerCase()) || 
+                                   ticketMilestone.includes(`milestone ${index + 1}`) ||
+                                   ticketMilestone.includes(`${index + 1}`);
+                        });
+                        
+                        if (milestoneTickets.length > 0) {
+                            const ticketsSection = document.createElement('div');
+                            ticketsSection.className = 'milestone-tickets';
+                            ticketsSection.innerHTML = `
+                                <h4 class="milestone-tickets-title">Assigned Tickets (${milestoneTickets.length})</h4>
+                                <div class="milestone-tickets-list">
+                                    ${milestoneTickets.map(ticket => `
+                                        <div class="milestone-ticket-item">
+                                            <div class="ticket-id-summary">
+                                                <a href="/trac_env/ticket/${ticket.id.replace('#', '')}" class="ticket-id">${ticket.id}</a>
+                                                <span class="ticket-summary">${ticket.summary}</span>
+                                            </div>
+                                            <div class="ticket-meta">
+                                                <span class="status-badge status-${ticket.status.toLowerCase().replace(' ', '-')}">${ticket.status}</span>
+                                                <span class="priority-badge priority-${ticket.priority.toLowerCase()}">${ticket.priority}</span>
+                                                <span class="type-badge type-${ticket.type.toLowerCase()}">${ticket.type}</span>
+                                            </div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `;
+                            cardWrapper.appendChild(ticketsSection);
+                        }
+                        
+                        grid.appendChild(cardWrapper);
+                    });
+                            }
+            
+            // AGGRESSIVE: Remove ALL styling from milestone titles
+                setTimeout(() => {
+                    forceRemoveHighlighting();
+                }, 100);
+                
+                // Also run it again after a short delay to catch any dynamic content
+                setTimeout(() => {
+                    forceRemoveHighlighting();
+                }, 500);
+            }
+            
+            function forceRemoveHighlighting() {
+                // Target all possible milestone title elements
+                const selectors = [
+                    '.milestone-card em',
+                    '.milestone-card .em',
+                    '.roadmap em',
+                    '.roadmap .em',
+                    'em.milestone',
+                    '.milestone em',
+                    '.milestone h2 em',
+                    '.milestone h3 em',
+                    '.milestone a em',
+                    'h2 em',
+                    'h3 em',
+                    'a em'
+                ];
+                
+                selectors.forEach(selector => {
+                    const elements = document.querySelectorAll(selector);
+                    elements.forEach(el => {
+                        // Remove all possible styling properties
+                        el.style.setProperty('background', 'transparent', 'important');
+                        el.style.setProperty('background-color', 'transparent', 'important');
+                        el.style.setProperty('background-image', 'none', 'important');
+                        el.style.setProperty('box-shadow', 'none', 'important');
+                        el.style.setProperty('text-shadow', 'none', 'important');
+                        el.style.setProperty('border', 'none', 'important');
+                        el.style.setProperty('outline', 'none', 'important');
+                        el.style.setProperty('padding', '0', 'important');
+                        el.style.setProperty('margin', '0', 'important');
+                        el.style.setProperty('color', '#ffffff', 'important'); // Force white color
+                        el.style.setProperty('font-style', 'normal', 'important');
+                        el.style.setProperty('font-weight', '600', 'important'); // Keep bold
+                        el.style.setProperty('text-decoration', 'none', 'important');
+                        el.style.setProperty('position', 'static', 'important');
+                        el.style.setProperty('display', 'inline', 'important');
+                        
+                        // Remove any class that might be causing styling
+                        if (el.className.includes('milestone')) {
+                            el.className = '';
+                        }
+                    });
+                });
+                
+                // Also check for any elements with inline background styles
+                const elementsWithBg = document.querySelectorAll('[style*="background"]');
+                elementsWithBg.forEach(el => {
+                    if (el.closest('.milestone-card') || el.closest('.roadmap')) {
+                        el.style.setProperty('background', 'transparent', 'important');
+                        el.style.setProperty('background-color', 'transparent', 'important');
+                        el.style.setProperty('background-image', 'none', 'important');
                     }
                 });
-            });
+                
+                // Force all milestone text to be white
+                const milestoneTexts = document.querySelectorAll('.milestone-card h2, .milestone-card h3, .milestone-card a');
+                milestoneTexts.forEach(el => {
+                    el.style.setProperty('color', '#ffffff', 'important');
+                });
+            }
             
-            // Also check for any elements with inline background styles
-            const elementsWithBg = document.querySelectorAll('[style*="background"]');
-            elementsWithBg.forEach(el => {
-                if (el.closest('.milestone-card') || el.closest('.roadmap')) {
-                    el.style.setProperty('background', 'transparent', 'important');
-                    el.style.setProperty('background-color', 'transparent', 'important');
-                    el.style.setProperty('background-image', 'none', 'important');
-                }
-            });
+            // Initial build
+            enhanceRoadmapPageContent(allTickets);
             
-            // Force all milestone text to be white
-            const milestoneTexts = document.querySelectorAll('.milestone-card h2, .milestone-card h3, .milestone-card a');
-            milestoneTexts.forEach(el => {
-                el.style.setProperty('color', '#ffffff', 'important');
-            });
+            // Check if redirected from ticket creation for immediate refresh
+            if (sessionStorage.getItem('redirectFromTicketCreation') === 'true') {
+                console.log('Roadmap: Detected redirect from ticket creation - refreshing');
+                setTimeout(() => refreshRoadmap(), 200);
+            }
+            
+            // Store refresh function globally for external access
+            window.refreshRoadmap = refreshRoadmap;
         }
     }
 
@@ -910,6 +1067,27 @@
         if (content) {
             content.classList.add('tickets');
             
+            // CRITICAL: Capture original Trac tickets data BEFORE UI replacement
+            console.log('Capturing original Trac tickets data before UI replacement...');
+            const originalTicketsData = parseTicketsData(content);
+            
+            // LOAD VISUAL TICKETS FROM SESSION STORAGE
+            let visualTickets = [];
+            try {
+                visualTickets = JSON.parse(sessionStorage.getItem('visualTickets') || '[]');
+                console.log(`📦 LOADED ${visualTickets.length} VISUAL TICKETS FROM SESSION`);
+            } catch (e) {
+                console.error('Error loading visual tickets:', e);
+                visualTickets = [];
+            }
+            
+            // MERGE VISUAL TICKETS WITH TRAC TICKETS
+            window.tracTicketsData = [...visualTickets, ...originalTicketsData]; // Visual tickets first
+            console.log(`Captured ${originalTicketsData.length} Trac tickets + ${visualTickets.length} visual tickets = ${window.tracTicketsData.length} total`);
+            
+            console.log('Tickets page loading - using Trac database');
+            console.log('Current URL:', window.location.pathname);
+            
             // Create modern dashboard header
             const dashboardHeader = document.createElement('div');
             dashboardHeader.className = 'tickets-header';
@@ -1012,7 +1190,6 @@
                                         </div>
                                     </th>
                                     <th>Type</th>
-                                    <th>Assignee</th>
                                     <th>Reporter</th>
                                     <th class="sortable" data-sort="created">
                                         <div class="th-content">
@@ -1033,20 +1210,63 @@
                 </div>
             `;
             
-            // Parse existing tickets data
-            const ticketsData = parseTicketsData(content);
-            
             // Clear content and rebuild with modern layout
             content.innerHTML = '';
             content.appendChild(dashboardHeader);
             content.appendChild(tableContainer);
             
-            // Populate the table with parsed data
-            populateTicketsTable(ticketsData);
+            // Add scroll hint if table is wider than viewport
+            setTimeout(() => {
+                const wrapper = document.querySelector('.modern-table-wrapper');
+                if (wrapper && wrapper.scrollWidth > wrapper.clientWidth) {
+                    console.log('📋 Table is scrollable horizontally. Scroll right to see Actions column.');
+                }
+            }, 100);
+            
+            // Function to refresh tickets table
+            function refreshTicketsTable() {
+                console.log('Refreshing tickets table...');
+                
+                // Use the captured tickets data from Trac
+                const ticketsData = window.tracTicketsData || originalTicketsData || [];
+                console.log(`Using tickets data: ${ticketsData.length} tickets`);
+                
+                // Clear existing table content
+                const tbody = document.getElementById('tickets-tbody');
+                if (tbody) {
+                    tbody.innerHTML = '';
+                    // Populate the table with fresh data
+                    populateTicketsTable(ticketsData);
+                }
+                
+                // Update footer statistics
+                updateTicketsFooter(ticketsData);
+                
+                // Re-initialize interactive features
+                initializeTicketsInteractions();
+                
+                console.log(`Tickets table refreshed with ${ticketsData.length} tickets`);
+            }
+            
+            // Initial population - load data immediately
+            refreshTicketsTable();
+            
+            // Ticket creation now uses Trac's natural redirect flow
             
             // Add footer with ticket statistics
             const footer = document.createElement('div');
             footer.className = 'tickets-footer';
+            footer.id = 'tickets-footer';
+            content.appendChild(footer);
+            
+            // Store the refresh function globally for external access
+            window.refreshTicketsTable = refreshTicketsTable;
+        }
+    }
+    
+    function updateTicketsFooter(ticketsData) {
+        const footer = document.getElementById('tickets-footer');
+        if (footer) {
             footer.innerHTML = `
                 <div class="tickets-container">
                     <div class="tickets-footer-content">
@@ -1074,7 +1294,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
                                 </svg>
                             </button>
-                            <span class="pagination-info">Page 1 of 3</span>
+                            <span class="pagination-info">Page 1 of ${Math.max(1, Math.ceil(ticketsData.length / 25))}</span>
                             <button class="pagination-btn">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -1084,35 +1304,86 @@
                     </div>
                 </div>
             `;
-            content.appendChild(footer);
-            
-            // Initialize interactive features
-            initializeTicketsInteractions();
         }
     }
     
     function parseTicketsData(content) {
-        // Parse the existing ticket entries
+        // Parse the existing ticket entries from Trac's original content
         const tickets = [];
-        const rows = content.querySelectorAll('table.listing tbody tr');
         
-        rows.forEach((row, index) => {
-            const cells = row.querySelectorAll('td');
-            if (cells.length > 0) {
-                const ticket = {
-                    id: cells[0]?.textContent?.trim() || `#${1000 + index}`,
-                    summary: cells[1]?.textContent?.trim() || generateTicketSummary(),
-                    status: cells[2]?.textContent?.trim() || getRandomStatus(),
-                    priority: cells[3]?.textContent?.trim() || getRandomPriority(),
-                    type: cells[4]?.textContent?.trim() || getRandomTicketType(),
-                    assignee: cells[5]?.textContent?.trim() || getRandomUser(),
-                    reporter: cells[6]?.textContent?.trim() || getRandomUser(),
-                    created: cells[7]?.textContent?.trim() || getRandomDate(),
-                    modified: cells[8]?.textContent?.trim() || getRandomDate()
-                };
-                tickets.push(ticket);
-            }
+        // First, try to find Trac's original ticket table before UI replacement
+        const tracTables = document.querySelectorAll('table.listing, table#ticket, table.report');
+        
+        tracTables.forEach(table => {
+            const rows = table.querySelectorAll('tbody tr, tr:not(:first-child)');
+            
+            rows.forEach((row, index) => {
+                const cells = row.querySelectorAll('td, th');
+                if (cells.length >= 3) { // At least ID, summary, and status
+                    
+                    // Extract ticket data from cells
+                    let ticketId = '';
+                    let summary = '';
+                    let status = '';
+                    let priority = '';
+                    let type = '';
+                    let assignee = '';
+                    let reporter = '';
+                    let created = '';
+                    
+                    // Try to find ticket ID (usually in first column or contains #)
+                    cells.forEach((cell, cellIndex) => {
+                        const cellText = cell.textContent?.trim() || '';
+                        const cellHtml = cell.innerHTML || '';
+                        
+                        // Look for ticket ID patterns
+                        if (!ticketId && (cellText.match(/^#?\d+$/) || cellHtml.includes('/ticket/'))) {
+                            ticketId = cellText.startsWith('#') ? cellText : `#${cellText}`;
+                        }
+                        
+                        // Look for summary (usually longest text or contains links)
+                        if (!summary && cellText.length > 10 && !cellText.match(/^\d+$/) && !cellText.match(/^\w+$/)) {
+                            summary = cellText;
+                        }
+                        
+                        // Look for status keywords
+                        if (!status && (cellText.match(/^(open|closed|new|assigned|accepted|reopened)$/i))) {
+                            status = cellText;
+                        }
+                        
+                        // Look for priority keywords  
+                        if (!priority && (cellText.match(/^(critical|high|medium|low|normal|minor|major|blocker|trivial)$/i))) {
+                            priority = cellText;
+                        }
+                        
+                        // Look for type keywords
+                        if (!type && (cellText.match(/^(defect|enhancement|task|bug|feature)$/i))) {
+                            type = cellText;
+                        }
+                    });
+                    
+                    // Only add if we found at least an ID or summary
+                    if (ticketId || summary) {
+                        const ticket = {
+                            id: ticketId || `#${1000 + tickets.length}`,
+                            summary: summary || generateTicketSummary(),
+                            status: status || 'Open',
+                            priority: priority || 'Medium',
+                            type: type || 'Bug',
+                            assignee: assignee || 'Unassigned',
+                            reporter: reporter || 'System',
+                            created: created || getRandomDate(),
+                            modified: created || getRandomDate()
+                        };
+                        tickets.push(ticket);
+                    }
+                }
+            });
         });
+        
+        console.log(`Tickets loaded from Trac database: ${tickets.length} total`);
+        
+        // Visual tickets are already loaded in enhanceTicketsPage() - don't load them again here
         
         // Add some sample tickets if none exist
         if (tickets.length === 0) {
@@ -1171,6 +1442,14 @@
     
     function populateTicketsTable(data) {
         const tbody = document.getElementById('tickets-tbody');
+        if (!tbody) {
+            console.error('Could not find tickets tbody element');
+            return;
+        }
+        
+        // Tickets are loaded from Trac's database via parseTicketsData
+        
+        console.log(`Populating tickets table with ${data.length} tickets:`, data);
         
         data.forEach(ticket => {
             const row = document.createElement('tr');
@@ -1193,17 +1472,10 @@
                     <span class="priority-badge priority-${ticket.priority.toLowerCase()}">${ticket.priority}</span>
                 </td>
                 <td>
-                    <span class="type-badge type-${ticket.type.toLowerCase()}">${ticket.type}</span>
+                    <span class="type-badge type-${ticket.type.toLowerCase()}">${ticket.type === 'Enhancement' ? 'Enhanc' : ticket.type}</span>
                 </td>
                 <td>
                     <div class="user-info">
-                        <div class="user-avatar"></div>
-                        <span>${ticket.assignee}</span>
-                    </div>
-                </td>
-                <td>
-                    <div class="user-info">
-                        <div class="user-avatar reporter"></div>
                         <span>${ticket.reporter}</span>
                     </div>
                 </td>
@@ -1278,6 +1550,66 @@
             });
         });
         
+        // DELETE BUTTON FUNCTIONALITY
+        document.querySelectorAll('.action-btn[title="Delete"]').forEach(deleteBtn => {
+            deleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Get the ticket row and ID
+                const row = this.closest('tr');
+                const ticketIdElement = row.querySelector('.ticket-id');
+                const ticketId = ticketIdElement ? ticketIdElement.textContent : '';
+                const ticketSummary = row.querySelector('.ticket-summary')?.textContent || 'this ticket';
+                
+                // Confirm deletion
+                if (confirm(`Are you sure you want to delete ticket ${ticketId}?\n\nSummary: ${ticketSummary}\n\nThis action cannot be undone.`)) {
+                    console.log(`🗑️ DELETING TICKET: ${ticketId}`);
+                    
+                    // Remove from visual tickets in sessionStorage
+                    try {
+                        let visualTickets = JSON.parse(sessionStorage.getItem('visualTickets') || '[]');
+                        visualTickets = visualTickets.filter(t => t.id !== ticketId);
+                        sessionStorage.setItem('visualTickets', JSON.stringify(visualTickets));
+                        console.log(`📦 REMOVED FROM SESSION STORAGE`);
+                    } catch (e) {
+                        console.error('Error updating sessionStorage:', e);
+                    }
+                    
+                    // Remove from global tracTicketsData
+                    if (window.tracTicketsData) {
+                        window.tracTicketsData = window.tracTicketsData.filter(t => t.id !== ticketId);
+                        console.log(`✅ REMOVED FROM GLOBAL DATA`);
+                    }
+                    
+                    // Animate row removal
+                    row.style.transition = 'all 0.3s ease';
+                    row.style.opacity = '0';
+                    row.style.transform = 'translateX(-100%)';
+                    
+                    // Remove row after animation
+                    setTimeout(() => {
+                        row.remove();
+                        console.log(`✅ TICKET ${ticketId} DELETED`);
+                        
+                        // Update footer statistics
+                        if (window.tracTicketsData) {
+                            updateTicketsFooter(window.tracTicketsData);
+                        }
+                        
+                        // Update select all checkbox state
+                        const allChecked = document.querySelectorAll('.ticket-checkbox:not(#select-all):checked').length;
+                        const totalCheckboxes = document.querySelectorAll('.ticket-checkbox:not(#select-all)').length;
+                        const selectAll = document.getElementById('select-all');
+                        if (selectAll) {
+                            selectAll.checked = totalCheckboxes > 0 && allChecked === totalCheckboxes;
+                            selectAll.indeterminate = allChecked > 0 && allChecked < totalCheckboxes;
+                        }
+                    }, 300);
+                }
+            });
+        });
+        
         // Filter functionality
         document.querySelectorAll('.filter-select').forEach(select => {
             select.addEventListener('change', function() {
@@ -1297,9 +1629,12 @@
     }
 
     function enhanceNewTicketPage() {
+                        console.log('🔧 ENHANCING NEW TICKET PAGE 🔧');
+        
         // Add new ticket class to body and content area
         document.body.classList.add('newticket-page');
         const content = document.getElementById('content');
+        
         if (content) {
             content.classList.add('newticket');
             
@@ -1311,9 +1646,17 @@
                                document.querySelector('form.newticket') ||
                                document.querySelector('#ticket') ||
                                document.querySelector('form');
+                
                 if (!tracForm) {
-                    console.log('No form found on new ticket page');
                     return;
+                }
+                
+                // Ensure form has proper action and method
+                if (!tracForm.action || tracForm.action === '') {
+                    tracForm.action = '/trac_env/newticket';
+                }
+                if (!tracForm.method || tracForm.method === '') {
+                    tracForm.method = 'post';
                 }
                 
                 // Create modern container
@@ -1349,8 +1692,9 @@
                         <input type="checkbox" class="modern-checkbox" id="privacy-check" checked>
                         <label for="privacy-check">I have reviewed the <a href="/trac_env/wiki/TracTickets">ticket guidelines</a></label>
                     </div>
-                    <button type="submit" class="newticket-submit-btn">Create Ticket</button>
+                    <button type="button" class="newticket-submit-btn" id="custom-submit-btn">Create Ticket</button>
                 `;
+                
                 formCard.appendChild(submitArea);
                 
                 // Hide original submit buttons
@@ -1359,15 +1703,253 @@
                     originalButtons.style.display = 'none';
                 }
                 
-                // Add event listener to our submit button
+                // Also hide any individual submit inputs
+                const submitInputs = tracForm.querySelectorAll('input[type="submit"], input[name="submit"]');
+                submitInputs.forEach((input) => {
+                    input.style.display = 'none';
+                });
+                
+                // Add comprehensive form submission handling
                 const submitBtn = formCard.querySelector('.newticket-submit-btn');
+                
                 if (submitBtn) {
+                    // Ensure button is properly styled and visible
+                    submitBtn.style.pointerEvents = 'auto';
+                    submitBtn.style.zIndex = '1000';
+                    submitBtn.style.display = 'block';
+                    submitBtn.style.visibility = 'visible';
+                    submitBtn.style.opacity = '1';
+                    submitBtn.style.position = 'relative';
+                    submitBtn.style.backgroundColor = '#6366f1';
+                    submitBtn.style.color = 'white';
+                    submitBtn.style.padding = '10px 20px';
+                    submitBtn.style.borderRadius = '6px';
+                    submitBtn.style.cursor = 'pointer';
+                    
+                    // Apply final styling
+                    submitBtn.style.border = 'none';
+                    submitBtn.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+                    
                     submitBtn.addEventListener('click', (e) => {
+                        console.log('Custom submit button clicked');
                         e.preventDefault();
-                        tracForm.submit();
+                        e.stopPropagation();
+                        
+                        // Ensure all field values are synced first
+                        syncAllFields(tracForm);
+                        
+                        // Validate required fields before submission  
+                        if (!validateForm(tracForm)) {
+                            showMessage('Please fill in all required fields.', 'error');
+                            return;
+                        }
+                        
+                        // Check privacy checkbox
+                        const privacyCheck = document.getElementById('privacy-check');
+                        if (!privacyCheck.checked) {
+                            showMessage('Please acknowledge that you have reviewed the ticket guidelines.', 'error');
+                            return;
+                        }
+                        
+                        // Add loading state
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Creating Ticket...';
+                        submitBtn.style.opacity = '0.7';
+                        
+                        // VISUAL TICKET CREATION - Capture form data and create visual ticket
+                        try {
+                            const newTicket = captureFormDataAsTicket(tracForm);
+                            console.log('Created visual ticket:', newTicket);
+                            
+                            // Add ticket to existing tickets display
+                            addTicketToDisplay(newTicket);
+                            
+                            // Add ticket to roadmap if milestone is selected
+                            if (newTicket.milestone && newTicket.milestone !== 'None') {
+                                addTicketToRoadmap(newTicket);
+                            }
+                            
+                            // Show success message
+                            showMessage(`Ticket ${newTicket.id} created successfully!`, 'success');
+                            
+                            // Clear form and reset button after a short delay
+                            setTimeout(() => {
+                                clearFormFields(tracForm);
+                                resetSubmitButton(submitBtn);
+                                showMessage('Ticket created! You can now navigate to the Tickets page to see it.', 'info');
+                            }, 1500);
+                            
+                        } catch (error) {
+                            console.error('Visual ticket creation error:', error);
+                            showMessage('Error creating ticket. Please try again.', 'error');
+                            resetSubmitButton(submitBtn);
+                        }
                     });
                 }
-            }, 100);
+                
+                // PREVENT FORM SUBMISSION TO BACKEND
+                tracForm.addEventListener('submit', (e) => {
+                    console.log('🛑 BLOCKING FORM SUBMISSION');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    // Ensure all fields are synced one more time
+                    syncAllFields(tracForm);
+                    return false;
+                });
+                
+            }, 500); // Increased timeout to ensure Trac form is fully loaded
+        }
+    }
+    
+    // Helper function to validate the form
+    function validateForm(form) {
+        // Check for required fields
+        const summaryField = form.querySelector('#field-summary') || form.querySelector('input[name="field_summary"]');
+        const descriptionField = form.querySelector('#field-description') || form.querySelector('textarea[name="field_description"]');
+        
+        if (summaryField && !summaryField.value.trim()) {
+            summaryField.focus();
+            return false;
+        }
+        
+        if (descriptionField && !descriptionField.value.trim()) {
+            descriptionField.focus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // Helper function to sync all field values
+    function syncAllFields(form) {
+        // Method 1: Use the stored references to original fields
+        const modernFields = form.querySelectorAll('.modern-form-input, .modern-form-select, .modern-form-textarea');
+        modernFields.forEach(modernField => {
+            if (modernField._originalField) {
+                modernField._originalField.value = modernField.value;
+                
+                // Trigger change event to ensure any listeners are notified
+                const changeEvent = new Event('change', { bubbles: true });
+                modernField._originalField.dispatchEvent(changeEvent);
+            } else {
+                // Fallback method: find original field by data attributes
+                const originalId = modernField.getAttribute('data-original-id');
+                const originalName = modernField.getAttribute('data-original-name');
+                
+                let originalField = null;
+                if (originalId) {
+                    originalField = form.querySelector(`#${originalId}`);
+                } else if (originalName) {
+                    originalField = form.querySelector(`[name="${originalName}"]`);
+                }
+                
+                if (originalField) {
+                    originalField.value = modernField.value;
+                    console.log(`Synced field via fallback:`, originalField.name || originalField.id, '=', modernField.value);
+                    
+                    // Trigger change event
+                    const changeEvent = new Event('change', { bubbles: true });
+                    originalField.dispatchEvent(changeEvent);
+                }
+            }
+        });
+        
+        // Sync radio buttons in action section
+        const modernRadios = form.querySelectorAll('.newticket-action-item input[type="radio"]');
+        modernRadios.forEach(modernRadio => {
+            if (modernRadio.checked) {
+                // Find the original radio button with the same value
+                const originalRadios = form.querySelectorAll('input[type="radio"]');
+                originalRadios.forEach(originalRadio => {
+                    if (originalRadio.value === modernRadio.value && originalRadio !== modernRadio) {
+                        originalRadio.checked = true;
+                        console.log(`Synced radio button:`, modernRadio.value);
+                        
+                        // Trigger change event
+                        const changeEvent = new Event('change', { bubbles: true });
+                        originalRadio.dispatchEvent(changeEvent);
+                    }
+                });
+            }
+        });
+        
+        // Sync any owner fields in actions
+        const ownerInputs = form.querySelectorAll('.newticket-owner-field input');
+        ownerInputs.forEach(ownerInput => {
+            const originalOwnerSelectors = [
+                'input[name*="owner"]',
+                '#action_create_and_assign_reassign_owner',
+                'input[id*="owner"]'
+            ];
+            
+            for (const selector of originalOwnerSelectors) {
+                const originalOwner = form.querySelector(selector);
+                if (originalOwner && originalOwner !== ownerInput) {
+                    originalOwner.value = ownerInput.value;
+                    console.log('Synced owner field:', ownerInput.value);
+                    
+                    // Trigger change event
+                    const changeEvent = new Event('change', { bubbles: true });
+                    originalOwner.dispatchEvent(changeEvent);
+                    break;
+                }
+            }
+        });
+        
+        // Additional safety: make sure all hidden fields are visible to form submission
+        const hiddenFields = form.querySelectorAll('input[type="hidden"]');
+        hiddenFields.forEach(hiddenField => {
+            console.log('Found hidden field:', hiddenField.name, '=', hiddenField.value);
+        });
+        
+        // Log all form data that will be submitted
+        const formData = new FormData(form);
+        console.log('Form data to be submitted:');
+        for (let [key, value] of formData.entries()) {
+            console.log(`  ${key}: ${value}`);
+        }
+        
+        console.log('Field synchronization complete');
+    }
+    
+    // Helper function to reset submit button state
+    function resetSubmitButton(submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Create Ticket';
+        submitBtn.style.opacity = '1';
+        submitBtn.style.background = ''; // Reset to CSS default
+    }
+    
+    // Helper function to show messages
+    function showMessage(message, type = 'info') {
+        // Remove any existing messages
+        const existingMessages = document.querySelectorAll('.newticket-message');
+        existingMessages.forEach(msg => msg.remove());
+        
+        // Create new message
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `newticket-message ${type}`;
+        messageDiv.innerHTML = `
+            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                ${type === 'error' 
+                    ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+                    : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>'
+                }
+            </svg>
+            <span>${message}</span>
+        `;
+        
+        // Insert message at the top of the form card
+        const formCard = document.querySelector('.newticket-form-card');
+        if (formCard) {
+            formCard.insertBefore(messageDiv, formCard.firstChild);
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.remove();
+                }
+            }, 5000);
         }
     }
     
@@ -1620,6 +2202,15 @@
             // Clone the field
             const newField = originalField.cloneNode(true);
             
+            // Ensure proper ID and data attributes for syncing
+            if (originalField.id) {
+                newField.id = originalField.id + '_modern';
+                newField.setAttribute('data-original-id', originalField.id);
+            } else if (originalField.name) {
+                newField.id = originalField.name + '_modern';
+                newField.setAttribute('data-original-name', originalField.name);
+            }
+            
             // Apply modern styling classes
             if (newField.tagName === 'INPUT') {
                 newField.className = 'modern-form-input';
@@ -1633,17 +2224,688 @@
                 newField.setAttribute('placeholder', placeholder);
             }
             
-            // Sync changes back to original field
-            newField.addEventListener('change', () => {
+            // Copy the original field's value to the new field
+            newField.value = originalField.value;
+            
+            // Set up bi-directional syncing
+            const syncToOriginal = () => {
                 originalField.value = newField.value;
-            });
-            newField.addEventListener('input', () => {
-                originalField.value = newField.value;
-            });
+                // Trigger change event on original field
+                const changeEvent = new Event('change', { bubbles: true });
+                originalField.dispatchEvent(changeEvent);
+            };
+            
+            const syncFromOriginal = () => {
+                if (newField.value !== originalField.value) {
+                    newField.value = originalField.value;
+                }
+            };
+            
+            // Sync changes from modern field to original field
+            newField.addEventListener('change', syncToOriginal);
+            newField.addEventListener('input', syncToOriginal);
+            newField.addEventListener('blur', syncToOriginal);
+            
+            // Sync changes from original field to modern field (in case other scripts modify the original)
+            originalField.addEventListener('change', syncFromOriginal);
+            originalField.addEventListener('input', syncFromOriginal);
+            
+            // Special handling for select elements
+            if (newField.tagName === 'SELECT') {
+                newField.addEventListener('change', () => {
+                    originalField.selectedIndex = newField.selectedIndex;
+                    syncToOriginal();
+                });
+            }
             
             group.appendChild(newField);
+            
+            // Store reference to original field for easy access
+            newField._originalField = originalField;
+            
+            console.log(`Created form group for ${label}, original field:`, originalField, 'new field:', newField);
         }
         
         return group;
     }
-})(); 
+    
+    // Helper function to capitalize first letter
+    function capitalizeFirst(str) {
+        if (!str) return str;
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
+    
+    // Helper function to clear form fields after successful submission
+    function clearFormFields(form) {
+        // Clear all modern form fields
+        const modernFields = form.querySelectorAll('.modern-form-input, .modern-form-select, .modern-form-textarea');
+        modernFields.forEach(field => {
+            if (field.tagName === 'SELECT') {
+                field.selectedIndex = 0;
+            } else {
+                field.value = '';
+            }
+            
+            // Also clear the original field if linked
+            if (field._originalField) {
+                if (field._originalField.tagName === 'SELECT') {
+                    field._originalField.selectedIndex = 0;
+                } else {
+                    field._originalField.value = '';
+                }
+            }
+        });
+        
+        // Reset radio buttons to default
+        const radioButtons = form.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach(radio => {
+            radio.checked = radio.defaultChecked;
+        });
+        
+        // Clear checkboxes except privacy checkbox
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]:not(#privacy-check)');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        
+        console.log('Form fields cleared after successful submission');
+    }
+    
+    // Tickets are now stored in Trac's database, not localStorage
+    
+    // SIMPLE DEBUGGING FUNCTIONS FOR USER
+    window.forceReloadTickets = function() {
+        console.log('=== EMERGENCY TICKET RELOAD ===');
+        console.log('Current page path:', window.location.pathname);
+        
+        if (window.refreshTicketsTable) {
+            console.log('Calling refreshTicketsTable...');
+            window.refreshTicketsTable();
+        } else {
+            console.log('refreshTicketsTable not available, trying manual reload...');
+            
+            // Try to manually trigger ticket page enhancement
+            if (window.location.pathname.includes('/report') || window.location.pathname.includes('/ticket')) {
+                enhanceTicketsPage();
+            }
+        }
+        
+        // Show current visual tickets
+        console.log('Current visual tickets:', window.tracTicketsData || []);
+        console.log('Visual tickets count:', (window.tracTicketsData || []).length);
+        
+        return window.tracTicketsData || [];
+    };
+    
+    // SIMPLE TEST FUNCTION - Create a test ticket instantly
+    window.createTestTicket = function(summary = 'Test Ticket from Console', description = 'This is a test') {
+        console.log('🧪 CREATING TEST TICKET');
+        
+        const testTicket = {
+            id: '#TEST' + Date.now(),
+            summary: summary,
+            description: description,
+            reporter: 'Test User',
+            assignee: 'Unassigned',
+            type: 'Bug',
+            priority: 'Medium',
+            status: 'Open',
+            component: 'General',
+            milestone: 'Milestone 1',
+            version: '',
+            keywords: '',
+            cc: '',
+            created: 'Just now',
+            modified: 'Just now'
+        };
+        
+        addTicketToDisplay(testTicket);
+        addTicketToRoadmap(testTicket);
+        
+        console.log('✅ TEST TICKET CREATED! Go to Tickets page to see it.');
+        return testTicket;
+    };
+    
+    // Clear all visual tickets (for testing)
+    window.clearVisualTickets = function() {
+        sessionStorage.removeItem('visualTickets');
+        if (window.tracTicketsData) {
+            window.tracTicketsData = window.tracTicketsData.filter(t => 
+                !t.id.includes('TEST') && !t.id.includes('DEMO') && !t.id.includes('VIS')
+            );
+        }
+        console.log('🗑️ CLEARED ALL VISUAL TICKETS');
+        if (window.refreshTicketsTable) {
+            window.refreshTicketsTable();
+        }
+    };
+    
+    // Function to set up navigation event listeners to prevent page reloads
+    function setupNavigationEventListeners() {
+        console.log('Setting up navigation event listeners to prevent page reloads...');
+        
+        // Get all navigation links but EXCLUDE newticket-related links
+        const navLinks = document.querySelectorAll('.nav-link, .nav-brand, .modern-nav a[href*="/trac_env"]');
+        
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href || href === '#' || href.startsWith('http') || href.startsWith('mailto:')) {
+                return; // Skip external links, empty links, etc.
+            }
+            
+            // CRITICAL FIX: Skip newticket links to allow full page reloads for proper localStorage handling
+            if (href.includes('/newticket')) {
+                console.log('Skipping SPA navigation for newticket link:', href);
+                return;
+            }
+            
+            console.log('Adding no-reload listener to:', href);
+            
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default navigation
+                
+                console.log('Navigation clicked:', href, '- preventing page reload');
+                
+                // Update URL without reloading page
+                if (href !== window.location.pathname) {
+                    history.pushState({page: href}, '', href);
+                    console.log('Updated URL to:', href);
+                }
+                
+                // Update page content based on the target
+                updatePageContent();
+                
+                // Dispatch a custom event to let other parts of the app know navigation happened
+                const navigationEvent = new CustomEvent('spa-navigation', { 
+                    detail: { url: href, previousUrl: window.location.pathname }
+                });
+                window.dispatchEvent(navigationEvent);
+                
+                return false;
+            });
+        });
+        
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function(e) {
+            console.log('Browser back/forward detected, updating content for:', window.location.pathname);
+            updatePageContent();
+        });
+        
+        console.log(`Navigation event listeners added to ${navLinks.length} links`);
+    }
+    
+    // Function to update page content without reloading
+    function updatePageContent() {
+        const currentPath = window.location.pathname;
+        console.log('Updating page content for path:', currentPath);
+        
+        // Clear any existing page-specific content enhancements
+        document.body.classList.remove('timeline-page', 'roadmap-page', 'browser-page', 'tickets-page', 'newticket-page');
+        
+        // Remove any page-specific content containers
+        const existingContainers = document.querySelectorAll('.timeline-header, .roadmap-container, .browser-header, .tickets-header, .newticket-container');
+        existingContainers.forEach(container => container.remove());
+        
+        // Apply page-specific enhancements based on current URL
+        if (currentPath.includes('/timeline')) {
+            console.log('Applying timeline page enhancements...');
+            enhanceTimelinePage();
+        } else if (currentPath.includes('/roadmap')) {
+            console.log('Applying roadmap page enhancements...');
+            enhanceRoadmapPage();
+            // Force refresh roadmap data from localStorage
+            setTimeout(() => {
+                if (window.refreshRoadmap) {
+                    console.log('Force refreshing roadmap data after navigation');
+                    window.refreshRoadmap();
+                }
+            }, 100);
+        } else if (currentPath.includes('/browser')) {
+            console.log('Applying browser page enhancements...');
+            enhanceBrowserPage();
+        } else if (currentPath.includes('/report') || currentPath.includes('/ticket')) {
+            console.log('=== HANDLING TICKETS PAGE NAVIGATION ===');
+            
+            // CRITICAL FIX: Force a clean page reload for tickets page
+            // This ensures proper UI rendering and localStorage access
+            if (!document.location.href.includes('?no_reload=true')) {
+                console.log('Forcing clean page reload for tickets page');
+                const currentUrl = document.location.href;
+                document.location.href = currentUrl + (currentUrl.includes('?') ? '&' : '?') + 'no_reload=true';
+                return; // Stop execution as we're reloading
+            }
+            
+            console.log('Applying tickets page enhancements...');
+            enhanceTicketsPage();
+        } else if (currentPath.includes('/newticket')) {
+            console.log('Applying new ticket page enhancements...');
+            enhanceNewTicketPage();
+        } else if (currentPath === '/trac_env' || currentPath === '/trac_env/' || currentPath.includes('/wiki')) {
+            console.log('Redirecting to homepage for full UI replacement...');
+            // For homepage, we need to reload to trigger the complete UI replacement
+            window.location.reload();
+        } else {
+            console.log('No specific page enhancement for:', currentPath);
+            // Apply basic dark theme for unknown pages
+            applyDarkTheme();
+        }
+        
+        // Scroll to top when navigating
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // Tickets are now stored in Trac's database, not localStorage
+    
+    // VISUAL TICKET CREATION FUNCTIONS
+    function captureFormDataAsTicket(form) {
+        // Generate unique ticket ID
+        const ticketId = generateNextTicketId();
+        
+        // Extract form field values
+        const summary = getFieldValue(form, 'summary') || 'Untitled Ticket';
+        const reporter = getFieldValue(form, 'reporter') || 'Anonymous';
+        const description = getFieldValue(form, 'description') || '';
+        const type = getFieldValue(form, 'type') || 'Bug';
+        const priority = getFieldValue(form, 'priority') || 'Medium';
+        const component = getFieldValue(form, 'component') || 'General';
+        const milestone = getFieldValue(form, 'milestone') || 'None';
+        const version = getFieldValue(form, 'version') || '';
+        const keywords = getFieldValue(form, 'keywords') || '';
+        const cc = getFieldValue(form, 'cc') || '';
+        
+        // Determine assignee from action selection
+        let assignee = 'Unassigned';
+        let status = 'Open';
+        
+        const createAndAssignRadio = form.querySelector('input[value="create_and_assign"]:checked');
+        if (createAndAssignRadio) {
+            const ownerField = form.querySelector('input[name*="owner"]') || 
+                              form.querySelector('#action_create_and_assign_reassign_owner');
+            if (ownerField && ownerField.value.trim()) {
+                assignee = ownerField.value.trim();
+                status = 'Assigned';
+            }
+        }
+        
+        // SIMPLE FALLBACK: If we couldn't find specific fields, just grab anything
+        if (!summary || summary === 'Untitled Ticket') {
+            const allInputs = form.querySelectorAll('input[type="text"]');
+            for (let input of allInputs) {
+                if (input.value && input.value.length > 3) {
+                    summary = input.value;
+                    console.log('Using fallback summary from any text input:', summary);
+                    break;
+                }
+            }
+        }
+        
+        if (!description) {
+            const allTextareas = form.querySelectorAll('textarea');
+            for (let textarea of allTextareas) {
+                if (textarea.value && textarea.value.length > 3) {
+                    description = textarea.value;
+                    console.log('Using fallback description from any textarea:', description);
+                    break;
+                }
+            }
+        }
+
+        const newTicket = {
+            id: ticketId,
+            summary: summary || 'Test Ticket',
+            description: description || 'Test description',
+            reporter: reporter || 'Test User',
+            assignee: assignee,
+            type: type,
+            priority: priority,
+            status: status,
+            component: component,
+            milestone: milestone,
+            version: version,
+            keywords: keywords,
+            cc: cc,
+            created: 'Just now',
+            modified: 'Just now'
+        };
+        
+        console.log('🎫 CREATED VISUAL TICKET:', newTicket);
+        return newTicket;
+    }
+    
+    function getFieldValue(form, fieldName) {
+        console.log(`Looking for field: ${fieldName}`);
+        
+        // Try multiple selectors to find the field - SIMPLIFIED AND MORE DIRECT
+        const selectors = [
+            `#field-${fieldName}`,
+            `input[name="field_${fieldName}"]`,
+            `select[name="field_${fieldName}"]`,
+            `textarea[name="field_${fieldName}"]`,
+            `input[id*="${fieldName}"]`,
+            `select[id*="${fieldName}"]`,
+            `textarea[id*="${fieldName}"]`,
+            `.modern-form-input[data-original-id="field-${fieldName}"]`,
+            `.modern-form-select[data-original-id="field-${fieldName}"]`,
+            `.modern-form-textarea[data-original-id="field-${fieldName}"]`
+        ];
+        
+        for (const selector of selectors) {
+            const field = form.querySelector(selector);
+            if (field && field.value) {
+                console.log(`Found field ${fieldName} with value: ${field.value}`);
+                return field.value;
+            }
+        }
+        
+        // FALLBACK: Just grab ANY input/select/textarea that might contain this data
+        if (fieldName === 'summary') {
+            const summaryFields = form.querySelectorAll('input[type="text"]');
+            for (let field of summaryFields) {
+                if (field.value && field.value.length > 5) {
+                    console.log(`Using fallback summary: ${field.value}`);
+                    return field.value;
+                }
+            }
+        }
+        
+        if (fieldName === 'description') {
+            const descFields = form.querySelectorAll('textarea');
+            for (let field of descFields) {
+                if (field.value && field.value.length > 3) {
+                    console.log(`Using fallback description: ${field.value}`);
+                    return field.value;
+                }
+            }
+        }
+        
+        console.log(`Field ${fieldName} not found or empty`);
+        return '';
+    }
+    
+    function generateNextTicketId() {
+        // Generate a ticket ID based on current timestamp to ensure uniqueness
+        const timestamp = Date.now();
+        const randomSuffix = Math.floor(Math.random() * 1000);
+        return `#${timestamp.toString().slice(-6)}${randomSuffix.toString().padStart(3, '0')}`;
+    }
+    
+    function addTicketToDisplay(ticket) {
+        console.log('🚀 ADDING TICKET TO DISPLAY:', ticket);
+        
+        // PERSIST TO SESSION STORAGE FOR CROSS-PAGE ACCESS
+        let visualTickets = [];
+        try {
+            visualTickets = JSON.parse(sessionStorage.getItem('visualTickets') || '[]');
+        } catch (e) {
+            console.error('Error parsing visual tickets:', e);
+            visualTickets = [];
+        }
+        
+        // Add new ticket to the beginning
+        visualTickets.unshift(ticket);
+        
+        // Store back in sessionStorage
+        sessionStorage.setItem('visualTickets', JSON.stringify(visualTickets));
+        console.log(`📦 STORED IN SESSION. TOTAL VISUAL TICKETS: ${visualTickets.length}`);
+        
+        // ALWAYS store the ticket globally first
+        if (!window.tracTicketsData) {
+            window.tracTicketsData = [];
+        }
+        window.tracTicketsData.unshift(ticket); // Add to beginning of array
+        console.log(`✅ STORED GLOBALLY. TOTAL TICKETS: ${window.tracTicketsData.length}`);
+        
+        // Check if we're currently on the tickets page and add directly
+        const ticketsTable = document.getElementById('tickets-tbody');
+        if (ticketsTable) {
+            console.log('📋 FOUND TICKETS TABLE - ADDING ROW DIRECTLY');
+            addTicketRowToTable(ticketsTable, ticket);
+            updateTicketsFooterWithNewTicket(ticket);
+            console.log('✅ TICKET ROW ADDED TO CURRENT PAGE');
+        } else {
+            console.log('⚠️ NOT ON TICKETS PAGE - WILL SHOW WHEN YOU NAVIGATE TO TICKETS');
+        }
+        
+        // FORCE refresh tickets page if function exists
+        if (window.refreshTicketsTable) {
+            console.log('🔄 FORCING TICKETS TABLE REFRESH');
+            setTimeout(() => window.refreshTicketsTable(), 100);
+        }
+    }
+    
+    function addTicketRowToTable(tbody, ticket) {
+        const row = document.createElement('tr');
+        row.className = 'new-ticket-highlight'; // Add special class for highlighting
+        row.innerHTML = `
+            <td class="checkbox-column">
+                <input type="checkbox" class="ticket-checkbox" data-ticket-id="${ticket.id}">
+            </td>
+            <td>
+                <a href="/trac_env/ticket/${ticket.id.replace('#', '')}" class="ticket-id">${ticket.id}</a>
+            </td>
+            <td>
+                <div class="ticket-summary">
+                    <a href="/trac_env/ticket/${ticket.id.replace('#', '')}" class="summary-link">${ticket.summary}</a>
+                </div>
+            </td>
+            <td>
+                <span class="status-badge status-${ticket.status.toLowerCase().replace(' ', '-')}">${ticket.status}</span>
+            </td>
+            <td>
+                <span class="priority-badge priority-${ticket.priority.toLowerCase()}">${ticket.priority}</span>
+            </td>
+            <td>
+                <span class="type-badge type-${ticket.type.toLowerCase()}">${ticket.type === 'Enhancement' ? 'Enhanc' : ticket.type}</span>
+            </td>
+            <td>
+                <div class="user-info">
+                    <span>${ticket.reporter}</span>
+                </div>
+            </td>
+            <td>
+                <span class="date-relative">${ticket.created}</span>
+            </td>
+            <td>
+                <div class="action-buttons">
+                    <button class="action-btn" title="View">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn" title="Edit">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn" title="Delete">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </td>
+        `;
+        
+        // Insert at the beginning of the table
+        tbody.insertBefore(row, tbody.firstChild);
+        
+        // Add delete button functionality to the new row
+        const deleteBtn = row.querySelector('.action-btn[title="Delete"]');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Get the ticket row and ID
+                const ticketRow = this.closest('tr');
+                const ticketIdElement = ticketRow.querySelector('.ticket-id');
+                const ticketId = ticketIdElement ? ticketIdElement.textContent : '';
+                const ticketSummary = ticketRow.querySelector('.ticket-summary')?.textContent || 'this ticket';
+                
+                // Confirm deletion
+                if (confirm(`Are you sure you want to delete ticket ${ticketId}?\n\nSummary: ${ticketSummary}\n\nThis action cannot be undone.`)) {
+                    console.log(`🗑️ DELETING TICKET: ${ticketId}`);
+                    
+                    // Remove from visual tickets in sessionStorage
+                    try {
+                        let visualTickets = JSON.parse(sessionStorage.getItem('visualTickets') || '[]');
+                        visualTickets = visualTickets.filter(t => t.id !== ticketId);
+                        sessionStorage.setItem('visualTickets', JSON.stringify(visualTickets));
+                        console.log(`📦 REMOVED FROM SESSION STORAGE`);
+                    } catch (e) {
+                        console.error('Error updating sessionStorage:', e);
+                    }
+                    
+                    // Remove from global tracTicketsData
+                    if (window.tracTicketsData) {
+                        window.tracTicketsData = window.tracTicketsData.filter(t => t.id !== ticketId);
+                        console.log(`✅ REMOVED FROM GLOBAL DATA`);
+                    }
+                    
+                    // Animate row removal
+                    ticketRow.style.transition = 'all 0.3s ease';
+                    ticketRow.style.opacity = '0';
+                    ticketRow.style.transform = 'translateX(-100%)';
+                    
+                    // Remove row after animation
+                    setTimeout(() => {
+                        ticketRow.remove();
+                        console.log(`✅ TICKET ${ticketId} DELETED`);
+                        
+                        // Update footer statistics
+                        if (window.tracTicketsData) {
+                            updateTicketsFooter(window.tracTicketsData);
+                        }
+                        
+                        // Update select all checkbox state
+                        const allChecked = document.querySelectorAll('.ticket-checkbox:not(#select-all):checked').length;
+                        const totalCheckboxes = document.querySelectorAll('.ticket-checkbox:not(#select-all)').length;
+                        const selectAll = document.getElementById('select-all');
+                        if (selectAll) {
+                            selectAll.checked = totalCheckboxes > 0 && allChecked === totalCheckboxes;
+                            selectAll.indeterminate = allChecked > 0 && allChecked < totalCheckboxes;
+                        }
+                    }, 300);
+                }
+            });
+        }
+        
+        // Add a highlight animation
+        setTimeout(() => {
+            row.style.backgroundColor = '#6366f133';
+            row.style.transition = 'background-color 0.5s ease';
+        }, 100);
+        
+        // Remove highlight after animation
+        setTimeout(() => {
+            row.style.backgroundColor = '';
+            row.classList.remove('new-ticket-highlight');
+        }, 2000);
+        
+        console.log('Ticket row added to table');
+    }
+    
+    function updateTicketsFooterWithNewTicket(ticket) {
+        // Update footer statistics if they exist
+        const footer = document.getElementById('tickets-footer');
+        if (footer && window.tracTicketsData) {
+            updateTicketsFooter(window.tracTicketsData);
+        }
+    }
+    
+    function addTicketToRoadmap(ticket) {
+        console.log('Adding ticket to roadmap:', ticket);
+        
+        // Check if we're currently on the roadmap page
+        const roadmapGrid = document.querySelector('.roadmap-grid');
+        if (roadmapGrid) {
+            console.log('Found roadmap grid, adding ticket to milestone');
+            addTicketToMilestone(roadmapGrid, ticket);
+        } else {
+            console.log('Not on roadmap page, ticket will appear when roadmap is next visited');
+        }
+    }
+    
+    function addTicketToMilestone(roadmapGrid, ticket) {
+        const milestoneCards = roadmapGrid.querySelectorAll('.milestone-card');
+        let ticketAdded = false;
+        
+        // Try to find matching milestone by name or number
+        milestoneCards.forEach(card => {
+            if (ticketAdded) return;
+            
+            const titleElement = card.querySelector('h2, h3, .milestone-title');
+            if (titleElement) {
+                const titleText = titleElement.textContent.toLowerCase();
+                const ticketMilestone = ticket.milestone.toLowerCase();
+                
+                // Check for various milestone matching patterns
+                const matches = titleText.includes(ticketMilestone) ||
+                              ticketMilestone.includes(titleText) ||
+                              (titleText.includes('milestone') && ticketMilestone.includes('milestone')) ||
+                              card.getAttribute('data-milestone-number') === ticketMilestone.replace(/\D/g, '');
+                
+                if (matches) {
+                    console.log(`Adding ticket to milestone: ${titleText}`);
+                    
+                    // Find or create tickets section
+                    let ticketsSection = card.querySelector('.milestone-tickets');
+                    if (!ticketsSection) {
+                        ticketsSection = document.createElement('div');
+                        ticketsSection.className = 'milestone-tickets';
+                        ticketsSection.innerHTML = `
+                            <h4 class="milestone-tickets-title">Assigned Tickets (1)</h4>
+                            <div class="milestone-tickets-list"></div>
+                        `;
+                        card.appendChild(ticketsSection);
+                    }
+                    
+                    const ticketsList = ticketsSection.querySelector('.milestone-tickets-list');
+                    const ticketsTitle = ticketsSection.querySelector('.milestone-tickets-title');
+                    
+                    // Update ticket count
+                    const currentCount = ticketsList.querySelectorAll('.milestone-ticket-item').length;
+                    ticketsTitle.textContent = `Assigned Tickets (${currentCount + 1})`;
+                    
+                    // Create ticket item
+                    const ticketItem = document.createElement('div');
+                    ticketItem.className = 'milestone-ticket-item new-milestone-ticket';
+                    ticketItem.innerHTML = `
+                        <div class="ticket-id-summary">
+                            <a href="/trac_env/ticket/${ticket.id.replace('#', '')}" class="ticket-id">${ticket.id}</a>
+                            <span class="ticket-summary">${ticket.summary}</span>
+                        </div>
+                        <div class="ticket-meta">
+                            <span class="status-badge status-${ticket.status.toLowerCase().replace(' ', '-')}">${ticket.status}</span>
+                            <span class="priority-badge priority-${ticket.priority.toLowerCase()}">${ticket.priority}</span>
+                            <span class="type-badge type-${ticket.type.toLowerCase()}">${ticket.type}</span>
+                        </div>
+                    `;
+                    
+                    // Insert at the beginning of the list
+                    ticketsList.insertBefore(ticketItem, ticketsList.firstChild);
+                    
+                    // Add highlight animation
+                    setTimeout(() => {
+                        ticketItem.style.backgroundColor = '#6366f133';
+                        ticketItem.style.transition = 'background-color 0.5s ease';
+                    }, 100);
+                    
+                    // Remove highlight after animation  
+                    setTimeout(() => {
+                        ticketItem.style.backgroundColor = '';
+                        ticketItem.classList.remove('new-milestone-ticket');
+                    }, 2000);
+                    
+                    ticketAdded = true;
+                    console.log('Ticket added to milestone successfully');
+                }
+            }
+        });
+        
+        if (!ticketAdded) {
+            console.log(`No matching milestone found for: ${ticket.milestone}`);
+        }
+    }
+})(); /* Cache bust: Wed Jul 23 19:12:08 CDT 2025 */

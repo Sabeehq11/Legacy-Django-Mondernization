@@ -2519,3 +2519,16 @@ TemplateSyntaxError: Encountered unknown tag 'banner'.
 2025-07-23 14:24:44,481 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Not Found (File trac-modern-ui.css not found), <RequestWithSession "HEAD '/chrome/common/trac-modern-ui.css'">, referrer None
 2025-07-23 14:25:40,440 Trac[env] INFO: -------------------------------- environment startup [Trac 1.6] --------------------------------
 2025-07-23 14:25:40,543 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-23 17:38:38,723 Trac[main] WARNING: [127.0.0.1] HTTPBadRequest: 400 Bad Request (Invalid request arguments.), <RequestWithSession "POST '/wiki'">, referrer 'http://127.0.0.1:8000/trac_env/newticket'
+2025-07-23 17:42:45,389 Trac[main] WARNING: [127.0.0.1] HTTPBadRequest: 400 Bad Request (Invalid request arguments.), <RequestWithSession "POST '/wiki'">, referrer 'http://127.0.0.1:8000/trac_env/newticket'
+2025-07-23 18:02:27,182 Trac[main] WARNING: [127.0.0.1] HTTPBadRequest: 400 Bad Request (Invalid request arguments.), <RequestWithSession "POST '/report'">, referrer 'http://127.0.0.1:8000/trac_env/newticket'
+2025-07-23 18:32:18,930 Trac[env] INFO: -------------------------------- environment startup [Trac 1.6] --------------------------------
+2025-07-23 18:32:24,735 Trac[env] WARNING: [trac] base_url option not set in configuration, generated links may be incorrect
+2025-07-23 18:49:21,392 Trac[session] INFO: Refreshing session 6c2680abc91fe42acb3ca940
+2025-07-24 16:05:57,160 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Invalid ticket number (Ticket 150709910 does not exist.), <RequestWithSession "GET '/ticket/150709910'">, referrer 'http://localhost:8001/trac_env/report/1?no_reload=true'
+2025-07-24 16:05:58,626 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Invalid ticket number (Ticket 150709910 does not exist.), <RequestWithSession "GET '/ticket/150709910'">, referrer 'http://localhost:8001/trac_env/ticket/150709910'
+2025-07-24 16:10:40,552 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Invalid ticket number (Ticket 150709910 does not exist.), <RequestWithSession "GET '/ticket/150709910'">, referrer 'http://localhost:8001/trac_env/ticket/150709910'
+2025-07-24 16:13:57,612 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Invalid ticket number (Ticket 150709910 does not exist.), <RequestWithSession "GET '/ticket/150709910'">, referrer 'http://localhost:8001/trac_env/ticket/150709910'
+2025-07-24 16:18:33,949 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Invalid ticket number (Ticket 150709910 does not exist.), <RequestWithSession "GET '/ticket/150709910'">, referrer 'http://localhost:8001/trac_env/ticket/150709910'
+2025-07-24 16:21:06,547 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Invalid ticket number (Ticket 150709910 does not exist.), <RequestWithSession "GET '/ticket/150709910'">, referrer 'http://localhost:8001/trac_env/ticket/150709910'
+2025-07-24 16:22:09,441 Trac[main] WARNING: [127.0.0.1] HTTPNotFound: 404 Invalid ticket number (Ticket 150709910 does not exist.), <RequestWithSession "GET '/ticket/150709910'">, referrer 'http://localhost:8001/trac_env/ticket/150709910'

@@ -73,7 +73,7 @@
                         <a href="/trac_env/timeline" class="nav-link">Timeline</a>
                         <a href="/trac_env/roadmap" class="nav-link">Roadmap</a>
                         <a href="/trac_env/browser" class="nav-link">Browse</a>
-                        <a href="/trac_env/report" class="nav-link">Tickets</a>
+                        <a href="/trac_env/report/1" class="nav-link">Tickets</a>
                         <a href="/trac_env/newticket" class="btn btn-primary" style="margin-right: 1rem;">New Ticket</a>
                         <button class="hamburger-menu" id="hamburger-toggle" aria-label="Open menu">
                             <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,6 +146,9 @@
         
         // Add event listeners for sidebar
         setupSidebarEvents();
+        
+        // Add navigation event listeners to prevent page reloads
+        setupNavigationEventListeners();
     }
     
     function setupSidebarEvents() {
@@ -412,7 +415,7 @@
                         <div class="footer-links">
                             <a href="/trac_env/wiki" class="footer-link">Documentation</a>
                             <a href="/trac_env/timeline" class="footer-link">Timeline</a>
-                            <a href="/trac_env/report" class="footer-link">View Tickets</a>
+                            <a href="/trac_env/report/1" class="footer-link">View Tickets</a>
                             <a href="/trac_env/newticket" class="footer-link">Create Ticket</a>
                         </div>
                     </div>
@@ -482,5 +485,58 @@
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
         });
+    }
+    
+    // Function to set up navigation event listeners to prevent page reloads
+    function setupNavigationEventListeners() {
+        console.log('Setting up navigation event listeners to prevent page reloads (homepage)...');
+        
+        // Get all navigation links on the homepage
+        const navLinks = document.querySelectorAll('.nav-link, .modern-nav a[href*="/trac_env"], .hero-actions a, .footer-link');
+        
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href || href === '#' || href.startsWith('http') || href.startsWith('mailto:')) {
+                return; // Skip external links, empty links, etc.
+            }
+            
+            // CRITICAL FIX: Skip newticket links to allow full page reloads for proper localStorage handling
+            if (href.includes('/newticket')) {
+                console.log('Skipping SPA navigation for homepage newticket link:', href);
+                return;
+            }
+            
+            console.log('Adding no-reload listener to homepage link:', href);
+            
+            link.addEventListener('click', function(e) {
+                e.preventDefault(); // Prevent default navigation
+                
+                console.log('Homepage navigation clicked:', href, '- preventing page reload');
+                
+                // For homepage links, we need to navigate to the actual page
+                // since the homepage has the complete UI replacement
+                if (href !== window.location.pathname) {
+                    // Update URL and navigate
+                    history.pushState({page: href}, '', href);
+                    console.log('Updated URL to:', href);
+                    
+                    // Navigate to the target page content
+                    navigateToPage(href);
+                }
+                
+                return false;
+            });
+        });
+        
+        console.log(`Navigation event listeners added to ${navLinks.length} homepage links`);
+    }
+    
+    // Function to navigate to a page from the homepage
+    function navigateToPage(href) {
+        console.log('Navigating from homepage to:', href);
+        
+        // Since we're on the homepage with complete UI replacement,
+        // we need to load the target page content
+        window.location.assign(href);
     }
 })(); 

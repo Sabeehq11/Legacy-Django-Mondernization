@@ -1664,8 +1664,11 @@ body.timeline-page {
     background: var(--dark-surface);
     border: 1px solid var(--dark-border);
     border-radius: var(--radius-lg);
-    overflow: hidden;
+    overflow-x: auto;
+    overflow-y: hidden;
     box-shadow: var(--shadow-lg);
+    -webkit-overflow-scrolling: touch;
+    position: relative;
 }
 
 /* Modern Timeline Table */
@@ -1898,6 +1901,8 @@ body.timeline-page {
     border-radius: var(--radius-md);
     font-size: 0.75rem;
     font-weight: 600;
+    background: transparent;
+    border: none;
 }
 
 .status-badge::before {
@@ -1906,14 +1911,33 @@ body.timeline-page {
     font-size: 0.625rem;
 }
 
-.status-active {
-    background: rgba(34, 197, 94, 0.2);
-    color: #22c55e;
+/* Status color coding */
+.status-open {
+    color: #22c55e; /* Green */
+}
+
+.status-closed {
+    color: #6b7280; /* Gray */
+}
+
+.status-in-progress {
+    color: #3b82f6; /* Blue */
 }
 
 .status-pending {
-    background: rgba(251, 191, 36, 0.2);
-    color: #fbbf24;
+    color: #fbbf24; /* Yellow */
+}
+
+.status-active {
+    color: #22c55e; /* Green */
+}
+
+.status-completed {
+    color: #6b7280; /* Gray */
+}
+
+.status-cancelled {
+    color: #ef4444; /* Red */
 }
 
 .status-completed {
@@ -1929,13 +1953,14 @@ body.timeline-page {
 /* Action Buttons */
 .action-buttons {
     display: flex;
-    gap: var(--space-xs);
+    gap: 4px;
+    justify-content: flex-start;
 }
 
 .action-btn {
     background: var(--dark-surface);
     border: 2px solid var(--dark-border);
-    padding: 0.5rem;
+    padding: 0.25rem;
     border-radius: var(--radius-md);
     color: var(--gray-400);
     cursor: pointer;
@@ -1943,6 +1968,9 @@ body.timeline-page {
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
 }
 
 .action-btn:hover {
@@ -1950,6 +1978,13 @@ body.timeline-page {
     color: var(--white);
     border-color: var(--gray-600);
     transform: translateY(-1px);
+}
+
+/* Delete button specific hover */
+.action-btn[title="Delete"]:hover {
+    background: rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.3);
 }
 
 .action-btn svg {
@@ -2637,10 +2672,53 @@ body.tickets-page {
     background: var(--gray-950);
 }
 
+/* Custom scrollbar for table wrapper */
+.modern-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-track {
+    background: var(--gray-900);
+    border-radius: 4px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-thumb {
+    background: var(--gray-700);
+    border-radius: 4px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-600);
+}
+
+/* Shadow indicators for horizontal scroll */
+.modern-table-wrapper::before,
+.modern-table-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.modern-table-wrapper::before {
+    left: 0;
+    background: linear-gradient(to right, var(--dark-surface), transparent);
+}
+
+.modern-table-wrapper::after {
+    right: 0;
+    background: linear-gradient(to left, var(--dark-surface), transparent);
+}
+
 /* Modern Tickets Table */
 .modern-tickets-table {
     width: 100%;
+    min-width: 1200px;
     border-collapse: collapse;
+    table-layout: fixed;
 }
 
 .modern-tickets-table thead {
@@ -2672,6 +2750,67 @@ body.tickets-page {
     color: var(--gray-300);
 }
 
+/* Column Widths */
+.modern-tickets-table th:nth-child(1),
+.modern-tickets-table td:nth-child(1) {
+    width: 40px; /* Checkbox */
+}
+
+.modern-tickets-table th:nth-child(2),
+.modern-tickets-table td:nth-child(2) {
+    width: 100px; /* ID */
+}
+
+.modern-tickets-table th:nth-child(3),
+.modern-tickets-table td:nth-child(3) {
+    width: 25%; /* Summary - flexible */
+    min-width: 200px;
+    padding-left: var(--space-xl);
+    padding-right: var(--space-xl);
+}
+
+/* Center align summary header */
+.modern-tickets-table th:nth-child(3) {
+    text-align: center;
+}
+
+/* Keep summary content left-aligned but with padding */
+.modern-tickets-table td:nth-child(3) .ticket-summary {
+    display: block;
+    text-align: left;
+}
+
+.modern-tickets-table th:nth-child(4),
+.modern-tickets-table td:nth-child(4) {
+    width: 90px; /* Status */
+}
+
+.modern-tickets-table th:nth-child(5),
+.modern-tickets-table td:nth-child(5) {
+    width: 90px; /* Priority */
+}
+
+.modern-tickets-table th:nth-child(6),
+.modern-tickets-table td:nth-child(6) {
+    width: 80px; /* Type */
+}
+
+.modern-tickets-table th:nth-child(7),
+.modern-tickets-table td:nth-child(7) {
+    width: 130px; /* Reporter */
+    padding-left: var(--space-lg);
+}
+
+.modern-tickets-table th:nth-child(8),
+.modern-tickets-table td:nth-child(8) {
+    width: 100px; /* Created */
+}
+
+.modern-tickets-table th:nth-child(9),
+.modern-tickets-table td:nth-child(9) {
+    width: 120px; /* Actions */
+}
+
 /* Checkbox Column */
 .checkbox-column {
     width: 40px;
@@ -2699,7 +2838,10 @@ body.tickets-page {
 
 /* Ticket Summary */
 .ticket-summary {
-    max-width: 400px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-right: 10px;
 }
 
 .summary-link {
@@ -2879,9 +3021,7 @@ body.tickets-page .reports {
     .modern-tickets-table th:nth-child(7),
     .modern-tickets-table td:nth-child(7),
     .modern-tickets-table th:nth-child(8),
-    .modern-tickets-table td:nth-child(8),
-    .modern-tickets-table th:nth-child(9),
-    .modern-tickets-table td:nth-child(9) {
+    .modern-tickets-table td:nth-child(8) {
         display: none;
     }
     
@@ -3292,6 +3432,45 @@ body.newticket-page .buttons {
     color: #ef4444;
 }
 
+/* New ticket highlighting animations */
+.new-ticket-highlight {
+    animation: ticketHighlight 2s ease-in-out;
+}
+
+.new-milestone-ticket {
+    animation: milestoneTicketHighlight 2s ease-in-out;
+}
+
+@keyframes ticketHighlight {
+    0% {
+        background-color: rgba(99, 102, 241, 0.3);
+        transform: translateX(5px);
+    }
+    50% {
+        background-color: rgba(99, 102, 241, 0.2);
+        transform: translateX(0);
+    }
+    100% {
+        background-color: transparent;
+        transform: translateX(0);
+    }
+}
+
+@keyframes milestoneTicketHighlight {
+    0% {
+        background-color: rgba(99, 102, 241, 0.3);
+        border-left: 3px solid var(--primary-color);
+    }
+    50% {
+        background-color: rgba(99, 102, 241, 0.15);
+        border-left: 3px solid var(--primary-color);
+    }
+    100% {
+        background-color: transparent;
+        border-left: none;
+    }
+}
+
 /* Responsive Design for New Ticket */
 @media (max-width: 768px) {
     .newticket-container {
@@ -3507,3 +3686,162 @@ body.newticket-page .field textarea:focus {
     box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
     background: rgba(0, 0, 0, 0.6) !important;
 }
+
+/* Milestone Tickets Styling */
+.milestone-tickets {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.milestone-tickets-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-200);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+
+.milestone-tickets-title::before {
+    content: '🎫';
+    font-size: 0.875rem;
+}
+
+.milestone-tickets-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.milestone-ticket-item {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    transition: all 0.2s ease;
+}
+
+.milestone-ticket-item:hover {
+    background: rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateX(4px);
+}
+
+.ticket-id-summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+}
+
+.ticket-id-summary .ticket-id {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    font-size: 0.875rem;
+    min-width: 60px;
+}
+
+.ticket-id-summary .ticket-id:hover {
+    color: var(--primary-light);
+    text-decoration: underline;
+}
+
+.ticket-id-summary .ticket-summary {
+    color: var(--gray-200);
+    font-size: 0.875rem;
+    flex: 1;
+    line-height: 1.4;
+}
+
+.ticket-meta {
+    display: flex;
+    gap: var(--space-xs);
+    flex-wrap: wrap;
+}
+
+.milestone-ticket-item .status-badge,
+.milestone-ticket-item .priority-badge,
+.milestone-ticket-item .type-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Default milestone styling for when no existing milestones are found */
+.milestone-header {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.milestone-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: var(--space-sm);
+}
+
+.milestone-description {
+    color: var(--gray-400);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-md);
+}
+
+.milestone-progress {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    align-items: center;
+}
+
+.progress-bar {
+    width: 200px;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.75rem;
+    color: var(--gray-400);
+    font-weight: 500;
+}
+
+/* Responsive adjustments for milestone tickets */
+@media (max-width: 768px) {
+    .ticket-id-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+    
+    .ticket-id-summary .ticket-id {
+        min-width: auto;
+    }
+    
+    .ticket-meta {
+        margin-top: var(--space-xs);
+    }
+    
+    .milestone-ticket-item .status-badge,
+    .milestone-ticket-item .priority-badge,
+    .milestone-ticket-item .type-badge {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+}
+
+/* Existing roadmap styling... (preserve all existing styles) */
