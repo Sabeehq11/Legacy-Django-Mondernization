@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics Dashboard - Trac</title>
+    <link rel="stylesheet" href="trac-modern-ui.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding-top: 80px;
+            background-color: #0a0a0a;
+            color: #d4d4d4;
+            min-height: 100vh;
+        }
+        
+        /* Hero Section Styles */
+        .page-hero-section {
+            position: relative;
+            padding: 4rem 0;
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+        
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+        
+        .hero-gradient {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 50%, rgba(6, 182, 212, 0.3) 0%, transparent 50%);
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+        
+        .hero-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .hero-label {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            color: #e9d5ff;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: #9ca3af;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+        
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .hero-stats .stat-item {
+            text-align: center;
+        }
+        
+        .hero-stats .stat-value {
+            display: block;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-stats .stat-label {
+            font-size: 0.875rem;
+            color: #9ca3af;
+        }
+        
+        .hero-visual {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .analytics-preview {
+            padding: 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.5); }
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .analytics-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .analytics-header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .time-filter {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 4px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .time-filter button {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            color: #d4d4d4;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .time-filter button.active {
+            background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+            color: white;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 182, 212, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+        
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-label {
+            color: #e5e7eb;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-change {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-change.positive {
+            color: #10b981;
+        }
+        
+        .stat-change.negative {
+            color: #ef4444;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-card {
+            background: rgba(139, 92, 246, 0.05);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.05), rgba(6, 182, 212, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .chart-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.3);
+        }
+        
+        .chart-card:hover::before {
+            opacity: 1;
+        }
+        
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #e5e7eb, #f3f4f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .theme-toggle {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Navigation -->
+    <nav class="modern-nav">
+        <div class="container">
+            <div class="nav-container">
+                <a href="/trac_env/wiki" class="nav-brand">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect width="32" height="32" rx="8" fill="url(#gradient1)"/>
+                        <path d="M16 8L20 12L16 16L12 12L16 8Z" fill="white"/>
+                        <path d="M16 16L20 20L16 24L12 20L16 16Z" fill="white" opacity="0.7"/>
+                        <defs>
+                            <linearGradient id="gradient1" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#6366f1"/>
+                                <stop offset="1" stop-color="#8b5cf6"/>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span>Trac</span>
+                </a>
+                <div class="nav-center">
+                    <a href="/trac_env/wiki" class="nav-link">Wiki</a>
+                    <a href="/trac_env/timeline" class="nav-link">Timeline</a>
+                    <a href="/trac_env/roadmap" class="nav-link">Roadmap</a>
+                    <a href="/trac_env/browser" class="nav-link">Browse</a>
+                    <a href="/trac_env/report/1" class="nav-link">Tickets</a>
+                    <a href="/trac_env/chrome/site/board.html" class="nav-link">Board</a>
+                    <a href="/trac_env/chrome/site/analytics.html" class="nav-link">Analytics</a>
+                </div>
+                <div class="nav-actions">
+                    <div class="notification-center">
+                        <div id="notification-bell" class="notification-bell">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 2C7.79 2 6 3.79 6 6v4l-2 2v1h12v-1l-2-2V6c0-2.21-1.79-4-4-4zm-1 14h2c0 .55-.45 1-1 1s-1-.45-1-1z"/>
+                            </svg>
+                            <span id="notification-count" class="notification-count hidden">0</span>
+                        </div>
+                        <div id="notification-dropdown" class="notification-dropdown hidden"></div>
+                    </div>
+                    <a href="/trac_env/newticket" class="btn btn-primary">New Ticket</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <div class="page-hero-section">
+        <div class="hero-background">
+            <div class="hero-gradient"></div>
+            <div class="hero-pattern"></div>
+        </div>
+        <div class="hero-content container">
+            <div class="hero-text">
+                <span class="hero-label">Data Insights</span>
+                <h1 class="hero-title">Analytics Dashboard</h1>
+                <p class="hero-subtitle">Gain valuable insights into your project's health. Track progress, identify bottlenecks, and make data-driven decisions.</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">156</span>
+                        <span class="stat-label">Total Tickets</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">67%</span>
+                        <span class="stat-label">Completion Rate</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value">8</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="analytics-preview">
+                    <div class="preview-chart">
+                        <svg viewBox="0 0 200 100" style="width: 200px; height: 100px;">
+                            <path d="M0,80 L30,60 L60,70 L90,40 L120,50 L150,30 L180,40 L200,20" 
+                                  stroke="url(#gradient)" stroke-width="3" fill="none"/>
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#8b5cf6;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="analytics-container">
+        <div class="analytics-header">
+            <div class="time-filter">
+                <button class="active" onclick="filterByTime('7d')">7 Days</button>
+                <button onclick="filterByTime('30d')">30 Days</button>
+                <button onclick="filterByTime('all')">All Time</button>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" style="background: linear-gradient(135deg, #8b5cf6, #6366f1); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="total-tickets">156</div>
+                <div class="stat-label">Total Tickets</div>
+                <div class="stat-change positive">+12% from last week</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" style="background: linear-gradient(135deg, #ef4444, #dc2626); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="open-bugs">23</div>
+                <div class="stat-label">Open Bugs</div>
+                <div class="stat-change negative">+3 from last week</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" style="background: linear-gradient(135deg, #06b6d4, #0891b2); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="milestone-progress">67%</div>
+                <div class="stat-label">Milestone Progress</div>
+                <div class="stat-change positive">+15% this month</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-value" style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;" id="active-contributors">8</div>
+                <div class="stat-label">Active Contributors</div>
+                <div class="stat-change positive">+2 new this week</div>
+            </div>
+        </div>
+        
+        <div class="charts-grid">
+            <div class="chart-card">
+                <h3 class="chart-title">Ticket Activity</h3>
+                <div class="chart-container">
+                    <canvas id="ticketActivityChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">Bug Status Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="bugStatusChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">Milestone Progress</h3>
+                <div class="chart-container">
+                    <canvas id="milestoneChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="chart-card">
+                <h3 class="chart-title">Contributor Activity</h3>
+                <div class="chart-container">
+                    <canvas id="contributorChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="theme-toggle" onclick="toggleChartTheme()">
+        <svg width="24" height="24" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" clip-rule="evenodd"/>
+        </svg>
+    </div>
+
+    <script>
+        // Mock data for analytics
+        const mockData = {
+            '7d': {
+                totalTickets: 156,
+                openBugs: 23,
+                milestoneProgress: 67,
+                activeContributors: 8
+            },
+            '30d': {
+                totalTickets: 542,
+                openBugs: 89,
+                milestoneProgress: 45,
+                activeContributors: 15
+            },
+            'all': {
+                totalTickets: 1287,
+                openBugs: 156,
+                milestoneProgress: 78,
+                activeContributors: 32
+            }
+        };
+        
+        let isDarkTheme = true;
+        let charts = {};
+        
+        function initializeCharts() {
+            console.log('Initializing charts...');
+            
+            // Check if Chart.js is loaded
+            if (typeof Chart === 'undefined') {
+                console.error('Chart.js is not loaded!');
+                return;
+            }
+            
+            // Chart.js default configuration with modern theme
+            Chart.defaults.color = '#9ca3af';
+            Chart.defaults.borderColor = 'rgba(139, 92, 246, 0.2)';
+            Chart.defaults.backgroundColor = 'rgba(139, 92, 246, 0.1)';
+            Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+            
+            // Ticket Activity Chart
+            const ticketCanvas = document.getElementById('ticketActivityChart');
+            if (!ticketCanvas) {
+                console.error('ticketActivityChart canvas not found!');
+                return;
+            }
+            const ticketCtx = ticketCanvas.getContext('2d');
+            
+            // Create gradient for line charts
+            const gradient1 = ticketCtx.createLinearGradient(0, 0, 0, 300);
+            gradient1.addColorStop(0, 'rgba(139, 92, 246, 0.4)');
+            gradient1.addColorStop(1, 'rgba(139, 92, 246, 0.0)');
+            
+            const gradient2 = ticketCtx.createLinearGradient(0, 0, 0, 300);
+            gradient2.addColorStop(0, 'rgba(6, 182, 212, 0.4)');
+            gradient2.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+            
+            charts.ticketActivity = new Chart(ticketCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Created',
+                        data: [12, 19, 8, 15, 22, 13, 18],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: gradient1,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#8b5cf6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }, {
+                        label: 'Closed',
+                        data: [8, 15, 12, 18, 16, 11, 14],
+                        borderColor: '#06b6d4',
+                        backgroundColor: gradient2,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#06b6d4',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { 
+                                color: '#e5e7eb',
+                                font: {
+                                    size: 14,
+                                    weight: '500'
+                                },
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            titleColor: '#f3f4f6',
+                            bodyColor: '#d1d5db',
+                            borderColor: 'rgba(139, 92, 246, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            usePointStyle: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            grid: { 
+                                color: 'rgba(139, 92, 246, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: { 
+                                color: '#9ca3af',
+                                font: {
+                                    size: 12
+                                },
+                                padding: 10
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: { 
+                                color: 'rgba(139, 92, 246, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: { 
+                                color: '#9ca3af',
+                                font: {
+                                    size: 12
+                                },
+                                padding: 10
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Bug Status Chart
+            const bugCtx = document.getElementById('bugStatusChart').getContext('2d');
+            charts.bugStatus = new Chart(bugCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Open', 'In Progress', 'Resolved', 'Closed'],
+                    datasets: [{
+                        data: [23, 15, 32, 45],
+                        backgroundColor: [
+                            '#ef4444',
+                            '#f59e0b', 
+                            '#8b5cf6',
+                            '#06b6d4'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 20
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { 
+                                color: '#e5e7eb',
+                                padding: 20,
+                                font: {
+                                    size: 14,
+                                    weight: '500'
+                                },
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            titleColor: '#f3f4f6',
+                            bodyColor: '#d1d5db',
+                            borderColor: 'rgba(139, 92, 246, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8
+                        }
+                    }
+                }
+            });
+            
+            // Milestone Chart
+            const milestoneCtx = document.getElementById('milestoneChart').getContext('2d');
+            
+            // Create gradient for bars
+            const barGradient = milestoneCtx.createLinearGradient(0, 0, 0, 300);
+            barGradient.addColorStop(0, '#8b5cf6');
+            barGradient.addColorStop(1, '#6366f1');
+            
+            charts.milestone = new Chart(milestoneCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['v1.0', 'v1.1', 'v1.2', 'v2.0'],
+                    datasets: [{
+                        label: 'Progress %',
+                        data: [100, 85, 67, 23],
+                        backgroundColor: [
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(6, 182, 212, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: [
+                            '#10b981',
+                            '#06b6d4',
+                            '#8b5cf6',
+                            '#ef4444'
+                        ],
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        barThickness: 40
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            display: false 
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            titleColor: '#f3f4f6',
+                            bodyColor: '#d1d5db',
+                            borderColor: 'rgba(139, 92, 246, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + '% Complete';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: { 
+                                color: 'rgba(139, 92, 246, 0.1)',
+                                drawBorder: false
+                            },
+                            ticks: { 
+                                color: '#9ca3af',
+                                font: {
+                                    size: 12
+                                },
+                                padding: 10,
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            },
+                            border: {
+                                display: false
+                            }
+                        },
+                        x: {
+                            grid: { 
+                                display: false
+                            },
+                            ticks: { 
+                                color: '#9ca3af',
+                                font: {
+                                    size: 14,
+                                    weight: '600'
+                                },
+                                padding: 10
+                            },
+                            border: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Contributor Chart
+            const contributorCtx = document.getElementById('contributorChart').getContext('2d');
+            charts.contributor = new Chart(contributorCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Commits', 'Reviews', 'Issues', 'PRs', 'Comments'],
+                    datasets: [{
+                        label: 'This Week',
+                        data: [15, 8, 12, 5, 23],
+                        borderColor: '#8b5cf6',
+                        backgroundColor: 'rgba(139, 92, 246, 0.2)',
+                        pointBackgroundColor: '#8b5cf6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 3,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { 
+                                color: '#e5e7eb',
+                                font: {
+                                    size: 14,
+                                    weight: '500'
+                                },
+                                padding: 20
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(17, 24, 39, 0.9)',
+                            titleColor: '#f3f4f6',
+                            bodyColor: '#d1d5db',
+                            borderColor: 'rgba(139, 92, 246, 0.3)',
+                            borderWidth: 1,
+                            padding: 12,
+                            cornerRadius: 8
+                        }
+                    },
+                    scales: {
+                        r: {
+                            grid: { 
+                                color: 'rgba(139, 92, 246, 0.1)',
+                                circular: true
+                            },
+                            angleLines: { 
+                                color: 'rgba(139, 92, 246, 0.1)' 
+                            },
+                            pointLabels: { 
+                                color: '#e5e7eb',
+                                font: {
+                                    size: 14,
+                                    weight: '500'
+                                },
+                                padding: 20
+                            },
+                            ticks: { 
+                                color: '#9ca3af',
+                                backdropColor: 'transparent',
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            console.log('All charts initialized successfully!');
+        }
+        
+        function filterByTime(period) {
+            // Update active button
+            document.querySelectorAll('.time-filter button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update stats
+            const data = mockData[period];
+            document.getElementById('total-tickets').textContent = data.totalTickets;
+            document.getElementById('open-bugs').textContent = data.openBugs;
+            document.getElementById('milestone-progress').textContent = data.milestoneProgress + '%';
+            document.getElementById('active-contributors').textContent = data.activeContributors;
+        }
+        
+        function toggleChartTheme() {
+            isDarkTheme = !isDarkTheme;
+            
+            const color = isDarkTheme ? '#d4d4d4' : '#374151';
+            const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)';
+            
+            Object.values(charts).forEach(chart => {
+                chart.options.plugins.legend.labels.color = color;
+                if (chart.options.scales.y) {
+                    chart.options.scales.y.grid.color = gridColor;
+                    chart.options.scales.y.ticks.color = color;
+                }
+                if (chart.options.scales.x) {
+                    chart.options.scales.x.grid.color = gridColor;
+                    chart.options.scales.x.ticks.color = color;
+                }
+                if (chart.options.scales.r) {
+                    chart.options.scales.r.grid.color = gridColor;
+                    chart.options.scales.r.angleLines.color = gridColor;
+                    chart.options.scales.r.pointLabels.color = color;
+                    chart.options.scales.r.ticks.color = color;
+                }
+                chart.update();
+            });
+        }
+        
+        // Initialize everything when page loads
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initializeCharts();
+            });
+        } else {
+            // DOM is already loaded, initialize with small delay to ensure canvas elements are ready
+            setTimeout(function() {
+                initializeCharts();
+            }, 100);
+        }
+    </script>
+</body>
+</html>

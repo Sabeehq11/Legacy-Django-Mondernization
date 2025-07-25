@@ -68,13 +68,17 @@
                         </svg>
                         <span>Trac</span>
                     </div>
-                    <div class="nav-links">
+                    <div class="nav-center">
                         <a href="/trac_env/wiki" class="nav-link">Wiki</a>
                         <a href="/trac_env/timeline" class="nav-link">Timeline</a>
                         <a href="/trac_env/roadmap" class="nav-link">Roadmap</a>
                         <a href="/trac_env/browser" class="nav-link">Browse</a>
                         <a href="/trac_env/report/1" class="nav-link">Tickets</a>
-                        <a href="/trac_env/newticket" class="btn btn-primary" style="margin-right: 1rem;">New Ticket</a>
+                        <a href="/trac_env/chrome/site/board.html" class="nav-link">Board</a>
+                        <a href="/trac_env/chrome/site/analytics.html" class="nav-link">Analytics</a>
+                    </div>
+                    <div class="nav-actions">
+                        <a href="/trac_env/newticket" class="btn btn-primary">New Ticket</a>
                         <button class="hamburger-menu" id="hamburger-toggle" aria-label="Open menu">
                             <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -193,7 +197,7 @@
                 <div class="hero-content">
                     <div class="hero-text fade-in">
                         <div class="hero-subtitle">Project Management Suite</div>
-                        <h1 class="hero-title">Track Issues,<br>Manage Projects,<br>Ship Faster</h1>
+                        <h1 class="hero-title" style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Track Issues,<br>Manage Projects,<br>Ship Faster</h1>
                         <div class="hero-tags">
                             <span class="tag">Bug Tracking</span>
                             <span class="tag">Milestones</span>
