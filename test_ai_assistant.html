@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Assistant Test</title>
+</head>
+<body>
+    <h1>AI Assistant API Test</h1>
+    <button onclick="testAPI()">Test AI API</button>
+    <div id="result"></div>
+
+    <script>
+    async function testAPI() {
+        const resultDiv = document.getElementById('result');
+        resultDiv.innerHTML = 'Testing API...';
+        
+        try {
+            const response = await fetch('http://localhost:5001/ai/analyze', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    description: 'Login button not working on mobile',
+                    context: {
+                        summary: 'Mobile login issue',
+                        type: 'defect',
+                        component: 'auth'
+                    }
+                })
+            });
+            
+            const data = await response.json();
+            resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        } catch (error) {
+            resultDiv.innerHTML = 'Error: ' + error.message;
+        }
+    }
+    </script>
+</body>
+</html> 

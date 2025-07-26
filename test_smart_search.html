@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Search Test</title>
+    <link rel="stylesheet" href="trac_env/htdocs/trac-modern-ui.css">
+    <style>
+        body { 
+            font-family: Inter, sans-serif; 
+            padding: 20px; 
+            background: #f9fafb;
+        }
+        .test-container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 { text-align: center; color: #1a1a1a; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Smart Search Test</h1>
+        
+        <div class="sidebar-section">
+            <h4>Smart Search</h4>
+            <div class="smart-search-container">
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" 
+                           id="smartSearchInput" 
+                           class="smart-search-input" 
+                           placeholder="Search tickets, wiki, milestones..."
+                           autocomplete="off">
+                    <button class="search-clear" id="searchClear" style="display: none;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="search-filters">
+                    <span class="filter-hint">Try: <code>type:bug</code>, <code>status:open</code>, <code>priority:high</code></span>
+                </div>
+                <div class="search-results" id="searchResults" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock TracMockData for testing
+        window.TracMockData = {
+            tickets: [
+                { 
+                    id: '1', 
+                    title: 'Mobile login authentication fails on iOS Safari', 
+                    summary: 'Users experiencing 504 timeout errors when attempting to login on iOS Safari browsers during peak hours.',
+                    description: 'Mobile login issues affecting iOS users',
+                    status: 'Open', 
+                    priority: 'High', 
+                    type: 'Bug'
+                },
+                { 
+                    id: '2', 
+                    title: 'Implement dark mode toggle for user interface', 
+                    summary: 'Add system-wide dark mode support with user preference persistence and smooth transitions.',
+                    description: 'Dark mode feature request',
+                    status: 'In Progress', 
+                    priority: 'Medium', 
+                    type: 'Feature'
+                },
+                { 
+                    id: '3', 
+                    title: 'Database performance optimization', 
+                    summary: 'Optimize slow queries and improve connection pooling',
+                    description: 'Performance improvements needed',
+                    status: 'Open', 
+                    priority: 'High', 
+                    type: 'Task'
+                }
+            ]
+        };
+    </script>
+    <script src="trac_env/htdocs/trac-complete-ui-replacement.js"></script>
+    
+    <script>
+        // Initialize search when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing search...');
+            setupSmartSearch();
+        });
+    </script>
+</body>
+</html>

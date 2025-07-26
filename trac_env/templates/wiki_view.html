@@ -1,0 +1,366 @@
+{# Copyright (C) 2006-2023 Edgewall Software
+  This software is licensed as described in the file COPYING, which
+  you should have received as part of this distribution. The terms
+  are also available at https://trac.edgewall.org/wiki/TracLicense.
+#}
+# extends 'layout.html'
+
+<!DOCTYPE html>
+<html>
+<head>
+  # block title
+  # if title:
+    ${title} – ${super()}
+  # else:
+    ${project.name or 'Trac'}
+  # endif
+  # endblock title
+
+  # block head
+  ${super()}
+  <style>
+    /* Modern Wiki Page Styling */
+    #content.wiki {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.03) 0%, rgba(139, 92, 246, 0.01) 100%);
+      min-height: calc(100vh - 200px);
+    }
+
+    /* Special styling for TracGuide page */
+    .wiki-page-TracGuide #content.wiki {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%);
+    }
+
+    /* Hero section for TracGuide */
+    .wiki-page-TracGuide .wiki-hero {
+      text-align: center;
+      padding: 3rem 2rem;
+      margin: -2rem -2rem 3rem -2rem;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 0 0 20px 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .wiki-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    .wiki-hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 50%, #c4b5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wiki-hero .subtitle {
+      font-size: 1.3rem;
+      color: #a78bfa;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Wiki Content Styling */
+    #content.wiki .wiki-content {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(139, 92, 246, 0.1);
+      border-radius: 15px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Typography */
+    #content.wiki h1, #content.wiki h2, #content.wiki h3, 
+    #content.wiki h4, #content.wiki h5, #content.wiki h6 {
+      color: #a78bfa;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-weight: 600;
+    }
+
+    #content.wiki h1 { 
+      font-size: 2.5rem; 
+      border-bottom: 2px solid rgba(139, 92, 246, 0.3);
+      padding-bottom: 0.5rem;
+    }
+    
+    #content.wiki h2 { 
+      font-size: 2rem;
+      color: #c4b5fd;
+    }
+    
+    #content.wiki h3 { 
+      font-size: 1.5rem;
+      color: #e9d5ff;
+    }
+
+    #content.wiki p {
+      color: #e0e0e0;
+      line-height: 1.8;
+      margin-bottom: 1.2rem;
+    }
+
+    /* Links */
+    #content.wiki a {
+      color: #a78bfa;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    #content.wiki a:hover {
+      color: #c4b5fd;
+    }
+
+    #content.wiki a.wiki {
+      font-weight: 500;
+    }
+
+    #content.wiki a.missing {
+      color: #ef4444;
+      font-style: italic;
+    }
+
+    /* Lists */
+    #content.wiki ul, #content.wiki ol {
+      margin: 1rem 0;
+      padding-left: 2rem;
+      color: #e0e0e0;
+    }
+
+    #content.wiki li {
+      margin-bottom: 0.5rem;
+      line-height: 1.8;
+    }
+
+    /* Code blocks */
+    #content.wiki pre {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 8px;
+      padding: 1.5rem;
+      overflow-x: auto;
+      margin: 1.5rem 0;
+    }
+
+    #content.wiki code {
+      font-family: 'Fira Code', 'Consolas', monospace;
+      background: rgba(139, 92, 246, 0.1);
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      color: #c4b5fd;
+      font-size: 0.9em;
+    }
+
+    #content.wiki pre code {
+      background: none;
+      padding: 0;
+      color: #e0e0e0;
+    }
+
+    /* Tables */
+    #content.wiki table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    #content.wiki th {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+      font-weight: 600;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    #content.wiki td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid rgba(139, 92, 246, 0.1);
+      color: #e0e0e0;
+    }
+
+    #content.wiki tr:hover {
+      background: rgba(139, 92, 246, 0.05);
+    }
+
+    /* Blockquotes */
+    #content.wiki blockquote {
+      border-left: 4px solid #8b5cf6;
+      margin: 1.5rem 0;
+      padding: 1rem 1.5rem;
+      background: rgba(139, 92, 246, 0.05);
+      border-radius: 0 8px 8px 0;
+      color: #e0e0e0;
+      font-style: italic;
+    }
+
+    /* Wiki toolbar */
+    .wiki-toolbar {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 8px;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .wiki-toolbar a {
+      padding: 0.5rem 1rem;
+      margin: 0 0.25rem;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .wiki-toolbar a:hover {
+      background: rgba(139, 92, 246, 0.2);
+    }
+
+    /* Guide Navigation Cards */
+    .guide-nav-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .guide-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 12px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .guide-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+
+    .guide-card h3 {
+      color: #a78bfa;
+      margin-bottom: 0.5rem;
+    }
+
+    .guide-card p {
+      color: #b8b8b8;
+      font-size: 0.95rem;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #content.wiki {
+        padding: 1rem;
+      }
+      
+      #content.wiki .wiki-content {
+        padding: 1.5rem;
+      }
+      
+      .wiki-hero h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+
+  # if page.name == 'TracGuide':
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add hero section for TracGuide
+    const content = document.getElementById('content');
+    const wikiContent = content.querySelector('.wiki-content') || content.querySelector('.wiki');
+    
+    if (wikiContent && !document.querySelector('.wiki-hero')) {
+      const hero = document.createElement('div');
+      hero.className = 'wiki-hero';
+      hero.innerHTML = `
+        <h1>Trac User Guide</h1>
+        <p class="subtitle">Everything you need to know about using Trac effectively</p>
+      `;
+      content.insertBefore(hero, wikiContent);
+    }
+    
+    // Style guide navigation links
+    const links = content.querySelectorAll('a[href*="TracGuide"]');
+    if (links.length > 5) {
+      const navCards = document.createElement('div');
+      navCards.className = 'guide-nav-cards';
+      
+      links.forEach(link => {
+        if (link.textContent && link.textContent.includes('Trac')) {
+          const card = document.createElement('div');
+          card.className = 'guide-card';
+          card.onclick = () => window.location.href = link.href;
+          card.innerHTML = `
+            <h3>${link.textContent}</h3>
+            <p>Learn more about ${link.textContent.replace('Trac', '').trim()}</p>
+          `;
+          navCards.appendChild(card);
+          link.style.display = 'none';
+        }
+      });
+      
+      if (navCards.children.length > 0) {
+        wikiContent.insertBefore(navCards, wikiContent.firstChild);
+      }
+    }
+  });
+  </script>
+  # endif
+  # endblock head
+</head>
+<body>
+  # block content
+  <div id="content" class="wiki">
+    # if page.exists:
+      <div class="wiki-content">
+        ${wiki_to_html(context, text)}
+      </div>
+      
+      # if attachments:
+      <div class="attachments">
+        <h3>Attachments</h3>
+        # for attachment in attachments:
+          <a href="${attachment.href}">${attachment.filename}</a>
+        # endfor
+      </div>
+      # endif
+    # else:
+      <div class="wiki-content">
+        <h1>${title}</h1>
+        <p>This page does not exist yet. You can create it here.</p>
+        # if 'WIKI_CREATE' in perm:
+          <a href="${href.wiki(page.name, action='edit')}" class="button">Create this page</a>
+        # endif
+      </div>
+    # endif
+  </div>
+  # endblock content
+</body>
+</html> 

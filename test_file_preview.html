@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test File Preview Feature</title>
+    <link rel="stylesheet" href="trac_env/htdocs/trac-modern-ui.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        .test-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            padding: 2rem;
+        }
+        .test-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #8b5cf6;
+        }
+        .test-section {
+            margin: 2rem 0;
+        }
+        .test-section h3 {
+            color: #e5e7eb;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            margin: 0.5rem;
+            transition: background 0.2s ease;
+        }
+        .btn:hover {
+            background: #4f46e5;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1 class="test-title">File Preview Feature Test</h1>
+        
+        <div class="test-section">
+            <h3>Sample Ticket with Attachments</h3>
+            <p>Click on any attachment to preview it (instead of downloading). Use the download button for direct downloads.</p>
+            
+            <!-- Simulate ticket attachments -->
+            <div class="detail-section">
+                <h3 class="detail-section-title">Attachments (3)</h3>
+                <div class="attachment-list">
+                    <div class="attachment-item" title="Click to preview • Download button on the right">
+                        <span class="attachment-icon">📄</span>
+                        <div class="attachment-info">
+                            <span class="attachment-name">test-document.txt</span>
+                            <span class="attachment-size">2.1 KB</span>
+                        </div>
+                    </div>
+                    <div class="attachment-item" title="Click to preview • Download button on the right">
+                        <span class="attachment-icon">🖼️</span>
+                        <div class="attachment-info">
+                            <span class="attachment-name">screenshot.png</span>
+                            <span class="attachment-size">145.2 KB</span>
+                        </div>
+                    </div>
+                    <div class="attachment-item" title="Click to preview • Download button on the right">
+                        <span class="attachment-icon">📋</span>
+                        <div class="attachment-info">
+                            <span class="attachment-name">log-file.log</span>
+                            <span class="attachment-size">8.7 KB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>Test Preview Functions</h3>
+            <button class="btn" onclick="testTextPreview()">Test Text File Preview</button>
+            <button class="btn" onclick="testCodePreview()">Test JavaScript Code</button>
+            <button class="btn" onclick="testJSONPreview()">Test JSON Config</button>
+            <button class="btn" onclick="testImagePreview()">Test Image Preview</button>
+            <button class="btn" onclick="testPDFPreview()">Test PDF Preview</button>
+        </div>
+    </div>
+
+    <!-- Include the main Trac UI JavaScript -->
+    <script src="trac_env/htdocs/trac-ui-init.js"></script>
+    
+    <script>
+        // Test data for file previews
+        const testFiles = {
+            'test-document.txt': {
+                id: 1,
+                name: 'test-document.txt',
+                size: 2150,
+                base64: 'data:text/plain;base64,' + btoa('This is a test document.\n\nIt contains some sample text to demonstrate the file preview functionality.\n\nFeatures:\n- Click attachments to preview\n- Download button for direct downloads\n- Support for text, images, and other file types\n- Real content display for images and text\n- Syntax highlighting for code files\n- JSON formatting\n- PDF inline viewing\n\nThis enhancement improves user experience by allowing quick file previews without downloading.')
+            },
+            'sample-code.js': {
+                id: 4,
+                name: 'sample-code.js',
+                size: 1240,
+                base64: 'data:text/javascript;base64,' + btoa('// Sample JavaScript file for testing preview\nfunction showFilePreview(file, fileName) {\n    console.log("Previewing file:", fileName);\n    \n    const fileExt = fileName.split(".").pop().toLowerCase();\n    const isImage = ["png", "jpg", "jpeg", "gif"].includes(fileExt);\n    \n    if (isImage) {\n        displayImagePreview(file);\n    } else {\n        displayTextPreview(file);\n    }\n}\n\n// Handle file upload\nconst uploadBtn = document.querySelector("#upload");\nuploadBtn.addEventListener("click", handleUpload);')
+            },
+            'config.json': {
+                id: 5,
+                name: 'config.json',
+                size: 890,
+                base64: 'data:application/json;base64,' + btoa('{\n  "server": {\n    "port": 8000,\n    "host": "localhost",\n    "ssl": false\n  },\n  "database": {\n    "type": "sqlite",\n    "path": "./data/trac.db",\n    "pool_size": 10\n  },\n  "features": {\n    "file_preview": true,\n    "syntax_highlighting": true,\n    "pdf_viewer": true,\n    "image_zoom": true\n  },\n  "supported_formats": [\n    "txt", "log", "md", "json", "xml", "csv",\n    "js", "ts", "py", "java", "cpp", "c", "h",\n    "css", "html", "php", "rb", "go", "rs",\n    "png", "jpg", "jpeg", "gif", "bmp", "webp",\n    "pdf", "doc", "docx"\n  ]\n}')
+            },
+            'screenshot.png': {
+                id: 2,
+                name: 'screenshot.png',
+                size: 148684,
+                // Demo colorful gradient image for testing
+                base64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABrrFhUAAAAwFBMVEX///8AAAD8/Pz5+fn29vbt7e3q6urh4eHe3t7a2trs7Oz19fX9/f3x8fHm5ubc3NzV1dXY2Njj4+Pw8PDz8/Pu7u7p6enh4eHT09PQ0NDNzc3KysrHx8fExMTBwcG+vr67u7u4uLi1tbWysrKvr6+srKypqammpqajo6OgoKCdnZ2ampqXl5eUlJSRkZGOjo6Li4uIiIiFhYWCgoJ/f399fX16enp3d3d0dHRxcXFubm5ra2toaGhlZWViYmJfX19cXFxZWVlWVlZTU1NQUFBNTc1KSkpHR0dERERBQUE+Pj47Ozs4ODg1NTUyMjIvLy8sLCwpKSkmJiYjIyMgICAd'
+            },
+            'log-file.log': {
+                id: 3,
+                name: 'log-file.log',
+                size: 8960,
+                base64: 'data:text/plain;base64,' + btoa('[2024-01-15 10:30:21] INFO: Application started\n[2024-01-15 10:30:22] DEBUG: Loading configuration\n[2024-01-15 10:30:23] INFO: Database connection established\n[2024-01-15 10:30:24] INFO: File preview feature initialized\n[2024-01-15 10:30:25] DEBUG: Attachment handlers registered\n[2024-01-15 10:30:26] INFO: Server ready on port 8000\n[2024-01-15 10:31:10] INFO: User clicked attachment for preview\n[2024-01-15 10:31:11] DEBUG: Loading file preview modal\n[2024-01-15 10:31:12] INFO: Preview displayed successfully')
+            }
+        };
+
+        // Simulate ticket data for testing
+        window.testTicket = {
+            id: 1,
+            attachments: [
+                testFiles['test-document.txt'],
+                testFiles['screenshot.png'],
+                testFiles['log-file.log']
+            ]
+        };
+
+        // Test functions
+        function testTextPreview() {
+            const file = new File([atob(testFiles['test-document.txt'].base64.split(',')[1])], 'test-document.txt', {type: 'text/plain'});
+            showFilePreview(file, 'test-document.txt');
+        }
+
+        function testCodePreview() {
+            const file = new File([atob(testFiles['sample-code.js'].base64.split(',')[1])], 'sample-code.js', {type: 'text/javascript'});
+            showFilePreview(file, 'sample-code.js');
+        }
+
+        function testJSONPreview() {
+            const file = new File([atob(testFiles['config.json'].base64.split(',')[1])], 'config.json', {type: 'application/json'});
+            showFilePreview(file, 'config.json');
+        }
+
+        function testImagePreview() {
+            fetch(testFiles['screenshot.png'].base64)
+                .then(res => res.blob())
+                .then(blob => {
+                    const file = new File([blob], 'screenshot.png', {type: 'image/png'});
+                    showFilePreview(file, 'screenshot.png');
+                });
+        }
+
+        function testPDFPreview() {
+            // Create a minimal PDF file for testing
+            const pdfContent = '%PDF-1.4\n1 0 obj\n<<\n/Type /Catalog\n/Pages 2 0 R\n>>\nendobj\n2 0 obj\n<<\n/Type /Pages\n/Kids [3 0 R]\n/Count 1\n>>\nendobj\n3 0 obj\n<<\n/Type /Page\n/Parent 2 0 R\n/MediaBox [0 0 612 792]\n>>\nendobj\nxref\n0 4\n0000000000 65535 f \n0000000009 00000 n \n0000000074 00000 n \n0000000120 00000 n \ntrailer\n<<\n/Size 4\n/Root 1 0 R\n>>\nstartxref\n178\n%%EOF';
+            const file = new File([pdfContent], 'sample-document.pdf', {type: 'application/pdf'});
+            showFilePreview(file, 'sample-document.pdf');
+        }
+
+        // Simulate attachment click handlers after DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const attachmentItems = document.querySelectorAll('.attachment-item');
+            
+            attachmentItems.forEach((item, index) => {
+                item.style.cursor = 'pointer';
+                
+                // Add download button
+                const downloadBtn = document.createElement('button');
+                downloadBtn.className = 'attachment-download-btn';
+                downloadBtn.title = 'Download file';
+                downloadBtn.innerHTML = `
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-4-4m4 4l4-4m-6 4V10"/>
+                    </svg>
+                `;
+                item.appendChild(downloadBtn);
+                
+                // Preview on main item click
+                item.addEventListener('click', async (e) => {
+                    if (e.target.closest('.attachment-download-btn')) return;
+                    
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const attachment = window.testTicket.attachments[index];
+                    
+                    if (attachment && attachment.base64) {
+                        try {
+                            const base64Response = await fetch(attachment.base64);
+                            const blob = await base64Response.blob();
+                            const file = new File([blob], attachment.name, { type: blob.type });
+                            
+                            showFilePreview(file, attachment.name);
+                        } catch (error) {
+                            console.error('Error loading file for preview:', error);
+                        }
+                    }
+                });
+                
+                // Download on download button click
+                downloadBtn.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const attachment = window.testTicket.attachments[index];
+                    
+                    if (attachment && attachment.base64) {
+                        try {
+                            const base64Response = await fetch(attachment.base64);
+                            const blob = await base64Response.blob();
+                            const blobUrl = URL.createObjectURL(blob);
+                            
+                            const link = document.createElement('a');
+                            link.href = blobUrl;
+                            link.download = attachment.name;
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                            
+                            setTimeout(() => URL.revokeObjectURL(blobUrl), 5000);
+                            
+                            console.log(`Downloaded: ${attachment.name}`);
+                        } catch (error) {
+                            console.error('Error downloading file:', error);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

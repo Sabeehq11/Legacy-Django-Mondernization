@@ -117,6 +117,7 @@
                     <a href="/trac_env/chrome/site/analytics.html" class="nav-link">Analytics</a>
                     </div>
                     <div class="nav-actions">
+                        <div class="login-status" id="loginStatus"></div>
                         <div class="notification-center">
                             <div id="notification-bell" class="notification-bell">
                                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
@@ -140,6 +141,9 @@
         
         // Add navigation event listeners to prevent page reloads
         setupNavigationEventListeners();
+        
+        // Initialize login status
+        initLoginStatus();
         
         // Initialize search and notification functionality
         // initializeSmartSearch(); // Search bar removed
@@ -248,26 +252,82 @@
             container.appendChild(grid);
             content.appendChild(container);
             
-            // Get all tickets from Trac database and visual tickets
+            // Get all tickets from unified data system, visual tickets, and Trac database
             let allTickets = [];
-            // Include visual tickets if they exist
+            
+            // PRIORITIZE UNIFIED DATA SYSTEM FIRST
+            if (window.TracMockData && window.TracMockData.tickets) {
+                const unifiedTickets = window.TracMockData.tickets.map(ticket => ({
+                    id: ticket.id,
+                    summary: ticket.title,
+                    status: ticket.status === 'open' ? 'Open' : 
+                           ticket.status === 'in-progress' ? 'In Progress' :
+                           ticket.status === 'review' ? 'Review' :
+                           ticket.status === 'done' ? 'Closed' : ticket.status,
+                    priority: ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1),
+                    type: ticket.type.charAt(0).toUpperCase() + ticket.type.slice(1),
+                    assignee: window.TracMockData.getUser(ticket.assignee).name,
+                    reporter: window.TracMockData.getUser(ticket.reporter).name,
+                    created: ticket.created,
+                    modified: ticket.modified,
+                    description: ticket.description,
+                    component: ticket.component,
+                    milestone: ticket.milestone,
+                    rawData: ticket
+                }));
+                allTickets.push(...unifiedTickets);
+                console.log(`Roadmap: Added ${unifiedTickets.length} tickets from unified data system`);
+            }
+            
+            // Include visual tickets if they exist (as fallback)
             if (window.tracTicketsData && window.tracTicketsData.length > 0) {
-                allTickets.push(...window.tracTicketsData);
-                console.log(`Roadmap: Added ${window.tracTicketsData.length} visual tickets`);
+                // Only add tickets that aren't already from unified system
+                const existingIds = new Set(allTickets.map(t => t.id));
+                const newVisualTickets = window.tracTicketsData.filter(t => !existingIds.has(t.id));
+                allTickets.push(...newVisualTickets);
+                console.log(`Roadmap: Added ${newVisualTickets.length} additional visual tickets`);
             }
             
             // Function to refresh roadmap display
             function refreshRoadmap() {
                 console.log('Refreshing roadmap display...');
                 
-                // Include visual tickets in roadmap refresh
+                // Get fresh tickets from unified data system
                 let currentTickets = [];
-                if (window.tracTicketsData && window.tracTicketsData.length > 0) {
-                    currentTickets.push(...window.tracTicketsData);
-                    console.log(`Roadmap refresh: Added ${window.tracTicketsData.length} visual tickets`);
+                
+                // PRIORITIZE UNIFIED DATA SYSTEM FIRST
+                if (window.TracMockData && window.TracMockData.tickets) {
+                    const unifiedTickets = window.TracMockData.tickets.map(ticket => ({
+                        id: ticket.id,
+                        summary: ticket.title,
+                        status: ticket.status === 'open' ? 'Open' : 
+                               ticket.status === 'in-progress' ? 'In Progress' :
+                               ticket.status === 'review' ? 'Review' :
+                               ticket.status === 'done' ? 'Closed' : ticket.status,
+                        priority: ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1),
+                        type: ticket.type.charAt(0).toUpperCase() + ticket.type.slice(1),
+                        assignee: window.TracMockData.getUser(ticket.assignee).name,
+                        reporter: window.TracMockData.getUser(ticket.reporter).name,
+                        created: ticket.created,
+                        modified: ticket.modified,
+                        description: ticket.description,
+                        component: ticket.component,
+                        milestone: ticket.milestone,
+                        rawData: ticket
+                    }));
+                    currentTickets.push(...unifiedTickets);
+                    console.log(`Roadmap refresh: Added ${unifiedTickets.length} tickets from unified data system`);
                 }
                 
-                console.log(`Roadmap refresh: Working with ${currentTickets.length} tickets`);
+                // Include visual tickets as fallback
+                if (window.tracTicketsData && window.tracTicketsData.length > 0) {
+                    const existingIds = new Set(currentTickets.map(t => t.id));
+                    const newVisualTickets = window.tracTicketsData.filter(t => !existingIds.has(t.id));
+                    currentTickets.push(...newVisualTickets);
+                    console.log(`Roadmap refresh: Added ${newVisualTickets.length} additional visual tickets`);
+                }
+                
+                console.log(`Roadmap refresh: Working with ${currentTickets.length} total tickets`);
                 
                 // Rebuild the roadmap content
                 enhanceRoadmapPageContent(currentTickets);
@@ -281,31 +341,68 @@
                     grid.innerHTML = '';
                 }
                 
-                // Use the captured original milestones
-                const milestones = originalMilestones;
+                // Use milestones from unified data system if available, otherwise use original milestones
+                let milestones = originalMilestones;
                 const updateForm = originalUpdateForm;
                 
+                // If we have unified data system, create milestone elements from it
+                if (window.TracMockData && window.TracMockData.milestones && window.TracMockData.milestones.length > 0) {
+                    console.log('Using milestones from unified data system');
+                    milestones = window.TracMockData.milestones.map(milestone => {
+                        const milestoneElement = document.createElement('div');
+                        milestoneElement.className = 'milestone-element';
+                        milestoneElement.innerHTML = `
+                            <h3><em>${milestone.name}</em></h3>
+                            <p class="milestone-description">${milestone.description}</p>
+                            <div class="milestone-progress">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${milestone.progress}%"></div>
+                                </div>
+                                <span class="progress-text">${milestone.progress}% Complete</span>
+                            </div>
+                            ${milestone.due ? `<div class="milestone-due">Due: ${new Date(milestone.due).toLocaleDateString()}</div>` : ''}
+                            ${milestone.status ? `<div class="milestone-status">Status: ${milestone.status}</div>` : ''}
+                        `;
+                        return milestoneElement;
+                    });
+                }
+                
                 // Move milestones to grid and add associated tickets
-                milestones.forEach(milestone => {
+                milestones.forEach((milestone, index) => {
                     // Wrap each milestone in a feature-card div
                     const cardWrapper = document.createElement('div');
                     cardWrapper.className = 'feature-card milestone-card';
                     
                     // Extract milestone name/number from title
-                    const titleElement = milestone.querySelector('h2 em, h3 em, a em, h2 a, h3 a');
                     let milestoneName = '';
                     let milestoneNumber = '';
                     
-                    if (titleElement) {
-                        const titleText = titleElement.textContent || '';
-                        console.log('Processing milestone title:', titleText);
-                        
-                        // Try to extract milestone name and number
-                        milestoneName = titleText.trim();
-                        const match = titleText.match(/milestone\s*(\d+)/i);
-                        if (match) {
-                            milestoneNumber = match[1];
-                            cardWrapper.setAttribute('data-milestone-number', milestoneNumber);
+                    // Handle unified data system milestones differently
+                    if (window.TracMockData && window.TracMockData.milestones && window.TracMockData.milestones.length > 0) {
+                        const unifiedMilestone = window.TracMockData.milestones[index];
+                        if (unifiedMilestone) {
+                            milestoneName = unifiedMilestone.name;
+                            const match = unifiedMilestone.name.match(/v?(\d+\.?\d*\.?\d*)/i);
+                            if (match) {
+                                milestoneNumber = match[1];
+                                cardWrapper.setAttribute('data-milestone-number', milestoneNumber);
+                            }
+                            cardWrapper.setAttribute('data-milestone-name', milestoneName);
+                        }
+                    } else {
+                        // Original Trac milestone processing
+                        const titleElement = milestone.querySelector('h2 em, h3 em, a em, h2 a, h3 a');
+                        if (titleElement) {
+                            const titleText = titleElement.textContent || '';
+                            console.log('Processing milestone title:', titleText);
+                            
+                            // Try to extract milestone name and number
+                            milestoneName = titleText.trim();
+                            const match = titleText.match(/milestone\s*(\d+)/i);
+                            if (match) {
+                                milestoneNumber = match[1];
+                                cardWrapper.setAttribute('data-milestone-number', milestoneNumber);
+                            }
                         }
                     }
                     
@@ -319,6 +416,13 @@
                         
                         // Match by milestone name or number
                         const ticketMilestone = ticket.milestone.toLowerCase();
+                        
+                        // For unified data system, do exact milestone name matching first
+                        if (milestoneName && ticketMilestone === milestoneName.toLowerCase()) {
+                            return true;
+                        }
+                        
+                        // Fallback to partial matching
                         const nameMatch = milestoneName && ticketMilestone.includes(milestoneName.toLowerCase());
                         const numberMatch = milestoneNumber && (ticketMilestone.includes(milestoneNumber) || ticketMilestone.includes(`milestone ${milestoneNumber}`));
                         
@@ -1260,11 +1364,37 @@
         if (content) {
             content.classList.add('tickets');
             
-            // CRITICAL: Capture original Trac tickets data BEFORE UI replacement
-            console.log('Capturing original Trac tickets data before UI replacement...');
+            // USE UNIFIED MOCK DATA SYSTEM FOR CONSISTENCY
+            console.log('Using unified mock data system for tickets...');
+            
+            // Load from unified data system first
+            let unifiedTickets = [];
+            if (window.TracMockData && window.TracMockData.tickets) {
+                unifiedTickets = window.TracMockData.tickets.map(ticket => ({
+                    id: ticket.id,
+                    summary: ticket.title,
+                    status: ticket.status === 'open' ? 'Open' : 
+                           ticket.status === 'in-progress' ? 'In Progress' :
+                           ticket.status === 'review' ? 'Review' :
+                           ticket.status === 'done' ? 'Closed' : ticket.status,
+                    priority: ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1),
+                    type: ticket.type.charAt(0).toUpperCase() + ticket.type.slice(1),
+                    assignee: window.TracMockData.getUser(ticket.assignee).name,
+                    reporter: window.TracMockData.getUser(ticket.reporter).name,
+                    created: ticket.created,
+                    modified: ticket.modified,
+                    description: ticket.description,
+                    component: ticket.component,
+                    milestone: ticket.milestone,
+                    rawData: ticket
+                }));
+                console.log(`📊 LOADED ${unifiedTickets.length} TICKETS FROM UNIFIED DATA SYSTEM`);
+            }
+            
+            // Also capture any original Trac data as fallback
             const originalTicketsData = parseTicketsData(content);
             
-            // LOAD VISUAL TICKETS FROM SESSION STORAGE
+            // LOAD VISUAL TICKETS FROM SESSION STORAGE (for any temporary tickets)
             let visualTickets = [];
             try {
                 visualTickets = JSON.parse(sessionStorage.getItem('visualTickets') || '[]');
@@ -1274,9 +1404,9 @@
                 visualTickets = [];
             }
             
-            // MERGE VISUAL TICKETS WITH TRAC TICKETS
-            window.tracTicketsData = [...visualTickets, ...originalTicketsData]; // Visual tickets first
-            console.log(`Captured ${originalTicketsData.length} Trac tickets + ${visualTickets.length} visual tickets = ${window.tracTicketsData.length} total`);
+            // PRIORITIZE: Unified data > Visual tickets > Original Trac data
+            window.tracTicketsData = [...unifiedTickets, ...visualTickets, ...originalTicketsData];
+            console.log(`Total tickets: ${unifiedTickets.length} unified + ${visualTickets.length} visual + ${originalTicketsData.length} original = ${window.tracTicketsData.length} total`);
             
             console.log('Tickets page loading - using Trac database');
             console.log('Current URL:', window.location.pathname);
@@ -1294,17 +1424,17 @@
                         <span class="hero-label">Issue Tracking</span>
                         <h1 class="hero-title" style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Ticket Management</h1>
                         <p class="hero-subtitle">Track bugs, feature requests, and tasks efficiently. Prioritize work, assign team members, and deliver quality software on schedule.</p>
-                        <div class="hero-stats">
+                        <div class="hero-stats" id="hero-stats">
                             <div class="stat-item">
-                                <span class="stat-value">${window.tracTicketsData.filter(t => t.status === 'open' || t.status === 'new').length}</span>
+                                <span class="stat-value" id="hero-open-count">0</span>
                                 <span class="stat-label">Open Tickets</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-value">${window.tracTicketsData.filter(t => t.status === 'in-progress' || t.status === 'assigned').length}</span>
+                                <span class="stat-value" id="hero-progress-count">0</span>
                                 <span class="stat-label">In Progress</span>
                             </div>
                             <div class="stat-item">
-                                <span class="stat-value">${window.tracTicketsData.filter(t => t.status === 'closed' || t.status === 'fixed').length}</span>
+                                <span class="stat-value" id="hero-closed-count">0</span>
                                 <span class="stat-label">Closed</span>
                             </div>
                         </div>
@@ -1312,15 +1442,15 @@
                     <div class="hero-visual">
                         <div class="tickets-visual">
                             <div class="ticket-stat-card open">
-                                <h3>${window.tracTicketsData.filter(t => t.status === 'open' || t.status === 'new').length}</h3>
+                                <h3 id="visual-open-count">0</h3>
                                 <p>Open</p>
                             </div>
                             <div class="ticket-stat-card progress">
-                                <h3>${window.tracTicketsData.filter(t => t.status === 'in-progress' || t.status === 'assigned').length}</h3>
+                                <h3 id="visual-progress-count">0</h3>
                                 <p>In Progress</p>
                             </div>
                             <div class="ticket-stat-card closed">
-                                <h3>${window.tracTicketsData.filter(t => t.status === 'closed' || t.status === 'fixed').length}</h3>
+                                <h3 id="visual-closed-count">0</h3>
                                 <p>Closed</p>
                             </div>
                         </div>
@@ -1496,7 +1626,8 @@
                     populateTicketsTable(ticketsData);
                 }
                 
-                // Update footer statistics
+                // Update hero and footer statistics
+                updateTicketsHeroStats(ticketsData);
                 updateTicketsFooter(ticketsData);
                 
                 // Re-initialize interactive features
@@ -1519,6 +1650,41 @@
             // Store the refresh function globally for external access
             window.refreshTicketsTable = refreshTicketsTable;
         }
+    }
+    
+    function updateTicketsHeroStats(ticketsData) {
+        // Calculate stats from actual ticket data
+        const openCount = ticketsData.filter(t => 
+            t.status === 'Open' || t.status === 'open' || t.status === 'new'
+        ).length;
+        
+        const progressCount = ticketsData.filter(t => 
+            t.status === 'In Progress' || t.status === 'in-progress' || t.status === 'assigned'
+        ).length;
+        
+        const closedCount = ticketsData.filter(t => 
+            t.status === 'Closed' || t.status === 'closed' || t.status === 'fixed' || t.status === 'done'
+        ).length;
+        
+        // Update hero stats
+        const heroOpenCount = document.getElementById('hero-open-count');
+        const heroProgressCount = document.getElementById('hero-progress-count');
+        const heroClosedCount = document.getElementById('hero-closed-count');
+        
+        if (heroOpenCount) heroOpenCount.textContent = openCount;
+        if (heroProgressCount) heroProgressCount.textContent = progressCount;
+        if (heroClosedCount) heroClosedCount.textContent = closedCount;
+        
+        // Update visual stats
+        const visualOpenCount = document.getElementById('visual-open-count');
+        const visualProgressCount = document.getElementById('visual-progress-count');
+        const visualClosedCount = document.getElementById('visual-closed-count');
+        
+        if (visualOpenCount) visualOpenCount.textContent = openCount;
+        if (visualProgressCount) visualProgressCount.textContent = progressCount;
+        if (visualClosedCount) visualClosedCount.textContent = closedCount;
+        
+        console.log(`Updated hero stats: ${openCount} open, ${progressCount} in progress, ${closedCount} closed`);
     }
     
     function updateTicketsFooter(ticketsData) {
@@ -1761,6 +1927,68 @@
                 </td>
             `;
             tbody.appendChild(row);
+            
+            // Add event listeners to action buttons for this row
+            const viewBtn = row.querySelector('.action-btn[title="View"]');
+            const editBtn = row.querySelector('.action-btn[title="Edit"]');
+            const deleteBtn = row.querySelector('.action-btn[title="Delete"]');
+            
+            if (viewBtn) {
+                viewBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showTicketDetails(ticket);
+                });
+            }
+            
+            if (editBtn) {
+                editBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    openTicketEditModal(ticket);
+                });
+            }
+            
+            if (deleteBtn) {
+                deleteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    // Confirm deletion
+                    if (confirm(`Are you sure you want to delete ticket ${ticket.id}?\n\nSummary: ${ticket.summary}\n\nThis action cannot be undone.`)) {
+                        // Remove from unified data system
+                        if (window.TracMockData) {
+                            window.TracMockData.tickets = window.TracMockData.tickets.filter(t => t.id !== ticket.id);
+                        }
+                        
+                        // Remove from local data
+                        if (window.tracTicketsData) {
+                            window.tracTicketsData = window.tracTicketsData.filter(t => t.id !== ticket.id);
+                        }
+                        
+                        // Remove from session storage
+                        try {
+                            let visualTickets = JSON.parse(sessionStorage.getItem('visualTickets') || '[]');
+                            visualTickets = visualTickets.filter(t => t.id !== ticket.id);
+                            sessionStorage.setItem('visualTickets', JSON.stringify(visualTickets));
+                        } catch (e) {
+                            console.error('Error updating sessionStorage:', e);
+                        }
+                        
+                        // Animate row removal and refresh table
+                        row.style.transition = 'all 0.3s ease';
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateX(-100%)';
+                        
+                        setTimeout(() => {
+                            if (window.refreshTicketsTable) {
+                                window.refreshTicketsTable();
+                            }
+                            showTicketUpdateNotification(ticket.id, 'deleted');
+                        }, 300);
+                    }
+                });
+            }
         });
     }
     
@@ -2071,6 +2299,16 @@
                                 successMessage += ` With ${newTicket.attachments.length} attachment(s): ${fileNames}`;
                             }
                             showMessage(successMessage, 'success');
+                            
+                            // Create real-time notification
+                            if (window.TracNotificationSystem) {
+                                window.TracNotificationSystem.addNotification({
+                                    title: `New Ticket Created: ${newTicket.id}`,
+                                    description: `"${newTicket.summary}" has been created and added to the system`,
+                                    type: 'success',
+                                    link: `/trac_env/ticket/${newTicket.id.replace('#', '')}`
+                                });
+                            }
                             
                             // Clear form and reset button after a short delay
                             setTimeout(() => {
@@ -2950,6 +3188,30 @@
     function addTicketToDisplay(ticket) {
         console.log('🚀 ADDING TICKET TO DISPLAY:', ticket);
         
+        // SYNC WITH UNIFIED DATA SYSTEM FIRST
+        if (window.TracMockData) {
+            const newUnifiedTicket = {
+                id: ticket.id,
+                title: ticket.summary,
+                description: ticket.description || 'New ticket created from kanban board',
+                type: ticket.type ? ticket.type.toLowerCase() : 'task',
+                priority: ticket.priority ? ticket.priority.toLowerCase() : 'medium',
+                status: ticket.status === 'Open' ? 'open' : 
+                       ticket.status === 'In Progress' ? 'in-progress' :
+                       ticket.status === 'Review' ? 'review' :
+                       ticket.status === 'Closed' ? 'done' : 'open',
+                assignee: 'AC', // Default assignee
+                reporter: 'AC', // Default reporter
+                component: 'Frontend',
+                milestone: ticket.milestone || 'v2.2.0', // Use ticket's milestone if specified, otherwise default
+                created: new Date().toISOString(),
+                modified: new Date().toISOString()
+            };
+            
+            window.TracMockData.tickets.unshift(newUnifiedTicket);
+            console.log(`✅ ADDED TO UNIFIED DATA SYSTEM. TOTAL: ${window.TracMockData.tickets.length}`);
+        }
+        
         // PERSIST TO SESSION STORAGE FOR CROSS-PAGE ACCESS
         let visualTickets = [];
         try {
@@ -2988,6 +3250,18 @@
         if (window.refreshTicketsTable) {
             console.log('🔄 FORCING TICKETS TABLE REFRESH');
             setTimeout(() => window.refreshTicketsTable(), 100);
+        }
+        
+        // FORCE refresh roadmap page if we're on it
+        if (window.location.pathname.includes('/roadmap') && typeof refreshRoadmap !== 'undefined') {
+            console.log('🔄 FORCING ROADMAP REFRESH');
+            setTimeout(() => refreshRoadmap(), 100);
+        }
+        
+        // FORCE refresh kanban board if function exists
+        if (window.refreshKanbanBoard) {
+            console.log('🔄 FORCING KANBAN BOARD REFRESH');
+            setTimeout(() => window.refreshKanbanBoard(), 100);
         }
     }
     
@@ -3060,6 +3334,16 @@
                 e.preventDefault();
                 e.stopPropagation();
                 showTicketDetails(ticket);
+            });
+        }
+        
+        // Add edit button functionality to the new row
+        const editBtn = row.querySelector('.action-btn[title="Edit"]');
+        if (editBtn) {
+            editBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openTicketEditModal(ticket);
             });
         }
         
@@ -4002,72 +4286,733 @@
         });
     }
     
+    // AI Assistant Logging System
+    class AIAssistantLogger {
+        constructor() {
+            this.sessionId = this.generateSessionId();
+            this.logs = [];
+            this.startTime = Date.now();
+            this.apiCallCount = 0;
+            this.userInteractions = 0;
+        }
+        
+        generateSessionId() {
+            return 'ai_session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+        
+        log(level, event, data = {}) {
+            const timestamp = new Date().toISOString();
+            const logEntry = {
+                timestamp,
+                sessionId: this.sessionId,
+                level,
+                event,
+                data: {
+                    ...data,
+                    userAgent: navigator.userAgent,
+                    url: window.location.href,
+                    sessionDuration: Date.now() - this.startTime
+                }
+            };
+            
+            this.logs.push(logEntry);
+            
+            // Console logging with colors
+            const colors = {
+                INFO: 'color: #06b6d4; font-weight: bold;',
+                SUCCESS: 'color: #10b981; font-weight: bold;',
+                WARNING: 'color: #f59e0b; font-weight: bold;',
+                ERROR: 'color: #ef4444; font-weight: bold;',
+                DEBUG: 'color: #8b5cf6; font-weight: bold;'
+            };
+            
+            console.log(`%c[AI Assistant ${level}] ${event}`, colors[level] || '', data);
+            
+            // Send to analytics (if available)
+            this.sendToAnalytics(logEntry);
+            
+            // Local storage backup
+            this.saveToLocalStorage(logEntry);
+        }
+        
+        info(event, data) { this.log('INFO', event, data); }
+        success(event, data) { this.log('SUCCESS', event, data); }
+        warning(event, data) { this.log('WARNING', event, data); }
+        error(event, data) { this.log('ERROR', event, data); }
+        debug(event, data) { this.log('DEBUG', event, data); }
+        
+        incrementInteraction() {
+            this.userInteractions++;
+        }
+        
+        incrementAPICall() {
+            this.apiCallCount++;
+        }
+        
+        sendToAnalytics(logEntry) {
+            // Send to Google Analytics, Mixpanel, or custom analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'ai_assistant_interaction', {
+                    event_category: 'AI Assistant',
+                    event_label: logEntry.event,
+                    custom_map: {
+                        session_id: logEntry.sessionId,
+                        level: logEntry.level
+                    }
+                });
+            }
+            
+            // Custom analytics endpoint
+            if (window.ANALYTICS_ENDPOINT) {
+                fetch(window.ANALYTICS_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(logEntry)
+                }).catch(err => console.warn('Analytics send failed:', err));
+            }
+        }
+        
+        saveToLocalStorage(logEntry) {
+            try {
+                const existingLogs = JSON.parse(localStorage.getItem('ai_assistant_logs') || '[]');
+                existingLogs.push(logEntry);
+                
+                // Keep only last 100 entries
+                if (existingLogs.length > 100) {
+                    existingLogs.splice(0, existingLogs.length - 100);
+                }
+                
+                localStorage.setItem('ai_assistant_logs', JSON.stringify(existingLogs));
+            } catch (err) {
+                console.warn('Failed to save log to localStorage:', err);
+            }
+        }
+        
+        getSessionSummary() {
+            return {
+                sessionId: this.sessionId,
+                duration: Date.now() - this.startTime,
+                totalLogs: this.logs.length,
+                apiCallCount: this.apiCallCount,
+                userInteractions: this.userInteractions,
+                events: this.logs.map(log => log.event),
+                errors: this.logs.filter(log => log.level === 'ERROR').length
+            };
+        }
+        
+        exportLogs() {
+            const summary = this.getSessionSummary();
+            const exportData = {
+                summary,
+                logs: this.logs
+            };
+            
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `ai_assistant_logs_${this.sessionId}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+    }
+    
+    // Global logger instance
+    const aiLogger = new AIAssistantLogger();
+    
     // AI Assistant for ticket description enhancement
     function addAIAssistant(descGroup, descriptionField) {
+        aiLogger.info('AI Assistant Initialized', {
+            formContext: {
+                hasDescriptionField: !!descriptionField,
+                fieldId: descriptionField?.id,
+                formLocation: window.location.pathname
+            }
+        });
         // Create AI assistant container
         const aiContainer = document.createElement('div');
         aiContainer.className = 'ai-assistant-container';
-        aiContainer.style.cssText = `
-            margin-top: 0.75rem;
-            padding: 1rem;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-        `;
         
         aiContainer.innerHTML = `
             <div class="ai-assistant-header">
-                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                    <div style="width: 24px; height: 24px; background: linear-gradient(135deg, #8b5cf6, #06b6d4); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        🤖
+                <div class="ai-header-top">
+                    <div class="ai-icon-wrapper">
+                        <div class="ai-icon-gradient">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                                <path d="M12 8v4m0 4h.01"/>
+                            </svg>
+                        </div>
                     </div>
-                    <span style="font-weight: 600; color: #f9fafb;">AI Ticket Assistant</span>
+                    <div class="ai-title-section">
+                        <span class="ai-title">AI Problem Solver</span>
+                        <span class="ai-subtitle">Intelligent ticket assistant</span>
+                    </div>
+                    <div class="ai-status-badge">
+                        <span class="ai-status-dot"></span>
+                        <span class="ai-status-text">SMART</span>
+                    </div>
                 </div>
-                <p style="font-size: 0.875rem; color: #d1d5db; margin: 0;">
-                    Provide a brief problem description and I'll help you write a more detailed ticket.
+                <p class="ai-description">
+                    Describe your problem and I'll analyze it, suggest immediate fixes, and create an actionable ticket if needed.
                 </p>
             </div>
             <div class="ai-assistant-content">
-                <div style="display: flex; gap: 0.75rem; margin-bottom: 0.75rem;">
-                    <input type="text" id="ai-brief-input" placeholder="e.g., Login button not working on mobile"
-                           style="flex: 1; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 8px; padding: 0.75rem; color: #f8fafc; font-size: 0.875rem;">
-                    <button id="ai-suggest-btn" style="background: linear-gradient(135deg, #8b5cf6, #06b6d4); border: none; border-radius: 8px; padding: 0.75rem 1.5rem; color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                        ✨ Auto-Suggest
+                <div class="ai-input-group">
+                    <div class="ai-input-wrapper">
+                        <input type="text" id="ai-brief-input" placeholder="Describe your issue (e.g., Login button not working on mobile)"
+                               class="ai-input">
+                        <div class="ai-input-hint">Press Enter or click Analyze to start</div>
+                    </div>
+                    <button id="ai-analyze-btn" class="ai-analyze-button">
+                        <svg class="ai-button-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <span>Analyze & Solve</span>
                     </button>
                 </div>
-                <div id="ai-suggestions" style="display: none;">
-                    <div style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 1rem; margin-bottom: 0.75rem;">
-                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                            <div style="width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></div>
-                            <span style="font-size: 0.875rem; font-weight: 600; color: #10b981;">AI Suggestion</span>
-                        </div>
-                        <div id="ai-suggestion-text" style="color: #f9fafb; font-size: 0.875rem; line-height: 1.5; white-space: pre-wrap;"></div>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button id="ai-use-btn" style="background: #10b981; border: none; border-radius: 6px; padding: 0.5rem 1rem; color: white; font-size: 0.875rem; cursor: pointer;">
-                            Use Suggestion
+                
+                <div id="ai-analysis-result" class="ai-analysis-result" style="display: none;">
+                    <!-- Tab Navigation -->
+                    <div class="ai-tabs">
+                        <button class="ai-tab active" data-tab="solutions">
+                            <svg class="ai-tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+                            </svg>
+                            <span>Solutions</span>
                         </button>
-                        <button id="ai-regenerate-btn" style="background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; padding: 0.5rem 1rem; color: #d1d5db; font-size: 0.875rem; cursor: pointer;">
-                            🔄 Regenerate
+                        <button class="ai-tab" data-tab="causes">
+                            <svg class="ai-tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4m0-4h.01"/>
+                            </svg>
+                            <span>Causes</span>
+                        </button>
+                        <button class="ai-tab" data-tab="diagnostics">
+                            <svg class="ai-tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 12h18m-9-9v18"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <span>Diagnostics</span>
+                        </button>
+                        <button class="ai-tab" data-tab="ticket">
+                            <svg class="ai-tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            <span>Ticket</span>
+                        </button>
+                        <button class="ai-tab" data-tab="related">
+                            <svg class="ai-tab-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                            </svg>
+                            <span>Related</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Tab Content -->
+                    <div id="ai-tab-content" class="ai-tab-content">
+                        <!-- Content will be dynamically loaded -->
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="ai-action-buttons">
+                        <button id="ai-apply-ticket" class="ai-action-btn ai-btn-primary">
+                            <svg class="ai-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            <span>Apply to Ticket</span>
+                        </button>
+                        <button id="ai-copy-section" class="ai-action-btn ai-btn-secondary">
+                            <svg class="ai-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            <span>Copy Section</span>
+                        </button>
+                        <button id="ai-search-similar" class="ai-action-btn ai-btn-secondary">
+                            <svg class="ai-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.35-4.35"/>
+                            </svg>
+                            <span>Search Similar</span>
+                        </button>
+                        <button id="ai-regenerate-analysis" class="ai-action-btn ai-btn-secondary">
+                            <svg class="ai-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="23 4 23 10 17 10"/>
+                                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                            </svg>
+                            <span>Re-analyze</span>
+                        </button>
+                        <button id="ai-view-logs" class="ai-action-btn ai-btn-ghost">
+                            <svg class="ai-btn-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="12" y1="18" x2="12" y2="12"/>
+                                <line x1="9" y1="15" x2="15" y2="15"/>
+                            </svg>
+                            <span>View Logs</span>
                         </button>
                     </div>
                 </div>
-                <div id="ai-loading" style="display: none; text-align: center; padding: 1rem;">
-                    <div style="display: inline-flex; align-items: center; gap: 0.5rem; color: #8b5cf6;">
-                        <div style="width: 16px; height: 16px; border: 2px solid rgba(139, 92, 246, 0.3); border-top: 2px solid #8b5cf6; border-radius: 50%; animation: spin 1s linear infinite;"></div>
-                        AI is thinking...
+                
+                <div id="ai-loading" class="ai-loading" style="display: none;">
+                    <div class="ai-loading-content">
+                        <div class="ai-loading-spinner">
+                            <div class="ai-spinner-ring"></div>
+                            <svg class="ai-spinner-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z"/>
+                            </svg>
+                        </div>
+                        <div class="ai-loading-text">
+                            <div class="ai-loading-title">AI is analyzing your problem...</div>
+                            <div class="ai-loading-status" id="ai-loading-status">Identifying root causes</div>
+                        </div>
                     </div>
                 </div>
             </div>
         `;
         
-        // Add CSS animation for spinner
+        // Add CSS for AI Problem Solver
         const style = document.createElement('style');
         style.textContent = `
+            /* AI Problem Solver Styles */
+            .ai-assistant-container {
+                margin-top: 0.75rem;
+                padding: 1.25rem;
+                background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(6, 182, 212, 0.08));
+                border: 1px solid rgba(139, 92, 246, 0.2);
+                border-radius: 14px;
+                backdrop-filter: blur(20px);
+                position: relative;
+                overflow: hidden;
+                animation: fadeIn 0.3s ease-out;
+            }
+            
+            .ai-assistant-container::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+                animation: shimmer 3s infinite;
+            }
+            
+            @keyframes shimmer {
+                0% { transform: translateX(-100%); }
+                100% { transform: translateX(100%); }
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .ai-header-top {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 0.75rem;
+            }
+            
+            .ai-icon-wrapper {
+                position: relative;
+            }
+            
+            .ai-icon-gradient {
+                width: 36px;
+                height: 36px;
+                background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            }
+            
+            .ai-title-section {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+            
+            .ai-title {
+                font-weight: 600;
+                color: #f9fafb;
+                font-size: 1.125rem;
+                letter-spacing: -0.025em;
+            }
+            
+            .ai-subtitle {
+                font-size: 0.75rem;
+                color: #9ca3af;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+            
+            .ai-status-badge {
+                display: flex;
+                align-items: center;
+                gap: 0.375rem;
+                background: rgba(16, 185, 129, 0.1);
+                border: 1px solid rgba(16, 185, 129, 0.3);
+                padding: 0.25rem 0.75rem;
+                border-radius: 9999px;
+                animation: pulse 2s infinite;
+            }
+            
+            .ai-status-dot {
+                width: 6px;
+                height: 6px;
+                background: #10b981;
+                border-radius: 50%;
+                animation: blink 1.5s infinite;
+            }
+            
+            .ai-status-text {
+                font-size: 0.75rem;
+                font-weight: 600;
+                color: #10b981;
+                letter-spacing: 0.05em;
+            }
+            
+            @keyframes pulse {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.8; }
+            }
+            
+            @keyframes blink {
+                0%, 100% { opacity: 1; }
+                50% { opacity: 0.3; }
+            }
+            
+            .ai-description {
+                font-size: 0.875rem;
+                color: #d1d5db;
+                margin: 0;
+                line-height: 1.5;
+            }
+            
+            .ai-input-group {
+                display: flex;
+                gap: 0.75rem;
+                margin-top: 1rem;
+            }
+            
+            .ai-input-wrapper {
+                flex: 1;
+                position: relative;
+            }
+            
+            .ai-input {
+                width: 100%;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 10px;
+                padding: 0.875rem 1rem;
+                color: #f8fafc;
+                font-size: 0.875rem;
+                transition: all 0.2s;
+                backdrop-filter: blur(10px);
+            }
+            
+            .ai-input:focus {
+                outline: none;
+                border-color: #8b5cf6;
+                background: rgba(255, 255, 255, 0.08);
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            }
+            
+            .ai-input::placeholder {
+                color: #6b7280;
+            }
+            
+            .ai-input-hint {
+                position: absolute;
+                bottom: -18px;
+                left: 1rem;
+                font-size: 0.75rem;
+                color: #6b7280;
+                opacity: 0;
+                transition: opacity 0.2s;
+            }
+            
+            .ai-input:focus ~ .ai-input-hint {
+                opacity: 1;
+            }
+            
+            .ai-analyze-button {
+                background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+                border: none;
+                border-radius: 10px;
+                padding: 0.875rem 1.5rem;
+                color: white;
+                font-weight: 600;
+                font-size: 0.875rem;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+                white-space: nowrap;
+            }
+            
+            .ai-analyze-button:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+            }
+            
+            .ai-analyze-button:active {
+                transform: translateY(0);
+            }
+            
+            .ai-button-icon {
+                width: 16px;
+                height: 16px;
+            }
+            
+            /* Analysis Results */
+            .ai-analysis-result {
+                margin-top: 1.5rem;
+                animation: slideIn 0.3s ease-out;
+            }
+            
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateY(20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+            
+            .ai-tabs {
+                display: flex;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 12px;
+                padding: 4px;
+                margin-bottom: 1rem;
+                gap: 4px;
+            }
+            
+            .ai-tab {
+                flex: 1;
+                padding: 0.625rem 0.75rem;
+                background: transparent;
+                color: #9ca3af;
+                border: none;
+                border-radius: 8px;
+                font-size: 0.8125rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.375rem;
+            }
+            
+            .ai-tab:hover {
+                color: #d1d5db;
+                background: rgba(255, 255, 255, 0.05);
+            }
+            
+            .ai-tab.active {
+                background: #8b5cf6;
+                color: white;
+                box-shadow: 0 2px 8px rgba(139, 92, 246, 0.3);
+            }
+            
+            .ai-tab-icon {
+                width: 14px;
+                height: 14px;
+                opacity: 0.8;
+            }
+            
+            .ai-tab.active .ai-tab-icon {
+                opacity: 1;
+            }
+            
+            .ai-tab-content {
+                min-height: 200px;
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                border-radius: 12px;
+                padding: 1.25rem;
+                color: #f9fafb;
+                font-size: 0.875rem;
+                line-height: 1.6;
+                backdrop-filter: blur(10px);
+            }
+            
+            /* Action Buttons */
+            .ai-action-buttons {
+                display: flex;
+                gap: 0.5rem;
+                margin-top: 1rem;
+                flex-wrap: wrap;
+            }
+            
+            .ai-action-btn {
+                padding: 0.5rem 1rem;
+                border-radius: 8px;
+                font-size: 0.8125rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 0.375rem;
+                border: 1px solid transparent;
+            }
+            
+            .ai-btn-icon {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .ai-btn-primary {
+                background: #10b981;
+                color: white;
+                border-color: #10b981;
+            }
+            
+            .ai-btn-primary:hover {
+                background: #059669;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            }
+            
+            .ai-btn-secondary {
+                background: rgba(255, 255, 255, 0.05);
+                color: #d1d5db;
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+            
+            .ai-btn-secondary:hover {
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+            
+            .ai-btn-ghost {
+                background: transparent;
+                color: #8b5cf6;
+                border-color: #8b5cf6;
+            }
+            
+            .ai-btn-ghost:hover {
+                background: rgba(139, 92, 246, 0.1);
+            }
+            
+            /* Loading State */
+            .ai-loading {
+                padding: 3rem 1rem;
+                text-align: center;
+            }
+            
+            .ai-loading-content {
+                display: inline-flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 1rem;
+            }
+            
+            .ai-loading-spinner {
+                position: relative;
+                width: 48px;
+                height: 48px;
+            }
+            
+            .ai-spinner-ring {
+                position: absolute;
+                inset: 0;
+                border: 3px solid rgba(139, 92, 246, 0.2);
+                border-top-color: #8b5cf6;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+            
+            .ai-spinner-icon {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: #8b5cf6;
+                opacity: 0.6;
+            }
+            
             @keyframes spin {
                 from { transform: rotate(0deg); }
                 to { transform: rotate(360deg); }
+            }
+            
+            .ai-loading-title {
+                font-weight: 600;
+                color: #f9fafb;
+                font-size: 0.9375rem;
+            }
+            
+            .ai-loading-status {
+                font-size: 0.8125rem;
+                color: #9ca3af;
+                margin-top: 0.25rem;
+            }
+            
+            /* Content Styling */
+            .ai-tab-content h3 {
+                font-size: 1rem;
+                font-weight: 600;
+                color: #f9fafb;
+                margin-bottom: 0.75rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+            
+            .ai-tab-content ol, .ai-tab-content ul {
+                margin-left: 1.25rem;
+                margin-bottom: 1rem;
+            }
+            
+            .ai-tab-content li {
+                margin-bottom: 0.5rem;
+                color: #e5e7eb;
+            }
+            
+            .ai-tab-content strong {
+                color: #f9fafb;
+                font-weight: 600;
+            }
+            
+            .ai-tab-content code {
+                background: rgba(139, 92, 246, 0.1);
+                color: #a78bfa;
+                padding: 0.125rem 0.375rem;
+                border-radius: 4px;
+                font-size: 0.8125rem;
+                font-family: var(--font-mono);
+            }
+            
+            .ai-tab-content pre {
+                background: rgba(0, 0, 0, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 8px;
+                padding: 1rem;
+                overflow-x: auto;
+                margin: 0.75rem 0;
+            }
+            
+            .ai-tab-content pre code {
+                background: none;
+                padding: 0;
+                color: #e5e7eb;
             }
         `;
         document.head.appendChild(style);
@@ -4075,64 +5020,171 @@
         // Insert AI container after the form group
         descGroup.appendChild(aiContainer);
         
-        // Event listeners
-        const briefInput = aiContainer.querySelector('#ai-brief-input');
-        const suggestBtn = aiContainer.querySelector('#ai-suggest-btn');
-        const useBtn = aiContainer.querySelector('#ai-use-btn');
-        const regenerateBtn = aiContainer.querySelector('#ai-regenerate-btn');
-        const suggestionsDiv = aiContainer.querySelector('#ai-suggestions');
-        const loadingDiv = aiContainer.querySelector('#ai-loading');
-        const suggestionText = aiContainer.querySelector('#ai-suggestion-text');
+        // Add session end logging
+        window.addEventListener('beforeunload', () => {
+            const sessionSummary = aiLogger.getSessionSummary();
+            aiLogger.info('AI Assistant Session Ended', {
+                sessionSummary: sessionSummary,
+                finalInteractionCount: aiLogger.userInteractions,
+                finalAPICallCount: aiLogger.apiCallCount
+            });
+        });
         
-        // Auto-suggest on button click
-        suggestBtn.addEventListener('click', async () => {
+        // Event listeners for new AI problem solver
+        const briefInput = aiContainer.querySelector('#ai-brief-input');
+        const analyzeBtn = aiContainer.querySelector('#ai-analyze-btn');
+        const analysisResult = aiContainer.querySelector('#ai-analysis-result');
+        const loadingDiv = aiContainer.querySelector('#ai-loading');
+        const loadingStatus = aiContainer.querySelector('#ai-loading-status');
+        const tabContent = aiContainer.querySelector('#ai-tab-content');
+        
+        // Store analysis data
+        let currentAnalysis = null;
+        let currentTab = 'solutions';
+        
+        // Analyze button click
+        analyzeBtn.addEventListener('click', async () => {
             const briefDescription = briefInput.value.trim();
+            aiLogger.incrementInteraction();
+            
             if (!briefDescription) {
+                aiLogger.warning('Analysis Attempted with Empty Input', {
+                    inputLength: briefDescription.length
+                });
                 briefInput.style.borderColor = '#ef4444';
                 setTimeout(() => briefInput.style.borderColor = 'rgba(255, 255, 255, 0.2)', 2000);
                 return;
             }
             
-            await generateAISuggestion(briefDescription);
+            aiLogger.info('Analysis Started', {
+                problemDescription: briefDescription,
+                inputLength: briefDescription.length,
+                triggeredBy: 'button_click'
+            });
+            
+            await performProblemAnalysis(briefDescription);
         });
         
-        // Auto-suggest on Enter key
+        // Analyze on Enter key
         briefInput.addEventListener('keypress', async (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                suggestBtn.click();
+                aiLogger.info('Analysis Triggered by Enter Key', {
+                    inputValue: briefInput.value.trim()
+                });
+                analyzeBtn.click();
             }
         });
         
-        // Use suggestion
-        useBtn.addEventListener('click', () => {
-            const suggestion = suggestionText.textContent;
-            if (suggestion && descriptionField) {
-                descriptionField.value = suggestion;
-                descriptionField.dispatchEvent(new Event('input', { bubbles: true }));
-                
-                // Show success animation
-                useBtn.textContent = '✅ Applied!';
-                useBtn.style.background = '#10b981';
-                setTimeout(() => {
-                    useBtn.textContent = 'Use Suggestion';
-                    useBtn.style.background = '#10b981';
-                }, 2000);
+        // Tab switching
+        aiContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('ai-tab')) {
+                const tabName = e.target.dataset.tab;
+                aiLogger.incrementInteraction();
+                aiLogger.info('Tab Switched', {
+                    newTab: tabName,
+                    previousTab: currentTab,
+                    hasAnalysis: !!currentAnalysis
+                });
+                switchTab(tabName);
             }
         });
         
-        // Regenerate suggestion
-        regenerateBtn.addEventListener('click', async () => {
-            const briefDescription = briefInput.value.trim();
-            if (briefDescription) {
-                await generateAISuggestion(briefDescription);
+        // Action buttons
+        aiContainer.addEventListener('click', async (e) => {
+            const btn = e.target.closest('button');
+            if (!btn) return;
+            
+            aiLogger.incrementInteraction();
+            const actionName = btn.id.replace('ai-', '').replace('-', '_');
+            
+            aiLogger.info('Action Button Clicked', {
+                action: actionName,
+                buttonId: btn.id,
+                currentTab: currentTab,
+                hasAnalysis: !!currentAnalysis
+            });
+            
+            if (btn.id === 'ai-apply-ticket') {
+                applyAnalysisToTicket();
+            } else if (btn.id === 'ai-copy-section') {
+                copyCurrentSection();
+            } else if (btn.id === 'ai-run-diagnostic') {
+                runDiagnosticCheck();
+            } else if (btn.id === 'ai-search-similar') {
+                searchSimilarIssues();
+            } else if (btn.id === 'ai-regenerate-analysis') {
+                const briefDescription = briefInput.value.trim();
+                if (briefDescription) {
+                    aiLogger.info('Re-analysis Requested', {
+                        originalDescription: briefDescription
+                    });
+                    await performProblemAnalysis(briefDescription);
+                }
+            } else if (btn.id === 'ai-view-logs') {
+                showLogViewer();
             }
         });
         
-        async function generateAISuggestion(briefDescription) {
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            // Update tab buttons
+            aiContainer.querySelectorAll('.ai-tab').forEach(tab => {
+                if (tab.dataset.tab === tabName) {
+                    tab.style.background = '#8b5cf6';
+                    tab.style.color = 'white';
+                } else {
+                    tab.style.background = 'transparent';
+                    tab.style.color = '#d1d5db';
+                }
+            });
+            
+            // Update content
+            if (currentAnalysis) {
+                displayTabContent(tabName, currentAnalysis);
+            }
+        }
+        
+        function displayTabContent(tabName, analysis) {
+            const content = analysis[tabName] || 'No content available for this section.';
+            tabContent.innerHTML = content;
+            
+            // Update action button visibility
+            const runDiagnosticBtn = aiContainer.querySelector('#ai-run-diagnostic');
+            if (runDiagnosticBtn) {
+                runDiagnosticBtn.style.display = tabName === 'diagnostics' ? 'flex' : 'none';
+            }
+        }
+        
+        // Main problem analysis function
+        async function performProblemAnalysis(briefDescription) {
+            const analysisStartTime = Date.now();
+            aiLogger.debug('Analysis Process Started', {
+                description: briefDescription,
+                startTime: analysisStartTime
+            });
+            
             loadingDiv.style.display = 'block';
-            suggestionsDiv.style.display = 'none';
-            suggestBtn.disabled = true;
+            analysisResult.style.display = 'none';
+            analyzeBtn.disabled = true;
+            
+            // Show progressive loading status
+            const loadingSteps = [
+                'Analyzing problem context...',
+                'Identifying root causes...',
+                'Generating solutions...',
+                'Preparing diagnostics...',
+                'Finalizing analysis...'
+            ];
+            
+            let stepIndex = 0;
+            const statusInterval = setInterval(() => {
+                if (stepIndex < loadingSteps.length) {
+                    loadingStatus.textContent = loadingSteps[stepIndex];
+                    stepIndex++;
+                }
+            }, 800);
             
             try {
                 // Get context from form fields
@@ -4147,178 +5199,1306 @@
                     project: 'Trac Project'
                 };
                 
-                const response = await callOpenAI(briefDescription, context);
+                const analysis = await generateProblemAnalysis(briefDescription, context);
+                currentAnalysis = analysis;
                 
-                if (response && response.suggestion) {
-                    suggestionText.textContent = response.suggestion;
-                    suggestionsDiv.style.display = 'block';
-                } else {
-                    throw new Error('No suggestion received');
+                const analysisEndTime = Date.now();
+                const analysisDuration = analysisEndTime - analysisStartTime;
+                
+                aiLogger.success('Analysis Completed Successfully', {
+                    duration: analysisDuration,
+                    analysisType: analysis.type || 'unknown',
+                    hasAllSections: !!(analysis.solutions && analysis.causes && analysis.diagnostics && analysis.ticket && analysis.related),
+                    contextUsed: context
+                });
+                
+                // Add notification for AI analysis completion
+                if (window.TracNotificationSystem) {
+                    window.TracNotificationSystem.addNotification({
+                        title: 'AI Analysis Complete',
+                        description: `Problem analysis for "${briefDescription.substring(0, 50)}${briefDescription.length > 50 ? '...' : ''}" is ready`,
+                        type: 'info'
+                    });
                 }
-            } catch (error) {
-                console.error('AI suggestion error:', error);
-                // Show fallback suggestion
-                showFallbackSuggestion(briefDescription);
-            } finally {
+                
+                // Display results
+                clearInterval(statusInterval);
                 loadingDiv.style.display = 'none';
-                suggestBtn.disabled = false;
+                analysisResult.style.display = 'block';
+                
+                // Show first tab (Solutions)
+                switchTab('solutions');
+                
+            } catch (error) {
+                console.error('AI analysis error:', error);
+                const analysisEndTime = Date.now();
+                const analysisDuration = analysisEndTime - analysisStartTime;
+                
+                aiLogger.error('Analysis Failed', {
+                    error: error.message,
+                    stack: error.stack,
+                    duration: analysisDuration,
+                    fallbackUsed: true,
+                    context: context
+                });
+                
+                clearInterval(statusInterval);
+                loadingDiv.style.display = 'none';
+                // Show fallback analysis
+                currentAnalysis = generateFallbackAnalysis(briefDescription);
+                analysisResult.style.display = 'block';
+                switchTab('solutions');
+            } finally {
+                analyzeBtn.disabled = false;
             }
         }
         
-        async function callOpenAI(briefDescription, context) {
-            // This would call your OpenAI API
-            // For now, we'll use a mock response with intelligent suggestions
+        async function generateProblemAnalysis(briefDescription, context) {
+            // Try to use the backend API first
+            try {
+                aiLogger.incrementAPICall();
+                aiLogger.info('Attempting Backend API Call', {
+                    apiCallNumber: aiLogger.apiCallCount,
+                    contextSize: JSON.stringify(context).length
+                });
+                return await callRealOpenAI(briefDescription, context);
+            } catch (error) {
+                aiLogger.error('Backend API Call Failed', {
+                    error: error.message,
+                    fallbackToTemplates: true
+                });
+                console.error('Backend API error:', error);
+                // Fall back to smart templates
+            }
+            
+            aiLogger.info('Using Smart Template Analysis', {
+                reason: 'api_fallback'
+            });
+            
+            // Use intelligent analysis based on problem patterns
+            return generateSmartAnalysis(briefDescription, context);
+        }
+        
+        async function callRealOpenAI(briefDescription, context) {
+            const apiCallStartTime = Date.now();
+            
+            aiLogger.debug('Backend API Request', {
+                endpoint: '/ai/analyze',
+                descriptionLength: briefDescription.length,
+                contextKeys: Object.keys(context)
+            });
+
+            try {
+                // Call our backend endpoint which handles the OpenAI API securely
+                const response = await fetch('http://localhost:5001/ai/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        description: briefDescription,
+                        context: context
+                    })
+                });
+                
+                const apiCallEndTime = Date.now();
+                const apiCallDuration = apiCallEndTime - apiCallStartTime;
+                
+                if (!response.ok) {
+                    const errorData = await response.text();
+                    aiLogger.error('Backend API HTTP Error', {
+                        status: response.status,
+                        statusText: response.statusText,
+                        errorData: errorData,
+                        duration: apiCallDuration
+                    });
+                    throw new Error(`Backend API error: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.fallback) {
+                    // Backend indicated to use fallback
+                    throw new Error(data.error || 'Backend requested fallback');
+                }
+                
+                aiLogger.success('Backend API Response Received', {
+                    duration: apiCallDuration,
+                    responseLength: JSON.stringify(data).length,
+                    tokensUsed: data.usage?.total_tokens,
+                    success: data.success
+                });
+                
+                const analysis = data.analysis;
+                
+                aiLogger.debug('Analysis Response Parsed', {
+                    hasSolutions: !!analysis.solutions,
+                    hasCauses: !!analysis.causes,
+                    hasDiagnostics: !!analysis.diagnostics,
+                    hasTicket: !!analysis.ticket,
+                    hasRelated: !!analysis.related
+                });
+                
+                return analysis;
+                
+            } catch (error) {
+                const apiCallEndTime = Date.now();
+                const apiCallDuration = apiCallEndTime - apiCallStartTime;
+                
+                aiLogger.error('Backend API Call Exception', {
+                    error: error.message,
+                    duration: apiCallDuration,
+                    isNetworkError: error.name === 'TypeError',
+                    isParseError: error.message.includes('JSON'),
+                    willFallback: true
+                });
+                
+                throw error;
+            }
+        }
+        
+        function generateSmartAnalysis(briefDescription, context) {
             return new Promise((resolve) => {
                 setTimeout(() => {
-                    const suggestions = {
-                        'login': `**Issue Summary:**
-Login functionality is not working properly on mobile devices.
-
-**Steps to Reproduce:**
-1. Open the application on a mobile device
-2. Navigate to the login page
-3. Enter valid credentials
-4. Tap the login button
-
-**Expected Behavior:**
-User should be successfully logged in and redirected to the dashboard.
-
-**Actual Behavior:**
-${briefDescription}
-
-**Environment:**
-- Device: Mobile (specify model if known)
-- Browser: (specify browser and version)
-- Operating System: (iOS/Android version)
-
-**Additional Information:**
-This issue may be related to responsive design or touch event handling on mobile devices.
-
-**Priority:** High - Blocking user access on mobile devices`,
-
-                        'button': `**Issue Summary:**
-Button functionality issue requiring investigation.
-
-**Detailed Description:**
-${briefDescription}
-
-**Steps to Reproduce:**
-1. Navigate to the relevant page/section
-2. Locate the affected button
-3. Click/tap the button
-4. Observe the behavior
-
-**Expected Behavior:**
-Button should perform its intended action correctly.
-
-**Actual Behavior:**
-Button is not functioning as expected.
-
-**Impact:**
-This affects user workflow and may prevent completion of important tasks.
-
-**Suggested Investigation:**
-- Check browser console for JavaScript errors
-- Verify button event handlers are properly attached
-- Test across different browsers and devices`,
-
-                        'mobile': `**Issue Summary:**
-Mobile-specific functionality issue.
-
-**Problem Description:**
-${briefDescription}
-
-**Device Information:**
-- Device Type: Mobile
-- Screen Size: [Please specify]
-- Operating System: [iOS/Android version]
-- Browser: [Browser name and version]
-
-**Steps to Reproduce:**
-1. Access the application on a mobile device
-2. [Specific steps to reproduce the issue]
-
-**Expected vs Actual Behavior:**
-**Expected:** Normal functionality on mobile devices
-**Actual:** ${briefDescription}
-
-**Mobile-Specific Considerations:**
-- Touch vs click events
-- Responsive design issues
-- Viewport scaling
-- Mobile browser compatibility
-
-**Priority:** High - Mobile users represent a significant portion of our user base`
-                    };
+                    const lowerDesc = briefDescription.toLowerCase();
+                    let analysis;
                     
-                    // Find the best matching suggestion
-                    let suggestion = '';
-                    const lowerBrief = briefDescription.toLowerCase();
-                    
-                    if (lowerBrief.includes('login')) {
-                        suggestion = suggestions.login;
-                    } else if (lowerBrief.includes('button')) {
-                        suggestion = suggestions.button;
-                    } else if (lowerBrief.includes('mobile')) {
-                        suggestion = suggestions.mobile;
+                    // Enhanced pattern matching with technical keywords
+                    if (lowerDesc.includes('login') || lowerDesc.includes('auth') || lowerDesc.includes('session') || lowerDesc.includes('credential')) {
+                        analysis = generateLoginAnalysis(briefDescription, context);
+                    } else if (lowerDesc.includes('mobile') || lowerDesc.includes('responsive') || lowerDesc.includes('touch') || lowerDesc.includes('ios') || lowerDesc.includes('android')) {
+                        analysis = generateMobileAnalysis(briefDescription, context);
+                    } else if (lowerDesc.includes('button') && !lowerDesc.includes('server') || lowerDesc.includes('click') || lowerDesc.includes('form submit')) {
+                        analysis = generateButtonAnalysis(briefDescription, context);
+                    } else if (
+                        // Server/Infrastructure indicators
+                        lowerDesc.includes('timeout') || lowerDesc.includes('502') || lowerDesc.includes('503') || lowerDesc.includes('504') ||
+                        lowerDesc.includes('gateway') || lowerDesc.includes('nginx') || lowerDesc.includes('apache') || 
+                        lowerDesc.includes('gunicorn') || lowerDesc.includes('uwsgi') || lowerDesc.includes('worker') ||
+                        lowerDesc.includes('concurrency') || lowerDesc.includes('load') || lowerDesc.includes('peak hours') ||
+                        lowerDesc.includes('upload') || lowerDesc.includes('attachment') || lowerDesc.includes('file size') ||
+                        lowerDesc.includes('backend') || lowerDesc.includes('server') || lowerDesc.includes('endpoint') ||
+                        lowerDesc.includes('proxy') || lowerDesc.includes('reverse proxy') || lowerDesc.includes('config')
+                    ) {
+                        analysis = generateServerInfrastructureAnalysis(briefDescription, context);
+                    } else if (lowerDesc.includes('slow') || lowerDesc.includes('performance') || lowerDesc.includes('loading')) {
+                        analysis = generatePerformanceAnalysis(briefDescription, context);
                     } else {
-                        // Generic template
-                        suggestion = `**Issue Summary:**
-${briefDescription}
-
-**Detailed Description:**
-Please provide a more detailed description of the issue, including:
-
-**Steps to Reproduce:**
-1. [First step]
-2. [Second step]
-3. [Third step]
-
-**Expected Behavior:**
-[What should happen]
-
-**Actual Behavior:**
-[What actually happens]
-
-**Environment:**
-- Browser: [Browser name and version]
-- Operating System: [OS and version]
-- Device: [Desktop/Mobile/Tablet]
-
-**Additional Information:**
-[Any other relevant details, error messages, or context]
-
-**Impact:**
-[How this affects users or the system]`;
+                        analysis = generateGenericAnalysis(briefDescription, context);
                     }
                     
-                    resolve({ suggestion });
-                }, 1500); // Simulate API delay
+                    resolve(analysis);
+                }, 2000);
             });
         }
         
-        function showFallbackSuggestion(briefDescription) {
-            const fallback = `**Issue Summary:**
-${briefDescription}
-
-**Description:**
-[Please expand on the issue details]
-
-**Steps to Reproduce:**
-1. [Describe the steps to reproduce this issue]
-2. [Include specific actions taken]
-
-**Expected Result:**
-[What should happen]
-
-**Actual Result:**
-[What actually happens]
-
-**Additional Information:**
-[Any relevant details, error messages, or context]`;
-
-            suggestionText.textContent = fallback;
-            suggestionsDiv.style.display = 'block';
+        function generateLoginAnalysis(briefDescription, context) {
+            return {
+                solutions: `
+                    <h3>🚀 Quick Solutions to Try</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>1. Clear Browser Data (80% success rate)</strong><br>
+                            • Clear cookies, cache, and localStorage<br>
+                            • Try incognito/private browsing mode<br>
+                            • Restart browser completely
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>2. Check Credentials & Case Sensitivity</strong><br>
+                            • Verify username/email spelling<br>
+                            • Check caps lock status<br>
+                            • Try password reset if available
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>3. Network & Connectivity</strong><br>
+                            • Try different network/WiFi<br>
+                            • Disable VPN if active<br>
+                            • Check if other users can login
+                        </div>
+                    </div>
+                `,
+                causes: `
+                    <h3>🔍 Likely Root Causes</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border-radius: 6px;">
+                            <strong style="color: #ef4444;">85% - Session/Cookie Issues</strong><br>
+                            <span style="color: #d1d5db;">Expired session tokens, corrupted cookies, or localStorage conflicts</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Developer tools → Application → Storage</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 6px;">
+                            <strong style="color: #f59e0b;">65% - Authentication Service</strong><br>
+                            <span style="color: #d1d5db;">Backend auth server issues, database connectivity, or API timeout</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Network tab for 401/403/500 errors</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(6, 182, 212, 0.1); border-radius: 6px;">
+                            <strong style="color: #06b6d4;">45% - Frontend JavaScript</strong><br>
+                            <span style="color: #d1d5db;">Form validation errors, CSRF token issues, or event handler problems</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Browser console for JavaScript errors</em>
+                        </div>
+                    </div>
+                `,
+                diagnostics: `
+                    <h3>📊 Diagnostic Information to Gather</h3>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                        <h4 style="color: #8b5cf6; margin-top: 0;">Essential Data Collection</h4>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Browser console errors (F12 → Console)</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Network requests (F12 → Network → Filter XHR)</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Browser type and version</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Operating system details</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Time of issue occurrence</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Screenshot of error message</label><br>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px;">
+                        <h4 style="color: #10b981; margin-top: 0;">Commands to Run</h4>
+                        <code style="background: rgba(0,0,0,0.3); padding: 0.25rem 0.5rem; border-radius: 3px; display: block; margin: 0.5rem 0;">
+                            # Check auth service status<br>
+                            curl -I https://your-domain.com/api/auth/status
+                        </code>
+                        <code style="background: rgba(0,0,0,0.3); padding: 0.25rem 0.5rem; border-radius: 3px; display: block; margin: 0.5rem 0;">
+                            # Test login endpoint<br>
+                            curl -X POST https://your-domain.com/api/auth/login
+                        </code>
+                    </div>
+                `,
+                ticket: `
+                    <h3>📝 Complete Ticket Structure</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.875rem;">
+                        <strong style="color: #ef4444;">PRIORITY: HIGH</strong> - Blocks user access<br><br>
+                        
+                        <strong>TITLE:</strong> Login Authentication Failure - ${briefDescription}<br><br>
+                        
+                        <strong>SUMMARY:</strong><br>
+                        Users experiencing login issues with ${briefDescription}. Authentication process failing despite correct credentials.<br><br>
+                        
+                        <strong>IMPACT:</strong><br>
+                        • Users cannot access the application<br>
+                        • Potential security implications<br>
+                        • Business disruption<br><br>
+                        
+                        <strong>INVESTIGATION PATHS:</strong><br>
+                        1. Check <code>auth/login.js</code> - handleLoginSubmit() function<br>
+                        2. Verify <code>middleware/auth.js</code> - token validation<br>
+                        3. Review <code>models/User.js</code> - authentication methods<br>
+                        4. Examine auth service logs for errors<br><br>
+                        
+                        <strong>LIKELY FILES TO CHECK:</strong><br>
+                        • <code>/src/components/auth/LoginForm.jsx</code><br>
+                        • <code>/api/routes/auth.js</code><br>
+                        • <code>/config/passport.js</code><br>
+                        • <code>/middleware/validateToken.js</code><br><br>
+                        
+                        <strong>SUGGESTED FIXES:</strong><br>
+                        • Update session timeout configuration<br>
+                        • Add proper CSRF token handling<br>
+                        • Implement better error messaging<br>
+                        • Add authentication retry logic
+                    </div>
+                `,
+                related: `
+                    <h3>🔗 Related Issues & Prevention</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <h4 style="color: #06b6d4;">Search for Similar Issues:</h4>
+                        <div style="background: rgba(6, 182, 212, 0.1); padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem;">
+                            <code>"login fails" OR "authentication error" OR "session expired"</code><br>
+                            <code>type:bug status:open component:auth</code><br>
+                            <code>"cannot login" mobile safari iOS</code>
+                        </div>
+                        
+                        <h4 style="color: #10b981;">Prevention Strategies:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li>Implement proper session management</li>
+                            <li>Add comprehensive auth logging</li>
+                            <li>Set up auth service monitoring</li>
+                            <li>Create automated login tests</li>
+                            <li>Document auth troubleshooting guide</li>
+                        </ul>
+                        
+                        <h4 style="color: #f59e0b;">Related Documentation:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li><a href="/wiki/AuthenticationGuide" style="color: #06b6d4;">Authentication Setup Guide</a></li>
+                            <li><a href="/wiki/TroubleshootingAuth" style="color: #06b6d4;">Auth Troubleshooting</a></li>
+                            <li><a href="/wiki/SessionManagement" style="color: #06b6d4;">Session Management</a></li>
+                        </ul>
+                    </div>
+                `
+            };
+        }
+        
+        function generateMobileAnalysis(briefDescription, context) {
+            return {
+                solutions: `
+                    <h3>🚀 Quick Solutions to Try</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>1. Enable Desktop Mode (90% success rate)</strong><br>
+                            • Safari: Tap AA icon → Request Desktop Website<br>
+                            • Chrome: Menu → Request Desktop Site<br>
+                            • Test functionality in desktop mode
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>2. Clear Mobile Browser Data</strong><br>
+                            • Clear Safari/Chrome cache and cookies<br>
+                            • Restart browser app completely<br>
+                            • Try in private/incognito mode
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>3. Device-Specific Fixes</strong><br>
+                            • Rotate device to landscape mode<br>
+                            • Zoom out to 100% if zoomed in<br>
+                            • Close other browser tabs to free memory
+                        </div>
+                    </div>
+                `,
+                causes: `
+                    <h3>🔍 Likely Root Causes</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border-radius: 6px;">
+                            <strong style="color: #ef4444;">80% - Touch vs Click Events</strong><br>
+                            <span style="color: #d1d5db;">Mobile elements not properly handling touch events, missing touchstart/touchend handlers</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Event listeners for touch devices</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 6px;">
+                            <strong style="color: #f59e0b;">75% - Responsive CSS Issues</strong><br>
+                            <span style="color: #d1d5db;">Media queries not covering device size, viewport scaling problems, or element overflow</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: CSS media queries and viewport meta tag</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(6, 182, 212, 0.1); border-radius: 6px;">
+                            <strong style="color: #06b6d4;">60% - Mobile Browser Compatibility</strong><br>
+                            <span style="color: #d1d5db;">Feature not supported in mobile Safari/Chrome, or iOS/Android specific issues</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Browser feature support and user agent</em>
+                        </div>
+                    </div>
+                `,
+                diagnostics: `
+                    <h3>📊 Diagnostic Information to Gather</h3>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                        <h4 style="color: #8b5cf6; margin-top: 0;">Mobile-Specific Data Collection</h4>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Device model and iOS/Android version</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Browser type and version (Safari/Chrome/Firefox)</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Screen size and orientation when issue occurs</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Does issue occur in landscape vs portrait?</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Screenshot or screen recording of the issue</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Does desktop mode work as workaround?</label><br>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px;">
+                        <h4 style="color: #10b981; margin-top: 0;">Mobile Debugging Tools</h4>
+                        <code style="background: rgba(0,0,0,0.3); padding: 0.25rem 0.5rem; border-radius: 3px; display: block; margin: 0.5rem 0;">
+                            # iOS Safari Remote Debugging<br>
+                            Settings → Safari → Advanced → Web Inspector (Enable)
+                        </code>
+                        <code style="background: rgba(0,0,0,0.3); padding: 0.25rem 0.5rem; border-radius: 3px; display: block; margin: 0.5rem 0;">
+                            # Chrome Mobile DevTools<br>
+                            chrome://inspect → Remote devices
+                        </code>
+                    </div>
+                `,
+                ticket: `
+                    <h3>📝 Complete Ticket Structure</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.875rem;">
+                        <strong style="color: #f59e0b;">PRIORITY: HIGH</strong> - Affects mobile users<br><br>
+                        
+                        <strong>TITLE:</strong> Mobile Device Issue - ${briefDescription}<br><br>
+                        
+                        <strong>SUMMARY:</strong><br>
+                        Mobile users experiencing issues with ${briefDescription}. Problem specific to mobile browsers/devices.<br><br>
+                        
+                        <strong>DEVICE INFO:</strong><br>
+                        • Device: [iOS/Android model]<br>
+                        • Browser: [Safari/Chrome version]<br>
+                        • Screen size: [dimensions]<br>
+                        • Orientation: [Portrait/Landscape]<br><br>
+                        
+                        <strong>INVESTIGATION PATHS:</strong><br>
+                        1. Check <code>css/responsive.css</code> - media queries<br>
+                        2. Review <code>js/mobile-events.js</code> - touch handlers<br>
+                        3. Test viewport meta tag configuration<br>
+                        4. Verify mobile browser compatibility<br><br>
+                        
+                        <strong>LIKELY FILES TO CHECK:</strong><br>
+                        • <code>/css/mobile.css</code> or <code>/css/responsive.css</code><br>
+                        • <code>/js/touch-events.js</code> or main JavaScript files<br>
+                        • <code>/index.html</code> - viewport meta tag<br>
+                        • <code>/js/feature-detection.js</code><br><br>
+                        
+                        <strong>SUGGESTED FIXES:</strong><br>
+                        • Add proper touch event handling<br>
+                        • Update responsive CSS breakpoints<br>
+                        • Test across multiple mobile devices<br>
+                        • Implement mobile-first design approach
+                    </div>
+                `,
+                related: `
+                    <h3>🔗 Related Issues & Prevention</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <h4 style="color: #06b6d4;">Search for Similar Issues:</h4>
+                        <div style="background: rgba(6, 182, 212, 0.1); padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem;">
+                            <code>"mobile issue" OR "responsive" OR "touch event"</code><br>
+                            <code>type:bug status:open component:frontend mobile</code><br>
+                            <code>"iOS Safari" OR "Android Chrome" ${briefDescription}</code>
+                        </div>
+                        
+                        <h4 style="color: #10b981;">Prevention Strategies:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li>Implement mobile-first responsive design</li>
+                            <li>Regular testing on actual mobile devices</li>
+                            <li>Use touch-friendly UI elements (44px minimum)</li>
+                            <li>Set up automated mobile testing pipeline</li>
+                            <li>Monitor mobile analytics and error rates</li>
+                        </ul>
+                        
+                        <h4 style="color: #f59e0b;">Related Documentation:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li><a href="/wiki/MobileDesignGuide" style="color: #06b6d4;">Mobile Design Guidelines</a></li>
+                            <li><a href="/wiki/ResponsiveTesting" style="color: #06b6d4;">Responsive Testing Process</a></li>
+                            <li><a href="/wiki/TouchEventHandling" style="color: #06b6d4;">Touch Event Best Practices</a></li>
+                        </ul>
+                    </div>
+                `
+            };
+        }
+        
+        function generateButtonAnalysis(briefDescription, context) {
+            return {
+                solutions: `
+                    <h3>🚀 Quick Solutions to Try</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>1. Basic Button Troubleshooting (85% success rate)</strong><br>
+                            • Hard refresh the page (Ctrl+F5 or Cmd+Shift+R)<br>
+                            • Check if button is disabled or loading<br>
+                            • Try clicking different areas of the button
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>2. JavaScript and Console Check</strong><br>
+                            • Open browser console (F12) and check for errors<br>
+                            • Look for "Uncaught" or "Cannot read property" errors<br>
+                            • Try disabling browser extensions temporarily
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>3. Form and Validation Issues</strong><br>
+                            • Fill in all required fields before clicking<br>
+                            • Check for form validation error messages<br>
+                            • Try submitting with different data
+                        </div>
+                    </div>
+                `,
+                causes: `
+                    <h3>🔍 Likely Root Causes</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border-radius: 6px;">
+                            <strong style="color: #ef4444;">70% - JavaScript Event Handler Issues</strong><br>
+                            <span style="color: #d1d5db;">Event listener not attached, handler function undefined, or JavaScript error preventing execution</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Console errors and event listeners in DevTools</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 6px;">
+                            <strong style="color: #f59e0b;">65% - Form Validation Preventing Submission</strong><br>
+                            <span style="color: #d1d5db;">Required fields empty, invalid data format, or custom validation rules failing</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Form validation state and required field indicators</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(6, 182, 212, 0.1); border-radius: 6px;">
+                            <strong style="color: #06b6d4;">50% - CSS/UI Interaction Issues</strong><br>
+                            <span style="color: #d1d5db;">Button covered by another element, z-index issues, or CSS preventing click events</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Element inspector and pointer-events CSS property</em>
+                        </div>
+                    </div>
+                `,
+                diagnostics: `
+                    <h3>📊 Diagnostic Information to Gather</h3>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                        <h4 style="color: #8b5cf6; margin-top: 0;">Button Interaction Diagnostics</h4>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Console errors when clicking button</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Button's HTML structure and CSS classes</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Form validation state and required fields</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Network requests triggered by button click</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Button's disabled/loading state</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Browser and device where issue occurs</label><br>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px;">
+                        <h4 style="color: #10b981; margin-top: 0;">Browser DevTools Commands</h4>
+                        <code style="background: rgba(0,0,0,0.3); padding: 0.25rem 0.5rem; border-radius: 3px; display: block; margin: 0.5rem 0;">
+                            # Check if button has event listeners<br>
+                            $0.onclick || getEventListeners($0)
+                        </code>
+                        <code style="background: rgba(0,0,0,0.3); padding: 0.25rem 0.5rem; border-radius: 3px; display: block; margin: 0.5rem 0;">
+                            # Test if button is clickable<br>
+                            $0.click() // Should trigger the action
+                        </code>
+                    </div>
+                `,
+                ticket: `
+                    <h3>📝 Complete Ticket Structure</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.875rem;">
+                        <strong style="color: #f59e0b;">PRIORITY: MEDIUM</strong> - Blocks user workflow<br><br>
+                        
+                        <strong>TITLE:</strong> Button Functionality Issue - ${briefDescription}<br><br>
+                        
+                        <strong>SUMMARY:</strong><br>
+                        Button not responding to clicks or not performing expected action: ${briefDescription}<br><br>
+                        
+                        <strong>REPRODUCTION STEPS:</strong><br>
+                        1. Navigate to [specific page]<br>
+                        2. [Describe any required form filling]<br>
+                        3. Click the [button name/description]<br>
+                        4. Observe: Nothing happens or unexpected behavior<br><br>
+                        
+                        <strong>INVESTIGATION PATHS:</strong><br>
+                        1. Check <code>js/button-handlers.js</code> - click event listeners<br>
+                        2. Review <code>js/form-validation.js</code> - validation logic<br>
+                        3. Examine <code>css/buttons.css</code> - pointer-events and z-index<br>
+                        4. Test form submission endpoints for errors<br><br>
+                        
+                        <strong>LIKELY FILES TO CHECK:</strong><br>
+                        • <code>/js/main.js</code> or component-specific JavaScript<br>
+                        • <code>/css/components/buttons.css</code><br>
+                        • <code>/js/form-validation.js</code><br>
+                        • Backend form processing endpoints<br><br>
+                        
+                        <strong>SUGGESTED FIXES:</strong><br>
+                        • Add error handling to button click handlers<br>
+                        • Improve form validation feedback<br>
+                        • Add loading states and user feedback<br>
+                        • Test button accessibility and keyboard navigation
+                    </div>
+                `,
+                related: `
+                    <h3>🔗 Related Issues & Prevention</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <h4 style="color: #06b6d4;">Search for Similar Issues:</h4>
+                        <div style="background: rgba(6, 182, 212, 0.1); padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem;">
+                            <code>"button not working" OR "click not responding" OR "form submit"</code><br>
+                            <code>type:bug status:open component:frontend button</code><br>
+                            <code>"event handler" OR "onclick" OR "addEventListener"</code>
+                        </div>
+                        
+                        <h4 style="color: #10b981;">Prevention Strategies:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li>Add comprehensive error handling to all button clicks</li>
+                            <li>Implement proper loading states and user feedback</li>
+                            <li>Use consistent event handling patterns</li>
+                            <li>Add automated testing for critical button actions</li>
+                            <li>Monitor JavaScript errors in production</li>
+                        </ul>
+                        
+                        <h4 style="color: #f59e0b;">Related Documentation:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li><a href="/wiki/JavaScriptBestPractices" style="color: #06b6d4;">JavaScript Event Handling</a></li>
+                            <li><a href="/wiki/FormValidation" style="color: #06b6d4;">Form Validation Guide</a></li>
+                            <li><a href="/wiki/UIComponents" style="color: #06b6d4;">Button Component Standards</a></li>
+                        </ul>
+                    </div>
+                `
+            };
+        }
+        
+        function generateServerInfrastructureAnalysis(briefDescription, context) {
+            return {
+                solutions: `
+                    <h3>🚀 Immediate Server & Infrastructure Solutions:</h3>
+                    <ol>
+                        <li><strong>Check Server Resources</strong>
+                            <ul>
+                                <li>Run: <code>top</code> or <code>htop</code> to check CPU/memory usage</li>
+                                <li>Check disk space: <code>df -h</code></li>
+                                <li>View active connections: <code>netstat -an | grep :8000</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Restart Services</strong>
+                            <ul>
+                                <li>Restart web server: <code>sudo systemctl restart nginx</code></li>
+                                <li>Restart application: <code>supervisorctl restart trac</code></li>
+                                <li>Clear any stuck processes: <code>pkill -f tracd</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Quick Configuration Fixes</strong>
+                            <ul>
+                                <li>Increase worker processes in config</li>
+                                <li>Adjust timeout settings</li>
+                                <li>Enable/disable debug mode as needed</li>
+                            </ul>
+                        </li>
+                    </ol>
+                `,
+                causes: `
+                    <h3>🔍 Likely Infrastructure Root Causes:</h3>
+                    <ol>
+                        <li><strong>Resource Exhaustion</strong> (40% probability)
+                            <ul>
+                                <li>Memory leaks in application</li>
+                                <li>Too many concurrent connections</li>
+                                <li>Insufficient server resources</li>
+                                <li>Check: Memory usage over 90%?</li>
+                            </ul>
+                        </li>
+                        <li><strong>Configuration Issues</strong> (35% probability)
+                            <ul>
+                                <li>Incorrect proxy settings</li>
+                                <li>Worker process limits too low</li>
+                                <li>Timeout values misconfigured</li>
+                                <li>Check: Recent config changes?</li>
+                            </ul>
+                        </li>
+                        <li><strong>Network/Connectivity</strong> (25% probability)
+                            <ul>
+                                <li>Firewall blocking connections</li>
+                                <li>DNS resolution issues</li>
+                                <li>SSL/TLS certificate problems</li>
+                                <li>Check: Can you ping the server?</li>
+                            </ul>
+                        </li>
+                    </ol>
+                `,
+                diagnostics: `
+                    <h3>📊 Server Diagnostics to Gather:</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px;">
+                        <h4>System Information:</h4>
+                        <ul style="list-style: none;">
+                            <li>☐ Server logs: <code>tail -f /var/log/trac/error.log</code></li>
+                            <li>☐ System logs: <code>journalctl -xe</code></li>
+                            <li>☐ Resource usage: <code>free -m && df -h</code></li>
+                            <li>☐ Process list: <code>ps aux | grep trac</code></li>
+                            <li>☐ Network status: <code>ss -tulpn | grep 8000</code></li>
+                            <li>☐ Configuration files from /etc/trac/</li>
+                        </ul>
+                    </div>
+                `,
+                ticket: `
+                    <h3>📝 Infrastructure Issue Ticket:</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px;">
+                        <p><strong>Priority:</strong> <span style="color: #ef4444;">High</span> - Infrastructure issues affect all users</p>
+                        <p><strong>Summary:</strong> Server infrastructure issue: ${briefDescription}</p>
+                        <p><strong>Description:</strong><br>
+                        ${briefDescription}</p>
+                        
+                        <p><strong>Environment:</strong><br>
+                        - Server OS: [Check with: uname -a]<br>
+                        - Web Server: [nginx/apache version]<br>
+                        - Python Version: [python --version]<br>
+                        - Trac Version: ${context.project || 'Unknown'}</p>
+                        
+                        <p><strong>Investigation Path:</strong><br>
+                        1. Check server resource usage and limits<br>
+                        2. Review application and system logs<br>
+                        3. Verify configuration files<br>
+                        4. Test with minimal configuration<br>
+                        5. Monitor during issue reproduction</p>
+                        
+                        <p><strong>Potential Fix Locations:</strong><br>
+                        - Config: <code>/etc/trac/trac.ini</code><br>
+                        - Web server: <code>/etc/nginx/sites-available/trac</code><br>
+                        - Systemd: <code>/etc/systemd/system/trac.service</code><br>
+                        - Logs: <code>/var/log/trac/</code></p>
+                    </div>
+                `,
+                related: `
+                    <h3>🔗 Related Infrastructure Resources:</h3>
+                    <ul>
+                        <li><strong>Similar Issues:</strong>
+                            <ul>
+                                <li>Search: "server timeout memory"</li>
+                                <li>Search: "502 bad gateway"</li>
+                                <li>Search: "worker process died"</li>
+                            </ul>
+                        </li>
+                        <li><strong>Prevention:</strong>
+                            <ul>
+                                <li>Set up monitoring (Prometheus/Grafana)</li>
+                                <li>Configure alerts for resource usage</li>
+                                <li>Implement auto-scaling if possible</li>
+                                <li>Regular log rotation and cleanup</li>
+                            </ul>
+                        </li>
+                        <li><strong>Documentation:</strong>
+                            <ul>
+                                <li>Trac Performance Tuning Guide</li>
+                                <li>Server Deployment Best Practices</li>
+                                <li>Troubleshooting Checklist</li>
+                            </ul>
+                        </li>
+                    </ul>
+                `
+            };
+        }
+        
+        function generatePerformanceAnalysis(briefDescription, context) {
+            return {
+                solutions: `
+                    <h3>🚀 Quick Solutions to Try</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>1. Immediate Performance Fixes (75% improvement)</strong><br>
+                            • Hard refresh to clear cached resources (Ctrl+F5)<br>
+                            • Close other browser tabs to free memory<br>
+                            • Check internet connection speed and stability
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>2. Browser Optimization</strong><br>
+                            • Disable unnecessary browser extensions<br>
+                            • Clear browser cache and cookies<br>
+                            • Try in incognito/private mode for comparison
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>3. Network and CDN Issues</strong><br>
+                            • Try different network (mobile hotspot vs WiFi)<br>
+                            • Use VPN to test from different geographic location<br>
+                            • Check if issue persists during off-peak hours
+                        </div>
+                    </div>
+                `,
+                causes: `
+                    <h3>🔍 Likely Root Causes</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(239, 68, 68, 0.1); border-radius: 6px;">
+                            <strong style="color: #ef4444;">80% - Database Query Performance</strong><br>
+                            <span style="color: #d1d5db;">Slow or inefficient database queries, missing indexes, or large dataset processing</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Database query logs and execution times</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 6px;">
+                            <strong style="color: #f59e0b;">70% - Resource Loading Issues</strong><br>
+                            <span style="color: #d1d5db;">Large JavaScript/CSS files, unoptimized images, or CDN delivery problems</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Network tab for large resources and slow requests</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(6, 182, 212, 0.1); border-radius: 6px;">
+                            <strong style="color: #06b6d4;">60% - Server Infrastructure</strong><br>
+                            <span style="color: #d1d5db;">High server load, insufficient memory/CPU, or network congestion</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Server monitoring and infrastructure metrics</em>
+                        </div>
+                    </div>
+                `,
+                diagnostics: `
+                    <h3>📊 Diagnostic Information to Gather</h3>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                        <h4 style="color: #8b5cf6; margin-top: 0;">Performance Metrics Collection</h4>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Page load time measurements (multiple tests)</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Network tab analysis (slow resources)</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Browser performance timeline recording</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Memory usage during slow operations</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Server response times and error rates</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Database query execution times</label><br>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px;">
+                        <h4 style="color: #10b981; margin-top: 0;">Performance Testing Tools</h4>
+                        <code style="background: rgba(0,0,0,0.3); padding: 0.25rem 0.5rem; border-radius: 3px; display: block; margin: 0.5rem 0;">
+                            # Lighthouse performance audit<br>
+                            chrome://lighthouse or DevTools → Lighthouse
+                        </code>
+                        <code style="background: rgba(0,0,0,0.3); padding: 0.25rem 0.5rem; border-radius: 3px; display: block; margin: 0.5rem 0;">
+                            # Network analysis<br>
+                            DevTools → Network → Throttling → Slow 3G
+                        </code>
+                    </div>
+                `,
+                ticket: `
+                    <h3>📝 Complete Ticket Structure</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.875rem;">
+                        <strong style="color: #ef4444;">PRIORITY: HIGH</strong> - Performance impacts user experience<br><br>
+                        
+                        <strong>TITLE:</strong> Performance Issue - ${briefDescription}<br><br>
+                        
+                        <strong>SUMMARY:</strong><br>
+                        Users experiencing slow performance: ${briefDescription}<br><br>
+                        
+                        <strong>PERFORMANCE METRICS:</strong><br>
+                        • Current load time: [X seconds]<br>
+                        • Expected load time: [Y seconds]<br>
+                        • Affected operations: [specific actions]<br>
+                        • User impact: [number of users/frequency]<br><br>
+                        
+                        <strong>INVESTIGATION PATHS:</strong><br>
+                        1. Check <code>db/queries/</code> - slow query identification<br>
+                        2. Review <code>api/endpoints/</code> - response time analysis<br>
+                        3. Examine <code>static/js/</code> - JavaScript bundle size<br>
+                        4. Analyze server logs for performance patterns<br><br>
+                        
+                        <strong>LIKELY FILES TO CHECK:</strong><br>
+                        • <code>/models/</code> - database query optimization<br>
+                        • <code>/webpack.config.js</code> - bundle optimization<br>
+                        • <code>/api/</code> - endpoint performance<br>
+                        • <code>/nginx.conf</code> or server configuration<br><br>
+                        
+                        <strong>SUGGESTED OPTIMIZATIONS:</strong><br>
+                        • Add database indexes for frequent queries<br>
+                        • Implement caching for expensive operations<br>
+                        • Optimize JavaScript bundle size and loading<br>
+                        • Add performance monitoring and alerting
+                    </div>
+                `,
+                related: `
+                    <h3>🔗 Related Issues & Prevention</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <h4 style="color: #06b6d4;">Search for Similar Issues:</h4>
+                        <div style="background: rgba(6, 182, 212, 0.1); padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem;">
+                            <code>"slow" OR "performance" OR "loading" OR "timeout"</code><br>
+                            <code>type:bug priority:high component:performance</code><br>
+                            <code>"database" OR "query" OR "optimization" slow</code>
+                        </div>
+                        
+                        <h4 style="color: #10b981;">Prevention Strategies:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li>Implement performance monitoring and alerting</li>
+                            <li>Regular database query optimization reviews</li>
+                            <li>Automated performance testing in CI/CD</li>
+                            <li>Resource optimization (images, JS, CSS)</li>
+                            <li>CDN and caching strategy implementation</li>
+                        </ul>
+                        
+                        <h4 style="color: #f59e0b;">Related Documentation:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li><a href="/wiki/PerformanceOptimization" style="color: #06b6d4;">Performance Best Practices</a></li>
+                            <li><a href="/wiki/DatabaseOptimization" style="color: #06b6d4;">Database Tuning Guide</a></li>
+                            <li><a href="/wiki/CachingStrategy" style="color: #06b6d4;">Caching Implementation</a></li>
+                        </ul>
+                    </div>
+                `
+            };
+        }
+        
+        function generateGenericAnalysis(briefDescription, context) {
+            return {
+                solutions: `
+                    <h3>🚀 Quick Solutions to Try</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>1. Basic Troubleshooting (70% success rate)</strong><br>
+                            • Refresh the page and try again<br>
+                            • Clear browser cache and cookies<br>
+                            • Try in incognito/private browsing mode
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; margin-bottom: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>2. Browser and Environment Check</strong><br>
+                            • Try different browser (Chrome, Firefox, Safari)<br>
+                            • Disable browser extensions temporarily<br>
+                            • Check for JavaScript errors in console (F12)
+                        </div>
+                        <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; border-radius: 0 6px 6px 0;">
+                            <strong>3. Alternative Approaches</strong><br>
+                            • Try the same action from a different page/route<br>
+                            • Test on different device or network<br>
+                            • Check if issue persists at different times
+                        </div>
+                    </div>
+                `,
+                causes: `
+                    <h3>🔍 Likely Root Causes</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 6px;">
+                            <strong style="color: #f59e0b;">Common Technical Issues</strong><br>
+                            <span style="color: #d1d5db;">Browser compatibility, JavaScript errors, network connectivity, or server-side problems</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Browser console, network requests, and server status</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(6, 182, 212, 0.1); border-radius: 6px;">
+                            <strong style="color: #06b6d4;">User Environment Factors</strong><br>
+                            <span style="color: #d1d5db;">Browser settings, extensions, cached data, or local configuration affecting functionality</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: Different browsers, incognito mode, and clean environments</em>
+                        </div>
+                        <div style="margin-bottom: 1rem; padding: 0.75rem; background: rgba(139, 92, 246, 0.1); border-radius: 6px;">
+                            <strong style="color: #8b5cf6;">Application State Issues</strong><br>
+                            <span style="color: #d1d5db;">Data inconsistency, permission problems, or workflow state preventing normal operation</span><br>
+                            <em style="color: #9ca3af; font-size: 0.8rem;">Check: User permissions, data state, and application logs</em>
+                        </div>
+                    </div>
+                `,
+                diagnostics: `
+                    <h3>📊 Diagnostic Information to Gather</h3>
+                    <div style="background: rgba(139, 92, 246, 0.1); padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                        <h4 style="color: #8b5cf6; margin-top: 0;">Essential Information</h4>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Exact error message or unexpected behavior</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Browser type and version</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Operating system details</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Steps to reproduce the issue reliably</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">When the issue first started occurring</label><br>
+                        <label><input type="checkbox" style="margin-right: 0.5rem;">Screenshot or screen recording of the problem</label><br>
+                    </div>
+                    <div style="background: rgba(16, 185, 129, 0.1); padding: 1rem; border-radius: 6px;">
+                        <h4 style="color: #10b981; margin-top: 0;">Technical Diagnostics</h4>
+                        <p style="color: #d1d5db; margin: 0.5rem 0;">Open browser console (F12) and look for:</p>
+                        <ul style="color: #d1d5db; margin: 0;">
+                            <li>Red error messages in Console tab</li>
+                            <li>Failed network requests in Network tab</li>
+                            <li>Any warnings or unusual messages</li>
+                        </ul>
+                    </div>
+                `,
+                ticket: `
+                    <h3>📝 Complete Ticket Structure</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px; font-family: monospace; font-size: 0.875rem;">
+                        <strong style="color: #f59e0b;">PRIORITY: MEDIUM</strong> - Requires investigation<br><br>
+                        
+                        <strong>TITLE:</strong> ${briefDescription}<br><br>
+                        
+                        <strong>SUMMARY:</strong><br>
+                        User experiencing issue: ${briefDescription}<br><br>
+                        
+                        <strong>DETAILED DESCRIPTION:</strong><br>
+                        [Please provide more details about the issue, including specific error messages and context]<br><br>
+                        
+                        <strong>STEPS TO REPRODUCE:</strong><br>
+                        1. [First step to reproduce the issue]<br>
+                        2. [Second step]<br>
+                        3. [Third step]<br><br>
+                        
+                        <strong>EXPECTED BEHAVIOR:</strong><br>
+                        [What should happen normally]<br><br>
+                        
+                        <strong>ACTUAL BEHAVIOR:</strong><br>
+                        [What actually happens - the problem]<br><br>
+                        
+                        <strong>ENVIRONMENT:</strong><br>
+                        • Browser: [Browser name and version]<br>
+                        • Operating System: [OS and version]<br>
+                        • Device: [Desktop/Mobile/Tablet]<br><br>
+                        
+                        <strong>ADDITIONAL INFORMATION:</strong><br>
+                        [Any other relevant details, error messages, or context that might help diagnose the issue]
+                    </div>
+                `,
+                related: `
+                    <h3>🔗 Related Issues & Prevention</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <h4 style="color: #06b6d4;">Search for Similar Issues:</h4>
+                        <div style="background: rgba(6, 182, 212, 0.1); padding: 0.75rem; border-radius: 6px; margin-bottom: 1rem;">
+                            <code>"${briefDescription}" OR related keywords</code><br>
+                            <code>type:bug status:open similar symptoms</code><br>
+                            <code>error messages or component names</code>
+                        </div>
+                        
+                        <h4 style="color: #10b981;">General Prevention:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li>Regular testing across different browsers and devices</li>
+                            <li>Comprehensive error handling and user feedback</li>
+                            <li>Monitoring and logging for early issue detection</li>
+                            <li>User acceptance testing for critical workflows</li>
+                            <li>Documentation of known issues and workarounds</li>
+                        </ul>
+                        
+                        <h4 style="color: #f59e0b;">Related Documentation:</h4>
+                        <ul style="color: #d1d5db;">
+                            <li><a href="/wiki/TroubleshootingGuide" style="color: #06b6d4;">General Troubleshooting</a></li>
+                            <li><a href="/wiki/BrowserCompatibility" style="color: #06b6d4;">Browser Support Guide</a></li>
+                            <li><a href="/wiki/UserGuide" style="color: #06b6d4;">User Documentation</a></li>
+                        </ul>
+                    </div>
+                `
+            };
+        }
+        
+        // Action button handlers
+        function applyAnalysisToTicket() {
+            if (!currentAnalysis || !currentAnalysis.ticket) {
+                aiLogger.warning('Apply Ticket Failed - No Analysis', {
+                    hasAnalysis: !!currentAnalysis,
+                    hasTicketSection: !!(currentAnalysis && currentAnalysis.ticket)
+                });
+                return;
+            }
+            
+            if (descriptionField) {
+                // Extract the ticket content and format it properly
+                const ticketContent = currentAnalysis.ticket.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+                descriptionField.value = ticketContent;
+                descriptionField.dispatchEvent(new Event('input', { bubbles: true }));
+                
+                aiLogger.success('Analysis Applied to Ticket', {
+                    contentLength: ticketContent.length,
+                    fieldId: descriptionField.id,
+                    previousContentLength: descriptionField.value.length
+                });
+                
+                // Add notification for applying AI analysis
+                if (window.TracNotificationSystem) {
+                    window.TracNotificationSystem.addNotification({
+                        title: 'AI Analysis Applied',
+                        description: 'AI-generated ticket structure has been applied to the description field',
+                        type: 'success'
+                    });
+                }
+                
+                // Show success
+                const btn = aiContainer.querySelector('#ai-apply-ticket');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>✅</span> Applied Successfully!';
+                btn.style.background = '#10b981';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = '#10b981';
+                }, 3000);
+            } else {
+                aiLogger.error('Apply Ticket Failed - No Description Field', {
+                    hasDescriptionField: !!descriptionField
+                });
+            }
+        }
+        
+        function copyCurrentSection() {
+            if (!currentAnalysis || !currentAnalysis[currentTab]) {
+                aiLogger.warning('Copy Section Failed - No Content', {
+                    hasAnalysis: !!currentAnalysis,
+                    currentTab: currentTab,
+                    hasCurrentTabContent: !!(currentAnalysis && currentAnalysis[currentTab])
+                });
+                return;
+            }
+            
+            const content = currentAnalysis[currentTab].replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+            
+            navigator.clipboard.writeText(content).then(() => {
+                aiLogger.success('Section Content Copied', {
+                    section: currentTab,
+                    contentLength: content.length,
+                    clipboardAPI: 'navigator.clipboard'
+                });
+                
+                const btn = aiContainer.querySelector('#ai-copy-section');
+                const originalText = btn.innerHTML;
+                btn.innerHTML = '<span>✅</span> Copied!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                }, 2000);
+            }).catch((error) => {
+                aiLogger.error('Copy to Clipboard Failed', {
+                    error: error.message,
+                    section: currentTab,
+                    contentLength: content.length
+                });
+            });
+        }
+        
+        function runDiagnosticCheck() {
+            aiLogger.info('Diagnostic Check Started', {
+                currentTab: currentTab,
+                userAgent: navigator.userAgent,
+                timestamp: Date.now()
+            });
+            
+            const diagnosticModal = document.createElement('div');
+            diagnosticModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            diagnosticModal.innerHTML = `
+                <div style="background: rgba(17, 24, 39, 0.95); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 2rem; max-width: 500px; width: 90%; backdrop-filter: blur(20px);">
+                    <h3 style="color: #f9fafb; margin-top: 0;">🔍 Running Diagnostics...</h3>
+                    <div id="diagnostic-progress" style="margin: 1rem 0;">
+                        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 8px; height: 6px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #8b5cf6, #06b6d4); height: 100%; width: 0%; transition: width 1s ease;" id="progress-bar"></div>
+                        </div>
+                        <div style="color: #d1d5db; font-size: 0.875rem; margin-top: 0.5rem;" id="diagnostic-status">Checking browser console...</div>
+                    </div>
+                    <div id="diagnostic-results" style="display: none;">
+                        <h4 style="color: #10b981;">✅ Diagnostic Results</h4>
+                        <ul style="color: #d1d5db; font-size: 0.875rem;">
+                            <li>✅ Browser console: No critical errors</li>
+                            <li>✅ Network connectivity: Active</li>
+                            <li>⚠️ Local storage: 12MB used (consider cleanup)</li>
+                            <li>✅ JavaScript enabled: Yes</li>
+                        </ul>
+                    </div>
+                    <button onclick="this.closest('div').closest('div').remove()" style="background: #6b7280; border: none; border-radius: 6px; padding: 0.5rem 1rem; color: white; cursor: pointer; margin-top: 1rem;">Close</button>
+                </div>
+            `;
+            
+            document.body.appendChild(diagnosticModal);
+            
+            // Simulate diagnostic progress
+            const progressBar = diagnosticModal.querySelector('#progress-bar');
+            const status = diagnosticModal.querySelector('#diagnostic-status');
+            const results = diagnosticModal.querySelector('#diagnostic-results');
+            
+            const steps = [
+                'Checking browser console...',
+                'Testing network connectivity...',
+                'Analyzing local storage...',
+                'Verifying JavaScript state...',
+                'Complete!'
+            ];
+            
+            let step = 0;
+            const interval = setInterval(() => {
+                progressBar.style.width = ((step + 1) / steps.length * 100) + '%';
+                status.textContent = steps[step];
+                step++;
+                
+                if (step >= steps.length) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        status.style.display = 'none';
+                        results.style.display = 'block';
+                    }, 500);
+                }
+            }, 1000);
+        }
+        
+        function searchSimilarIssues() {
+            if (!currentAnalysis || !currentAnalysis.related) return;
+            
+            // Extract search queries from the related section
+            const searchQueries = [
+                briefInput.value.replace(/[^\w\s]/g, ''),
+                'login authentication error',
+                'mobile browser issue'
+            ];
+            
+            console.log('Searching for similar issues:', searchQueries);
+            // In a real implementation, this would trigger the smart search
+            const searchInput = document.getElementById('smart-search');
+            if (searchInput) {
+                searchInput.value = searchQueries[0];
+                searchInput.focus();
+                searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+        
+        function generateFallbackAnalysis(briefDescription) {
+            return {
+                solutions: `
+                    <h3>🚀 Quick Solutions to Try</h3>
+                    <div style="background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; padding: 0.75rem; border-radius: 0 6px 6px 0;">
+                        <strong>1. Basic Troubleshooting</strong><br>
+                        • Refresh the page and try again<br>
+                        • Clear browser cache and cookies<br>
+                        • Try in incognito/private mode
+                    </div>
+                `,
+                causes: `
+                    <h3>🔍 Likely Root Causes</h3>
+                    <div style="padding: 0.75rem; background: rgba(245, 158, 11, 0.1); border-radius: 6px;">
+                        <strong style="color: #f59e0b;">Possible Technical Issues</strong><br>
+                        <span style="color: #d1d5db;">Browser compatibility, network connectivity, or server-side problems</span>
+                    </div>
+                `,
+                diagnostics: `
+                    <h3>📊 Diagnostic Information Needed</h3>
+                    <p>Please provide more details about the issue, including browser type, error messages, and steps to reproduce.</p>
+                `,
+                ticket: `
+                    <h3>📝 Basic Ticket Structure</h3>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 6px;">
+                        <strong>Issue:</strong> ${briefDescription}<br><br>
+                        <strong>Description:</strong> [Please provide more details]<br><br>
+                        <strong>Steps to Reproduce:</strong><br>
+                        1. [Step 1]<br>
+                        2. [Step 2]<br><br>
+                        <strong>Expected vs Actual Behavior:</strong><br>
+                        [Describe what should happen vs what actually happens]
+                    </div>
+                `,
+                related: `
+                    <h3>🔗 Related Issues</h3>
+                    <p>Search for similar issues using keywords from your problem description.</p>
+                `
+            };
+        }
+        
+        // Log Viewer Function
+        function showLogViewer() {
+            aiLogger.info('Log Viewer Opened', {
+                totalLogs: aiLogger.logs.length,
+                sessionDuration: Date.now() - aiLogger.startTime
+            });
+            
+            const logModal = document.createElement('div');
+            logModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            const summary = aiLogger.getSessionSummary();
+            const recentLogs = aiLogger.logs.slice(-20); // Last 20 logs
+            
+            logModal.innerHTML = `
+                <div style="background: rgba(17, 24, 39, 0.98); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 2rem; max-width: 800px; width: 90%; max-height: 90%; overflow-y: auto; backdrop-filter: blur(20px);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h2 style="color: #f9fafb; margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                            <span>📊</span> AI Assistant Logs
+                        </h2>
+                        <button onclick="this.closest('div').closest('div').remove()" style="background: #6b7280; border: none; border-radius: 6px; padding: 0.5rem; color: white; cursor: pointer;">✕</button>
+                    </div>
+                    
+                    <!-- Session Summary -->
+                    <div style="background: rgba(139, 92, 246, 0.1); border: 1px solid #8b5cf6; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                        <h3 style="color: #8b5cf6; margin-top: 0;">Session Summary</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; color: #d1d5db; font-size: 0.875rem;">
+                            <div><strong>Session ID:</strong><br>${summary.sessionId}</div>
+                            <div><strong>Duration:</strong><br>${Math.round(summary.duration / 1000)}s</div>
+                            <div><strong>Total Logs:</strong><br>${summary.totalLogs}</div>
+                            <div><strong>API Calls:</strong><br>${summary.apiCallCount}</div>
+                            <div><strong>Interactions:</strong><br>${summary.userInteractions}</div>
+                            <div><strong>Errors:</strong><br>${summary.errors}</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                        <button onclick="aiLogger.exportLogs()" style="background: #10b981; border: none; border-radius: 6px; padding: 0.5rem 1rem; color: white; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <span>💾</span> Export Logs
+                        </button>
+                        <button onclick="console.table(aiLogger.logs)" style="background: #06b6d4; border: none; border-radius: 6px; padding: 0.5rem 1rem; color: white; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <span>🔍</span> View in Console
+                        </button>
+                        <button onclick="localStorage.removeItem('ai_assistant_logs'); alert('Local logs cleared!')" style="background: #ef4444; border: none; border-radius: 6px; padding: 0.5rem 1rem; color: white; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                            <span>🗑️</span> Clear Local Logs
+                        </button>
+                    </div>
+                    
+                    <!-- Recent Logs -->
+                    <div>
+                        <h3 style="color: #f9fafb; margin-bottom: 1rem;">Recent Activity (Last 20 logs)</h3>
+                        <div style="max-height: 400px; overflow-y: auto; background: rgba(0, 0, 0, 0.3); border-radius: 8px; padding: 1rem;">
+                            ${recentLogs.map(log => `
+                                <div style="margin-bottom: 0.75rem; padding: 0.5rem; border-left: 3px solid ${getLogColor(log.level)}; background: rgba(255, 255, 255, 0.02); border-radius: 0 6px 6px 0;">
+                                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 0.25rem;">
+                                        <span style="color: ${getLogColor(log.level)}; font-weight: 600; font-size: 0.75rem;">${log.level}</span>
+                                        <span style="color: #9ca3af; font-size: 0.75rem; margin-left: auto;">${new Date(log.timestamp).toLocaleTimeString()}</span>
+                                    </div>
+                                    <div style="color: #f9fafb; font-size: 0.875rem; margin-bottom: 0.25rem;">${log.event}</div>
+                                    ${Object.keys(log.data).length > 2 ? `
+                                        <details style="margin-top: 0.5rem;">
+                                            <summary style="color: #9ca3af; font-size: 0.75rem; cursor: pointer;">View Details</summary>
+                                            <pre style="color: #d1d5db; font-size: 0.75rem; margin-top: 0.5rem; overflow-x: auto;">${JSON.stringify(log.data, null, 2)}</pre>
+                                        </details>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(logModal);
+            
+            // Close on backdrop click
+            logModal.addEventListener('click', (e) => {
+                if (e.target === logModal) {
+                    logModal.remove();
+                }
+            });
+        }
+        
+        function getLogColor(level) {
+            const colors = {
+                INFO: '#06b6d4',
+                SUCCESS: '#10b981',
+                WARNING: '#f59e0b',
+                ERROR: '#ef4444',
+                DEBUG: '#8b5cf6'
+            };
+            return colors[level] || '#9ca3af';
         }
     }
     
@@ -4465,6 +6645,59 @@ ${briefDescription}
         };
     }
     
+    // Global notification system
+    window.TracNotificationSystem = {
+        notifications: [],
+        callbacks: [],
+        nextId: 1,
+        
+        addNotification: function(notification) {
+            const newNotification = {
+                id: this.nextId++,
+                title: notification.title,
+                description: notification.description,
+                time: 'Just now',
+                unread: true,
+                link: notification.link || '#',
+                type: notification.type || 'info',
+                timestamp: Date.now()
+            };
+            
+            this.notifications.unshift(newNotification);
+            
+            // Keep only last 50 notifications
+            if (this.notifications.length > 50) {
+                this.notifications = this.notifications.slice(0, 50);
+            }
+            
+            // Trigger callbacks to update UI
+            this.callbacks.forEach(callback => callback(newNotification));
+            
+            return newNotification;
+        },
+        
+        markAsRead: function(id) {
+            const notification = this.notifications.find(n => n.id === id);
+            if (notification) {
+                notification.unread = false;
+                this.callbacks.forEach(callback => callback(null, 'mark_read'));
+            }
+        },
+        
+        markAllAsRead: function() {
+            this.notifications.forEach(n => n.unread = false);
+            this.callbacks.forEach(callback => callback(null, 'mark_all_read'));
+        },
+        
+        getUnreadCount: function() {
+            return this.notifications.filter(n => n.unread).length;
+        },
+        
+        subscribe: function(callback) {
+            this.callbacks.push(callback);
+        }
+    };
+    
     // Notification Center Functionality  
     function initializeNotificationCenter() {
         const notificationBell = document.getElementById('notification-bell');
@@ -4473,50 +6706,103 @@ ${briefDescription}
         
         if (!notificationBell || !notificationDropdown || !notificationCount) return;
         
-        // Mock notifications
-        const notifications = [
+        // Initialize with some demo notifications
+        const demoNotifications = [
             {
-                id: 1,
-                title: 'You were assigned Ticket #042',
-                description: 'Fix login authentication bug',
-                time: '2 minutes ago',
-                unread: true,
-                link: '/trac_env/ticket/42'
+                title: 'Welcome to Enhanced Trac!',
+                description: 'Your notification system is now real-time',
+                type: 'success'
             },
             {
-                id: 2, 
-                title: 'Comment on Ticket #038',
-                description: 'Sarah added a comment to your ticket',
-                time: '15 minutes ago',
-                unread: true,
-                link: '/trac_env/ticket/38'
-            },
-            {
-                id: 3,
-                title: 'Milestone deadline approaching',
-                description: 'v1.2 Release due in 3 days',
-                time: '1 hour ago',
-                unread: false,
-                link: '/trac_env/milestone/v1.2'
-            },
-            {
-                id: 4,
-                title: 'New ticket created',
-                description: 'Mobile responsive fixes #045',
-                time: '2 hours ago',
-                unread: false,
-                link: '/trac_env/ticket/45'
+                title: 'System Status',
+                description: 'All services operational',
+                type: 'info'
             }
         ];
         
-        // Update notification count
-        const unreadCount = notifications.filter(n => n.unread).length;
-        if (unreadCount > 0) {
-            notificationCount.textContent = unreadCount;
-            notificationCount.classList.remove('hidden');
-        } else {
-            notificationCount.classList.add('hidden');
+        demoNotifications.forEach(notif => window.TracNotificationSystem.addNotification(notif));
+        
+        // Subscribe to notification updates
+        window.TracNotificationSystem.subscribe((newNotification, action) => {
+            updateNotificationUI();
+            
+            if (newNotification && newNotification.unread) {
+                // Show animation for new notifications
+                notificationBell.style.animation = 'none';
+                setTimeout(() => {
+                    notificationBell.style.animation = 'pulse 1s ease-in-out 3';
+                }, 10);
+                
+                // Show toast notification
+                showToastNotification(newNotification);
+            }
+        });
+        
+        function updateNotificationUI() {
+            const unreadCount = window.TracNotificationSystem.getUnreadCount();
+            if (unreadCount > 0) {
+                notificationCount.textContent = unreadCount;
+                notificationCount.classList.remove('hidden');
+            } else {
+                notificationCount.classList.add('hidden');
+            }
         }
+        
+        function showToastNotification(notification) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: rgba(17, 24, 39, 0.95);
+                border: 1px solid rgba(6, 182, 212, 0.5);
+                border-radius: 8px;
+                padding: 1rem;
+                color: white;
+                max-width: 300px;
+                z-index: 10000;
+                backdrop-filter: blur(10px);
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            `;
+            
+            const typeIcon = {
+                'success': '✅',
+                'info': 'ℹ️',
+                'warning': '⚠️',
+                'error': '❌'
+            }[notification.type] || '📢';
+            
+            toast.innerHTML = `
+                <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+                    <span style="font-size: 1.2rem;">${typeIcon}</span>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">${notification.title}</div>
+                        <div style="font-size: 0.875rem; color: #d1d5db; line-height: 1.4;">${notification.description}</div>
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: #9ca3af; cursor: pointer; font-size: 1.2rem;">×</button>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => {
+                toast.style.transform = 'translateX(0)';
+            }, 10);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                if (toast.parentElement) {
+                    toast.style.transform = 'translateX(100%)';
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, 5000);
+        }
+        
+        // Initial UI update
+        updateNotificationUI();
         
         // Toggle dropdown
         notificationBell.addEventListener('click', (e) => {
@@ -4537,26 +6823,52 @@ ${briefDescription}
         });
         
         function showNotificationDropdown() {
+            const notifications = window.TracNotificationSystem.notifications;
+            const unreadCount = window.TracNotificationSystem.getUnreadCount();
+            
             let html = `
                 <div class="notification-header">
                     <div class="notification-title">Notifications</div>
-                    <div class="notification-subtitle">${notifications.length} total, ${notifications.filter(n => n.unread).length} unread</div>
+                    <div class="notification-subtitle">${notifications.length} total, ${unreadCount} unread</div>
                 </div>
                 <div class="notification-list">
             `;
             
-            notifications.forEach(notification => {
+            if (notifications.length === 0) {
                 html += `
-                    <div class="notification-item ${notification.unread ? 'unread' : ''}" 
-                         onclick="handleNotificationClick('${notification.link}', ${notification.id})">
-                        <div class="notification-content">
-                            <strong>${notification.title}</strong><br>
-                            ${notification.description}
-                        </div>
-                        <div class="notification-time">${notification.time}</div>
+                    <div style="text-align: center; padding: 2rem; color: #9ca3af;">
+                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔔</div>
+                        <div>No notifications yet</div>
+                        <div style="font-size: 0.875rem; margin-top: 0.25rem;">Create a ticket to see real-time notifications!</div>
                     </div>
                 `;
-            });
+            } else {
+                notifications.forEach(notification => {
+                    const timeAgo = getTimeAgo(notification.timestamp);
+                    const typeIcon = {
+                        'success': '✅',
+                        'info': 'ℹ️',
+                        'warning': '⚠️',
+                        'error': '❌'
+                    }[notification.type] || '📢';
+                    
+                    html += `
+                        <div class="notification-item ${notification.unread ? 'unread' : ''}" 
+                             onclick="handleNotificationClick('${notification.link}', ${notification.id})">
+                            <div style="display: flex; align-items: flex-start; gap: 0.5rem;">
+                                <span style="font-size: 1rem; margin-top: 0.1rem;">${typeIcon}</span>
+                                <div style="flex: 1;">
+                                    <div class="notification-content">
+                                        <strong>${notification.title}</strong><br>
+                                        ${notification.description}
+                                    </div>
+                                    <div class="notification-time">${timeAgo}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
             
             html += `
                 </div>
@@ -4569,62 +6881,48 @@ ${briefDescription}
             notificationDropdown.classList.remove('hidden');
         }
         
-        window.handleNotificationClick = function(link, notificationId) {
-            // Mark as read
-            const notification = notifications.find(n => n.id === notificationId);
-            if (notification) {
-                notification.unread = false;
-            }
+        function getTimeAgo(timestamp) {
+            const now = Date.now();
+            const diff = now - timestamp;
+            const seconds = Math.floor(diff / 1000);
+            const minutes = Math.floor(seconds / 60);
+            const hours = Math.floor(minutes / 60);
+            const days = Math.floor(hours / 24);
             
-            // Update count
-            const newUnreadCount = notifications.filter(n => n.unread).length;
-            if (newUnreadCount > 0) {
-                notificationCount.textContent = newUnreadCount;
-            } else {
-                notificationCount.classList.add('hidden');
-            }
+            if (seconds < 60) return 'Just now';
+            if (minutes < 60) return `${minutes}m ago`;
+            if (hours < 24) return `${hours}h ago`;
+            return `${days}d ago`;
+        }
+        
+        window.handleNotificationClick = function(link, notificationId) {
+            // Mark as read using global system
+            window.TracNotificationSystem.markAsRead(notificationId);
             
             // Navigate
             console.log('Navigate to:', link);
             notificationDropdown.classList.add('hidden');
+            
+            if (link !== '#') {
+                window.location.href = link;
+            }
         };
         
         window.clearAllNotifications = function() {
-            notifications.forEach(n => n.unread = false);
-            notificationCount.classList.add('hidden');
+            window.TracNotificationSystem.markAllAsRead();
             notificationDropdown.classList.add('hidden');
         };
         
-        // Simulate new notifications (for demo)
-        setInterval(() => {
-            if (Math.random() < 0.1) { // 10% chance every 30 seconds
-                addNewNotification();
+        // Add demo notification for testing
+        setTimeout(() => {
+            if (window.TracNotificationSystem) {
+                window.TracNotificationSystem.addNotification({
+                    title: 'System Ready',
+                    description: 'Real-time notifications are now active. Create a ticket to see them in action!',
+                    type: 'info'
+                });
             }
-        }, 30000);
-        
-        function addNewNotification() {
-            const newNotification = {
-                id: Date.now(),
-                title: 'New activity',
-                description: 'Something happened in your project',
-                time: 'Just now',
-                unread: true,
-                link: '/trac_env/timeline'
-            };
-            
-            notifications.unshift(newNotification);
-            
-            // Update count
-            const unreadCount = notifications.filter(n => n.unread).length;
-            notificationCount.textContent = unreadCount;
-            notificationCount.classList.remove('hidden');
-            
-            // Show brief animation
-            notificationBell.style.animation = 'none';
-            setTimeout(() => {
-                notificationBell.style.animation = 'pulse 1s ease-in-out 3';
-            }, 10);
-        }
+        }, 3000);
     }
     
     function createAnalyticsPage() {
@@ -4995,4 +7293,529 @@ ${briefDescription}
             currentAngle += sliceAngle;
         });
     }
+    
+    // Ticket Edit Modal Functionality
+    let currentEditingTicket = null;
+    
+    function openTicketEditModal(ticket) {
+        currentEditingTicket = ticket;
+        
+        // Create modal if it doesn't exist
+        let modal = document.getElementById('ticketEditModal');
+        if (!modal) {
+            createTicketEditModal();
+            modal = document.getElementById('ticketEditModal');
+        }
+        
+        // Populate form fields
+        document.getElementById('editTicketId').textContent = ticket.id;
+        document.getElementById('editTicketTitle').value = ticket.summary || ticket.title || '';
+        document.getElementById('editTicketDescription').value = ticket.description || '';
+        document.getElementById('editTicketType').value = ticket.type ? ticket.type.toLowerCase() : 'task';
+        document.getElementById('editTicketPriority').value = ticket.priority ? ticket.priority.toLowerCase() : 'medium';
+        document.getElementById('editTicketStatus').value = ticket.status === 'Open' ? 'open' : 
+                                                           ticket.status === 'In Progress' ? 'in-progress' :
+                                                           ticket.status === 'Review' ? 'review' :
+                                                           ticket.status === 'Closed' ? 'done' : 'open';
+        
+        // Populate assignee dropdown
+        populateTicketAssigneeDropdown();
+        
+        // Set assignee
+        if (ticket.rawData && ticket.rawData.assignee) {
+            document.getElementById('editTicketAssignee').value = ticket.rawData.assignee;
+        } else if (window.TracMockData) {
+            // Try to find assignee by name
+            const userEntry = Object.entries(window.TracMockData.users).find(([initials, user]) => 
+                user.name === ticket.assignee
+            );
+            if (userEntry) {
+                document.getElementById('editTicketAssignee').value = userEntry[0];
+            }
+        }
+        
+        // Show modal
+        modal.style.display = 'flex';
+    }
+    
+    function createTicketEditModal() {
+        const modal = document.createElement('div');
+        modal.id = 'ticketEditModal';
+        modal.className = 'edit-modal';
+        modal.style.display = 'none';
+        modal.innerHTML = `
+            <div class="edit-modal-content">
+                <div class="edit-modal-header">
+                    <h3>Edit Ticket <span id="editTicketId"></span></h3>
+                    <button class="close-btn" onclick="closeTicketEditModal()">&times;</button>
+                </div>
+                <form id="editTicketForm" class="edit-form">
+                    <div class="form-group">
+                        <label for="editTicketTitle">Title</label>
+                        <input type="text" id="editTicketTitle" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editTicketDescription">Description</label>
+                        <textarea id="editTicketDescription" name="description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editTicketType">Type</label>
+                            <select id="editTicketType" name="type">
+                                <option value="bug">Bug</option>
+                                <option value="feature">Feature</option>
+                                <option value="task">Task</option>
+                                <option value="enhancement">Enhancement</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editTicketPriority">Priority</label>
+                            <select id="editTicketPriority" name="priority">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editTicketAssignee">Assignee</label>
+                            <select id="editTicketAssignee" name="assignee">
+                                <!-- Will be populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editTicketStatus">Status</label>
+                            <select id="editTicketStatus" name="status">
+                                <option value="open">Open</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="review">Review</option>
+                                <option value="done">Done</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeTicketEditModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <button type="button" class="btn-complete" onclick="markTicketComplete()" id="completeTicketBtn">Mark Complete</button>
+                    </div>
+                </form>
+            </div>
+        `;
+        
+        // Add CSS styles for the modal (reuse from kanban board)
+        const style = document.createElement('style');
+        style.textContent = `
+            .edit-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(5px);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .edit-modal-content {
+                background: rgba(17, 24, 39, 0.95);
+                border: 1px solid rgba(139, 92, 246, 0.3);
+                border-radius: 16px;
+                padding: 2rem;
+                width: 90%;
+                max-width: 600px;
+                max-height: 90vh;
+                overflow-y: auto;
+                backdrop-filter: blur(20px);
+            }
+            
+            .edit-modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 2rem;
+                padding-bottom: 1rem;
+                border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            }
+            
+            .edit-modal-header h3 {
+                margin: 0;
+                color: #e5e7eb;
+                font-size: 1.5rem;
+                font-weight: 600;
+            }
+            
+            .close-btn {
+                background: none;
+                border: none;
+                color: #9ca3af;
+                font-size: 2rem;
+                cursor: pointer;
+                padding: 0;
+                width: 2rem;
+                height: 2rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 50%;
+                transition: all 0.2s ease;
+            }
+            
+            .close-btn:hover {
+                background: rgba(239, 68, 68, 0.2);
+                color: #ef4444;
+            }
+            
+            .edit-form {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .form-row {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+            
+            .form-group label {
+                color: #d1d5db;
+                font-weight: 500;
+                font-size: 0.875rem;
+            }
+            
+            .form-group input,
+            .form-group textarea,
+            .form-group select {
+                background: rgba(31, 41, 55, 0.8);
+                border: 1px solid rgba(75, 85, 99, 0.5);
+                border-radius: 8px;
+                padding: 0.75rem;
+                color: #e5e7eb;
+                font-size: 0.875rem;
+                transition: all 0.2s ease;
+            }
+            
+            .form-group input:focus,
+            .form-group textarea:focus,
+            .form-group select:focus {
+                outline: none;
+                border-color: #8b5cf6;
+                box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            }
+            
+            .form-group textarea {
+                resize: vertical;
+                min-height: 80px;
+            }
+            
+            .form-actions {
+                display: flex;
+                gap: 1rem;
+                justify-content: flex-end;
+                padding-top: 1rem;
+                border-top: 1px solid rgba(139, 92, 246, 0.2);
+            }
+            
+            .btn-secondary {
+                background: rgba(75, 85, 99, 0.8);
+                border: 1px solid rgba(107, 114, 128, 0.5);
+                color: #d1d5db;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            
+            .btn-secondary:hover {
+                background: rgba(107, 114, 128, 0.8);
+                border-color: #6b7280;
+            }
+            
+            .btn-primary {
+                background: linear-gradient(135deg, #8b5cf6, #6366f1);
+                border: none;
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            
+            .btn-primary:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+            }
+            
+            .btn-complete {
+                background: linear-gradient(135deg, #10b981, #059669);
+                border: none;
+                color: white;
+                padding: 0.75rem 1.5rem;
+                border-radius: 8px;
+                cursor: pointer;
+                font-weight: 500;
+                transition: all 0.2s ease;
+            }
+            
+            .btn-complete:hover {
+                transform: translateY(-1px);
+                box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+            }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(modal);
+        
+        // Add form submission handler
+        document.getElementById('editTicketForm').addEventListener('submit', handleTicketEditSubmit);
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeTicketEditModal();
+            }
+        });
+    }
+    
+    function populateTicketAssigneeDropdown() {
+        const assigneeSelect = document.getElementById('editTicketAssignee');
+        assigneeSelect.innerHTML = '';
+        
+        if (window.TracMockData) {
+            Object.entries(window.TracMockData.users).forEach(([initials, user]) => {
+                const option = document.createElement('option');
+                option.value = initials;
+                option.textContent = user.name;
+                assigneeSelect.appendChild(option);
+            });
+        } else {
+            // Fallback if TracMockData isn't loaded
+            const defaultUsers = ['AC', 'SK', 'MR', 'ET', 'DP', 'LW', 'JW', 'MG'];
+            defaultUsers.forEach(initials => {
+                const option = document.createElement('option');
+                option.value = initials;
+                option.textContent = initials;
+                assigneeSelect.appendChild(option);
+            });
+        }
+    }
+    
+    function closeTicketEditModal() {
+        const modal = document.getElementById('ticketEditModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+        currentEditingTicket = null;
+    }
+    
+    function handleTicketEditSubmit(e) {
+        e.preventDefault();
+        
+        if (!currentEditingTicket) return;
+        
+        // Get form values
+        const formData = new FormData(e.target);
+        const updatedData = {
+            title: formData.get('title'),
+            summary: formData.get('title'), // For compatibility
+            description: formData.get('description'),
+            type: formData.get('type'),
+            priority: formData.get('priority'),
+            assignee: formData.get('assignee'),
+            status: formData.get('status')
+        };
+        
+        // Update the ticket in unified data system
+        if (window.TracMockData) {
+            const unifiedTicket = window.TracMockData.tickets.find(t => t.id === currentEditingTicket.id);
+            if (unifiedTicket) {
+                unifiedTicket.title = updatedData.title;
+                unifiedTicket.description = updatedData.description;
+                unifiedTicket.type = updatedData.type;
+                unifiedTicket.priority = updatedData.priority;
+                unifiedTicket.assignee = updatedData.assignee;
+                unifiedTicket.status = updatedData.status;
+                unifiedTicket.modified = new Date().toISOString();
+            }
+        }
+        
+        // Update the ticket in tracTicketsData
+        Object.assign(currentEditingTicket, updatedData);
+        currentEditingTicket.modified = new Date().toISOString();
+        
+        // Convert status for display
+        currentEditingTicket.status = updatedData.status === 'open' ? 'Open' : 
+                                     updatedData.status === 'in-progress' ? 'In Progress' :
+                                     updatedData.status === 'review' ? 'Review' :
+                                     updatedData.status === 'done' ? 'Closed' : updatedData.status;
+        
+        // Convert other fields for display
+        currentEditingTicket.priority = updatedData.priority.charAt(0).toUpperCase() + updatedData.priority.slice(1);
+        currentEditingTicket.type = updatedData.type.charAt(0).toUpperCase() + updatedData.type.slice(1);
+        
+        if (window.TracMockData) {
+            currentEditingTicket.assignee = window.TracMockData.getUser(updatedData.assignee).name;
+        }
+        
+        // Refresh the tickets table
+        if (window.refreshTicketsTable) {
+            window.refreshTicketsTable();
+        }
+        
+        // Close modal and show notification
+        closeTicketEditModal();
+        showTicketUpdateNotification(currentEditingTicket.id, 'updated');
+    }
+    
+    function markTicketComplete() {
+        if (!currentEditingTicket) return;
+        
+        // Set status to done/closed
+        document.getElementById('editTicketStatus').value = 'done';
+        
+        // Submit the form
+        document.getElementById('editTicketForm').dispatchEvent(new Event('submit'));
+    }
+    
+    function showTicketUpdateNotification(ticketId, action) {
+        // Simple notification system
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 1rem;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            animation: slideInRight 0.3s ease;
+        `;
+        notification.textContent = `Ticket ${ticketId} ${action} successfully`;
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+    
+    // Initialize login status display
+    function initLoginStatus() {
+        const loginStatusElement = document.getElementById('loginStatus');
+        if (!loginStatusElement) return;
+        
+        // Check if user is logged in by making a request to check authentication
+        fetch('/trac_env/login')
+            .then(response => response.text())
+            .then(html => {
+                // Parse the response to check if we're already logged in
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Look for logout link or user info in the response
+                const logoutLink = doc.querySelector('a[href*="logout"]');
+                const userInfo = doc.querySelector('#metanav');
+                
+                if (logoutLink && userInfo) {
+                    // Extract username from the page content
+                    const textContent = userInfo.textContent || '';
+                    const loginMatch = textContent.match(/logged in as ([^,\s]+)/i);
+                    
+                    if (loginMatch) {
+                        const username = loginMatch[1];
+                        displayLoginStatus(loginStatusElement, username);
+                    } else {
+                        // Try to extract from other patterns
+                        const welcomeMatch = textContent.match(/welcome ([^,\s]+)/i);
+                        if (welcomeMatch) {
+                            displayLoginStatus(loginStatusElement, welcomeMatch[1]);
+                        } else {
+                            // Default logged in state without specific username
+                            displayLoginStatus(loginStatusElement, 'user');
+                        }
+                    }
+                } else {
+                    // Not logged in
+                    displayLoginStatus(loginStatusElement, null);
+                }
+            })
+            .catch(error => {
+                console.log('Could not determine login status:', error);
+                displayLoginStatus(loginStatusElement, null);
+            });
+    }
+    
+    // Display the login status
+    function displayLoginStatus(element, username) {
+        if (username) {
+            element.innerHTML = `
+                <div class="user-menu">
+                    <span class="login-indicator">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: middle;">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                        </svg>
+                        ${username}
+                    </span>
+                    <div class="user-dropdown">
+                        <a href="/trac_env/prefs" class="dropdown-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                            </svg>
+                            Preferences
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/trac_env/logout" class="dropdown-item logout-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            </svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            // Add hover functionality
+            const userMenu = element.querySelector('.user-menu');
+            const dropdown = element.querySelector('.user-dropdown');
+            
+            userMenu.addEventListener('mouseenter', () => {
+                dropdown.style.display = 'block';
+            });
+            
+            userMenu.addEventListener('mouseleave', () => {
+                dropdown.style.display = 'none';
+            });
+        } else {
+            element.innerHTML = `<a href="/trac_env/login" class="login-link">Login</a>`;
+        }
+    }
+    
+    // Make functions globally available
+    window.openTicketEditModal = openTicketEditModal;
+    window.closeTicketEditModal = closeTicketEditModal;
+    window.markTicketComplete = markTicketComplete;
+    
 })(); /* Cache bust: Wed Jul 23 19:12:08 CDT 2025 */

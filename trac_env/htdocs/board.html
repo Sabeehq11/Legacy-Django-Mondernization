@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kanban Board - Trac</title>
     <link rel="stylesheet" href="trac-modern-ui.css">
+    <script src="trac-mock-data.js"></script>
     <style>
         body {
             margin: 0;
@@ -327,6 +328,7 @@
             margin-bottom: 0.75rem;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -397,6 +399,159 @@
             border-color: #06b6d4;
             color: #06b6d4;
             background: rgba(6, 182, 212, 0.05);
+        }
+        
+        /* Edit Modal Styles */
+        .edit-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .edit-modal-content {
+            background: rgba(17, 24, 39, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            backdrop-filter: blur(20px);
+        }
+        
+        .edit-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .edit-modal-header h3 {
+            margin: 0;
+            color: #e5e7eb;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 2rem;
+            cursor: pointer;
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+        }
+        
+        .close-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+        
+        .edit-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .form-group label {
+            color: #d1d5db;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            background: rgba(31, 41, 55, 0.8);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            border-radius: 8px;
+            padding: 0.75rem;
+            color: #e5e7eb;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .btn-secondary {
+            background: rgba(75, 85, 99, 0.8);
+            border: 1px solid rgba(107, 114, 128, 0.5);
+            color: #d1d5db;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(107, 114, 128, 0.8);
+            border-color: #6b7280;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
         }
     </style>
 </head>
@@ -561,58 +716,207 @@
         </div>
     </div>
 
+    <!-- Edit Ticket Modal -->
+    <div id="editModal" class="edit-modal" style="display: none;">
+        <div class="edit-modal-content">
+            <div class="edit-modal-header">
+                <h3>Edit Ticket</h3>
+                <button class="close-btn" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editTicketForm" class="edit-form">
+                <div class="form-group">
+                    <label for="editTitle">Title</label>
+                    <input type="text" id="editTitle" name="title" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="editDescription">Description</label>
+                    <textarea id="editDescription" name="description" rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="editType">Type</label>
+                        <select id="editType" name="type">
+                            <option value="bug">Bug</option>
+                            <option value="feature">Feature</option>
+                            <option value="task">Task</option>
+                            <option value="enhancement">Enhancement</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editPriority">Priority</label>
+                        <select id="editPriority" name="priority">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                <div class="form-group">
+                <label for="editAssignee">Assignee</label>
+                <select id="editAssignee" name="assignee">
+                <!-- Will be populated dynamically -->
+                </select>
+                </div>
+                
+                <div class="form-group">
+                <label for="editStatus">Status</label>
+                <select id="editStatus" name="status">
+                <option value="todo">Todo</option>
+                <option value="in-progress">In Progress</option>
+                <option value="review">Review</option>
+                <option value="done">Done</option>
+                </select>
+                </div>
+                </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="editMilestone">Milestone</label>
+                            <select id="editMilestone" name="milestone">
+                                <!-- Will be populated dynamically -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="editComponent">Component</label>
+                            <select id="editComponent" name="component">
+                                <!-- Will be populated dynamically -->
+                            </select>
+                        </div>
+                    </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
-        // Mock ticket data
-        const mockTickets = [
-            {
-                id: '#001',
-                title: 'Fix login authentication bug',
-                description: 'Users are experiencing login issues after the latest update',
-                type: 'bug',
-                priority: 'high',
-                assignee: 'JD',
-                status: 'todo'
-            },
-            {
-                id: '#002',
-                title: 'Implement dark mode toggle',
-                description: 'Add a dark/light mode toggle to the user interface',
-                type: 'feature',
-                priority: 'medium',
-                assignee: 'AS',
-                status: 'in-progress'
-            },
-            {
-                id: '#003',
-                title: 'Update documentation',
-                description: 'Update the API documentation with new endpoints',
-                type: 'task',
-                priority: 'low',
-                assignee: 'BJ',
-                status: 'review'
-            },
-            {
-                id: '#004',
-                title: 'Performance optimization',
-                description: 'Optimize database queries for better performance',
-                type: 'enhancement',
-                priority: 'high',
-                assignee: 'JD',
-                status: 'done'
-            },
-            {
-                id: '#005',
-                title: 'Add search functionality',
-                description: 'Implement advanced search with filters',
-                type: 'feature',
-                priority: 'medium',
-                assignee: 'AS',
-                status: 'todo'
+        // Use unified mock data system
+        function initializeTicketData() {
+            if (!window.TracMockData) {
+                console.error('TracMockData not loaded!');
+                return [];
             }
-        ];
+            
+            return window.TracMockData.tickets.map(ticket => ({
+                id: ticket.id,
+                title: ticket.title,
+                description: ticket.description,
+                type: ticket.type,
+                priority: ticket.priority,
+                assignee: ticket.assignee,
+                status: ticket.status === 'open' ? 'todo' : ticket.status
+            }));
+        }
         
-        let allTickets = [...mockTickets];
-        let filteredTickets = [...mockTickets];
+        let allTickets = [];
+        let filteredTickets = [];
+        let currentEditingTicket = null;
+        
+        function openEditModal(ticket) {
+            currentEditingTicket = ticket;
+            
+            // Populate form fields
+            document.getElementById('editTitle').value = ticket.title;
+            document.getElementById('editDescription').value = ticket.description;
+            document.getElementById('editType').value = ticket.type;
+            document.getElementById('editPriority').value = ticket.priority;
+            document.getElementById('editStatus').value = ticket.status;
+            
+            // Populate dropdowns
+            populateAssigneeDropdown();
+            populateMilestoneDropdown();
+            populateComponentDropdown();
+            
+            document.getElementById('editAssignee').value = ticket.assignee;
+            document.getElementById('editMilestone').value = ticket.milestone || 'v2.2.0';
+            document.getElementById('editComponent').value = ticket.component || 'Frontend';
+            
+            // Show modal
+            document.getElementById('editModal').style.display = 'flex';
+        }
+        
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+            currentEditingTicket = null;
+        }
+        
+        function populateAssigneeDropdown() {
+            const assigneeSelect = document.getElementById('editAssignee');
+            assigneeSelect.innerHTML = '';
+            
+            if (window.TracMockData) {
+                Object.entries(window.TracMockData.users).forEach(([initials, user]) => {
+                    const option = document.createElement('option');
+                    option.value = initials;
+                    option.textContent = user.name;
+                    assigneeSelect.appendChild(option);
+                });
+            } else {
+                // Fallback if TracMockData isn't loaded
+                const defaultUsers = ['AC', 'SK', 'MR', 'ET', 'DP', 'LW', 'JW', 'MG'];
+                defaultUsers.forEach(initials => {
+                    const option = document.createElement('option');
+                    option.value = initials;
+                    option.textContent = initials;
+                    assigneeSelect.appendChild(option);
+                });
+            }
+        }
+        
+        function populateMilestoneDropdown() {
+            const milestoneSelect = document.getElementById('editMilestone');
+            milestoneSelect.innerHTML = '';
+            
+            if (window.TracMockData && window.TracMockData.milestones) {
+                window.TracMockData.milestones.forEach(milestone => {
+                    const option = document.createElement('option');
+                    option.value = milestone.name;
+                    option.textContent = `${milestone.name} - ${milestone.description}`;
+                    milestoneSelect.appendChild(option);
+                });
+            } else {
+                // Fallback milestones
+                const defaultMilestones = ['v2.1.1', 'v2.2.0', 'v2.3.0'];
+                defaultMilestones.forEach(milestone => {
+                    const option = document.createElement('option');
+                    option.value = milestone;
+                    option.textContent = milestone;
+                    milestoneSelect.appendChild(option);
+                });
+            }
+        }
+        
+        function populateComponentDropdown() {
+            const componentSelect = document.getElementById('editComponent');
+            componentSelect.innerHTML = '';
+            
+            if (window.TracMockData && window.TracMockData.components) {
+                window.TracMockData.components.forEach(component => {
+                    const option = document.createElement('option');
+                    option.value = component;
+                    option.textContent = component;
+                    componentSelect.appendChild(option);
+                });
+            } else {
+                // Fallback components
+                const defaultComponents = ['Frontend', 'Backend', 'Documentation', 'Infrastructure', 'Security', 'AI Features'];
+                defaultComponents.forEach(component => {
+                    const option = document.createElement('option');
+                    option.value = component;
+                    option.textContent = component;
+                    componentSelect.appendChild(option);
+                });
+            }
+        }
         
         function createTicketElement(ticket) {
             const ticketEl = document.createElement('div');
@@ -634,13 +938,20 @@
                     <div class="ticket-priority priority-${ticket.priority}">
                         ${priorityIcon} ${ticket.priority}
                     </div>
-                    <div class="ticket-assignee">${ticket.assignee}</div>
+                    <div class="ticket-assignee">${window.TracMockData ? window.TracMockData.getUser(ticket.assignee).name : ticket.assignee}</div>
                 </div>
             `;
             
             // Add drag event listeners
             ticketEl.addEventListener('dragstart', handleDragStart);
             ticketEl.addEventListener('dragend', handleDragEnd);
+            
+            // Add click event listener for editing
+            ticketEl.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                openEditModal(ticket);
+            });
             
             return ticketEl;
         }
@@ -729,7 +1040,18 @@
                         // Update ticket status in data
                         const ticket = allTickets.find(t => t.id === ticketId);
                         if (ticket) {
+                            const originalStatus = ticket.status;
                             ticket.status = newStatus;
+                            
+                            // Update in unified data system as well
+                            if (window.TracMockData) {
+                                const unifiedTicket = window.TracMockData.tickets.find(t => t.id === ticketId);
+                                if (unifiedTicket) {
+                                    // Map kanban status back to unified status
+                                    unifiedTicket.status = newStatus === 'todo' ? 'open' : newStatus;
+                                    unifiedTicket.modified = new Date().toISOString();
+                                }
+                            }
                             
                             // Move the element
                             list.appendChild(draggedElement);
@@ -746,21 +1068,37 @@
         }
         
         function addNewTicket(status) {
+            const newTicketId = Math.max(...allTickets.map(t => parseInt(t.id.replace('#', '')))) + 1;
+            const assignees = window.TracMockData ? Object.keys(window.TracMockData.users) : ['AC'];
+            const randomAssignee = assignees[Math.floor(Math.random() * assignees.length)];
+            
             const newTicket = {
-                id: `#${String(allTickets.length + 1).padStart(3, '0')}`,
+                id: `#${String(newTicketId).padStart(3, '0')}`,
                 title: 'New Ticket',
                 description: 'Click to edit description',
                 type: 'task',
                 priority: 'medium',
-                assignee: 'JD',
-                status: status
+                assignee: randomAssignee,
+                status: status,
+                component: 'Frontend',
+                milestone: 'v2.2.0',
+                created: new Date().toISOString(),
+                modified: new Date().toISOString(),
+                reporter: randomAssignee
             };
             
+            // Add to both local arrays and unified data system
             allTickets.push(newTicket);
             filteredTickets.push(newTicket);
+            
+            if (window.TracMockData) {
+                window.TracMockData.tickets.push(newTicket);
+            }
+            
             renderBoard();
             
-            showNotification(`New ticket ${newTicket.id} created`);
+            const assigneeName = window.TracMockData ? window.TracMockData.getUser(randomAssignee).name : randomAssignee;
+            showNotification(`New ticket ${newTicket.id} created and assigned to ${assigneeName}`);
         }
         
         function showNotification(message) {
@@ -788,8 +1126,77 @@
             }, 3000);
         }
         
+        // Handle form submission
+        document.getElementById('editTicketForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!currentEditingTicket) return;
+            
+            // Get form values
+            const formData = new FormData(e.target);
+            const updatedData = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                type: formData.get('type'),
+                priority: formData.get('priority'),
+                assignee: formData.get('assignee'),
+                status: formData.get('status'),
+                milestone: formData.get('milestone'),
+                component: formData.get('component')
+            };
+            
+            // Update the ticket in local data
+            Object.assign(currentEditingTicket, updatedData);
+            currentEditingTicket.modified = new Date().toISOString();
+            
+            // Update in unified data system
+            if (window.TracMockData) {
+                const unifiedTicket = window.TracMockData.tickets.find(t => t.id === currentEditingTicket.id);
+                if (unifiedTicket) {
+                    unifiedTicket.title = updatedData.title;
+                    unifiedTicket.description = updatedData.description;
+                    unifiedTicket.type = updatedData.type;
+                    unifiedTicket.priority = updatedData.priority;
+                    unifiedTicket.assignee = updatedData.assignee;
+                    unifiedTicket.milestone = updatedData.milestone;
+                    unifiedTicket.component = updatedData.component;
+                    // Map kanban status back to unified status
+                    unifiedTicket.status = updatedData.status === 'todo' ? 'open' : updatedData.status;
+                    unifiedTicket.modified = new Date().toISOString();
+                }
+            }
+            
+            // Re-render the board
+            renderBoard();
+            
+            // Close modal and show notification
+            closeEditModal();
+            const assigneeName = window.TracMockData ? window.TracMockData.getUser(updatedData.assignee).name : updatedData.assignee;
+            showNotification(`Ticket ${currentEditingTicket.id} updated and assigned to ${assigneeName}`);
+        });
+        
+        // Close modal when clicking outside
+        document.getElementById('editModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeEditModal();
+            }
+        });
+        
+        // Function to refresh board globally
+        function refreshKanbanBoard() {
+            console.log('Refreshing kanban board...');
+            allTickets = initializeTicketData();
+            filteredTickets = [...allTickets];
+            renderBoard();
+        }
+        
+        // Make refresh function globally available
+        window.refreshKanbanBoard = refreshKanbanBoard;
+        
         // Initialize board
         document.addEventListener('DOMContentLoaded', function() {
+            allTickets = initializeTicketData();
+            filteredTickets = [...allTickets];
             renderBoard();
             setupDropZones();
         });

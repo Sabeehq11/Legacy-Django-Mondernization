@@ -12,7 +12,7 @@ Let users attach screenshots, logs, or supporting files when creating tickets. I
 
 ### 📍 Location
 - Page: `New Ticket`
-- Placement: Below the **Description** field, above the **Submit** button
+- Placement: Below the **Description** field, above the **create ticket** button
 
 ### 💡 UX Behavior
 - Shows dashed dropzone: "Drag files here or click to upload"

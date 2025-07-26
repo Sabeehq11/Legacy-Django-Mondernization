@@ -1,0 +1,352 @@
+{# Copyright (C) 2006-2023 Edgewall Software
+  This software is licensed as described in the file COPYING, which
+  you should have received as part of this distribution. The terms
+  are also available at https://trac.edgewall.org/wiki/TracLicense.
+#}
+# extends 'layout.html'
+
+<!DOCTYPE html>
+<html>
+<head>
+  # block title
+  ${_("About Trac")} – ${super()}
+  # endblock title
+  
+  # block head
+  ${super()}
+  <style>
+    /* Modern About Page Styling */
+    #content.about {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.05) 0%, rgba(139, 92, 246, 0.02) 100%);
+      min-height: calc(100vh - 200px);
+    }
+
+    /* Hero Section */
+    .about-hero {
+      text-align: center;
+      padding: 4rem 2rem;
+      margin-bottom: 3rem;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    .about-hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 50%, #c4b5fd 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-hero .tagline {
+      font-size: 1.5rem;
+      color: #a78bfa;
+      margin-bottom: 2rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Logo Section */
+    .trac-logo-section {
+      margin: 3rem 0;
+      text-align: center;
+    }
+
+    .trac-logo-section img {
+      max-width: 300px;
+      height: auto;
+      filter: drop-shadow(0 10px 20px rgba(139, 92, 246, 0.3));
+      transition: all 0.3s ease;
+    }
+
+    .trac-logo-section img:hover {
+      transform: translateY(-5px);
+      filter: drop-shadow(0 15px 30px rgba(139, 92, 246, 0.5));
+    }
+
+    /* Content Grid */
+    .about-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin: 3rem 0;
+    }
+
+    /* Feature Cards */
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 15px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+
+    .feature-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .feature-card h3 {
+      color: #a78bfa;
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .feature-card h3::before {
+      content: '✨';
+      font-size: 1.2rem;
+    }
+
+    .feature-card p {
+      color: #e0e0e0;
+      line-height: 1.8;
+    }
+
+    /* Version Info */
+    .version-info {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 2rem 0;
+      text-align: center;
+    }
+
+    .version-info h3 {
+      color: #c4b5fd;
+      margin-bottom: 1rem;
+    }
+
+    .version-info .version-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #8b5cf6;
+    }
+
+    /* Credits Section */
+    .credits-section {
+      margin-top: 4rem;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 15px;
+      text-align: center;
+    }
+
+    .credits-section h2 {
+      color: #a78bfa;
+      margin-bottom: 2rem;
+    }
+
+    .credits-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .credit-item {
+      padding: 1rem;
+      background: rgba(139, 92, 246, 0.05);
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .credit-item:hover {
+      background: rgba(139, 92, 246, 0.1);
+      transform: scale(1.05);
+    }
+
+    /* Links */
+    #content.about a {
+      color: #a78bfa;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    #content.about a:hover {
+      color: #c4b5fd;
+      text-decoration: underline;
+    }
+
+    /* Animations */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.5; }
+      50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .feature-card {
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+    }
+
+    .feature-card:nth-child(1) { animation-delay: 0.1s; }
+    .feature-card:nth-child(2) { animation-delay: 0.2s; }
+    .feature-card:nth-child(3) { animation-delay: 0.3s; }
+    .feature-card:nth-child(4) { animation-delay: 0.4s; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .about-hero h1 {
+        font-size: 2.5rem;
+      }
+      
+      .about-hero .tagline {
+        font-size: 1.2rem;
+      }
+      
+      .about-content {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+  # endblock head
+</head>
+<body>
+  # block content
+  <div id="content" class="about">
+    <div class="about-hero">
+      <h1>About Trac</h1>
+      <p class="tagline">The Enhanced Web-Based Project Management System</p>
+    </div>
+
+    <div class="trac-logo-section">
+      # if chrome.logo.src:
+      <img src="${chrome.logo.src}" alt="${chrome.logo.alt}" 
+           height="${chrome.logo.height}" width="${chrome.logo.width}" />
+      # else:
+      <img src="${href.chrome('common/trac_banner.png')}" alt="Trac" />
+      # endif
+    </div>
+
+    <div class="version-info">
+      <h3>Version Information</h3>
+      <div class="version-number">Trac ${trac.version}</div>
+    </div>
+
+    <div class="about-content">
+      <div class="feature-card">
+        <h3>Integrated SCM</h3>
+        <p>Trac provides an interface to Subversion, Git, and other version control systems, 
+           allowing you to browse your repository, view changesets, and track modifications.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Wiki System</h3>
+        <p>A built-in wiki allows for collaborative documentation, with full version control 
+           and cross-referencing between wiki pages, tickets, and changesets.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Issue Tracking</h3>
+        <p>A flexible ticket system to track bugs, feature requests, and project tasks. 
+           Customizable workflows and fields adapt to your project's needs.</p>
+      </div>
+
+      <div class="feature-card">
+        <h3>Roadmap & Milestones</h3>
+        <p>Plan your project with milestones and visualize progress through the roadmap. 
+           Track completion and manage releases effectively.</p>
+      </div>
+    </div>
+
+    <div class="credits-section">
+      <h2>System Information</h2>
+      
+      <div class="credits-grid">
+        <div class="credit-item">
+          <h4>Python</h4>
+          <p>${sys.version}</p>
+        </div>
+        
+        # if config.get('trac', 'database'):
+        <div class="credit-item">
+          <h4>Database</h4>
+          <p>${config.get('trac', 'database')}</p>
+        </div>
+        # endif
+        
+        <div class="credit-item">
+          <h4>Installation Path</h4>
+          <p>${sys.prefix}</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top: 2rem; color: #a78bfa;">Installed Plugins</h3>
+      <div class="credits-grid">
+        # for plugin in plugins:
+        <div class="credit-item">
+          <strong>${plugin.name}</strong>
+          # if plugin.version:
+          <span style="color: #8b5cf6;">${plugin.version}</span>
+          # endif
+        </div>
+        # endfor
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 3rem; padding: 2rem;">
+      <p style="color: #a78bfa;">
+        Visit <a href="https://trac.edgewall.org/">trac.edgewall.org</a> for more information.
+      </p>
+      <p style="color: #888; margin-top: 1rem;">
+        Trac is made possible by the contributions of many individuals and organizations.
+      </p>
+    </div>
+  </div>
+  # endblock content
+</body>
+</html> 

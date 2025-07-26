@@ -45,6 +45,9 @@
         // Add scroll effects
         initScrollEffects();
         
+        // Initialize login status
+        initLoginStatus();
+        
         console.log('Modern UI initialized successfully');
     }
     
@@ -78,6 +81,7 @@
                         <a href="/trac_env/chrome/site/analytics.html" class="nav-link">Analytics</a>
                     </div>
                     <div class="nav-actions">
+                        <div class="login-status" id="loginStatus"></div>
                         <a href="/trac_env/newticket" class="btn btn-primary">New Ticket</a>
                         <button class="hamburger-menu" id="hamburger-toggle" aria-label="Open menu">
                             <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,6 +108,32 @@
                     </button>
                 </div>
                 <div class="sidebar-content">
+                    <div class="sidebar-section">
+                        <h4>Smart Search</h4>
+                        <div class="smart-search-container">
+                            <div class="search-input-wrapper">
+                                <svg class="search-icon" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="m21 21-4.35-4.35"/>
+                                </svg>
+                                <input type="text" 
+                                       id="smartSearchInput" 
+                                       class="smart-search-input" 
+                                       placeholder="Search tickets, wiki, milestones..."
+                                       autocomplete="off">
+                                <button class="search-clear" id="searchClear">
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="search-filters">
+                                <span class="filter-hint">Try: <code>type:bug</code>, <code>status:open</code>, <code>priority:high</code></span>
+                            </div>
+                            <div class="search-results" id="searchResults" style="display: none;"></div>
+                        </div>
+                    </div>
                     <div class="sidebar-section">
                         <h4>Account</h4>
                         <a href="/trac_env/prefs" class="sidebar-link">
@@ -150,6 +180,9 @@
         
         // Add event listeners for sidebar
         setupSidebarEvents();
+        
+        // Initialize smart search
+        setupSmartSearch();
         
         // Add navigation event listeners to prevent page reloads
         setupNavigationEventListeners();
@@ -543,4 +576,376 @@
         // we need to load the target page content
         window.location.assign(href);
     }
+    
+    // Initialize login status display
+    function initLoginStatus() {
+        const loginStatusElement = document.getElementById('loginStatus');
+        if (!loginStatusElement) return;
+        
+        // Check if user is logged in by making a request to check authentication
+        fetch('/trac_env/login')
+            .then(response => response.text())
+            .then(html => {
+                // Parse the response to check if we're already logged in
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                
+                // Look for logout link or user info in the response
+                const logoutLink = doc.querySelector('a[href*="logout"]');
+                const userInfo = doc.querySelector('#metanav');
+                
+                if (logoutLink && userInfo) {
+                    // Extract username from the page content
+                    const textContent = userInfo.textContent || '';
+                    const loginMatch = textContent.match(/logged in as ([^,\s]+)/i);
+                    
+                    if (loginMatch) {
+                        const username = loginMatch[1];
+                        displayLoginStatus(loginStatusElement, username);
+                    } else {
+                        // Try to extract from other patterns
+                        const welcomeMatch = textContent.match(/welcome ([^,\s]+)/i);
+                        if (welcomeMatch) {
+                            displayLoginStatus(loginStatusElement, welcomeMatch[1]);
+                        } else {
+                            // Default logged in state without specific username
+                            displayLoginStatus(loginStatusElement, 'user');
+                        }
+                    }
+                } else {
+                    // Not logged in
+                    displayLoginStatus(loginStatusElement, null);
+                }
+            })
+            .catch(error => {
+                console.log('Could not determine login status:', error);
+                displayLoginStatus(loginStatusElement, null);
+            });
+    }
+    
+    // Display the login status
+    function displayLoginStatus(element, username) {
+        if (username) {
+            element.innerHTML = `
+                <div class="user-menu">
+                    <span class="login-indicator">
+                        <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="margin-right: 4px; vertical-align: middle;">
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                        </svg>
+                        ${username}
+                    </span>
+                    <div class="user-dropdown">
+                        <a href="/trac_env/prefs" class="dropdown-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+                            </svg>
+                            Preferences
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="/trac_env/logout" class="dropdown-item logout-item">
+                            <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                                <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                            </svg>
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            `;
+            
+            // Add hover functionality
+            const userMenu = element.querySelector('.user-menu');
+            const dropdown = element.querySelector('.user-dropdown');
+            
+            userMenu.addEventListener('mouseenter', () => {
+                dropdown.style.display = 'block';
+            });
+            
+            userMenu.addEventListener('mouseleave', () => {
+                dropdown.style.display = 'none';
+            });
+        } else {
+            element.innerHTML = `<a href="/trac_env/login" class="login-link">Login</a>`;
+        }
+    }
+    
+    // Setup smart search functionality
+    function setupSmartSearch() {
+        const searchInput = document.getElementById('smartSearchInput');
+        const searchClear = document.getElementById('searchClear');
+        const searchResults = document.getElementById('searchResults');
+        
+        if (!searchInput) return;
+        
+        let searchTimeout;
+        
+        // Handle search input
+        searchInput.addEventListener('input', function(e) {
+            const query = e.target.value.trim();
+            
+            // Show/hide clear button with animation
+            if (query) {
+                searchClear.classList.add('visible');
+            } else {
+                searchClear.classList.remove('visible');
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            // Debounce search
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                performSmartSearch(query);
+            }, 300);
+        });
+        
+        // Handle clear button
+        searchClear.addEventListener('click', function() {
+            searchInput.value = '';
+            searchClear.classList.remove('visible');
+            searchResults.style.display = 'none';
+            searchInput.focus();
+        });
+        
+        // Handle enter key
+        searchInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const query = e.target.value.trim();
+                if (query) {
+                    performSmartSearch(query);
+                }
+            }
+        });
+    }
+    
+    // Perform smart search with filters
+    function performSmartSearch(query) {
+        const searchResults = document.getElementById('searchResults');
+        if (!searchResults) return;
+        
+        // Parse filters from query
+        const filters = parseSearchFilters(query);
+        const searchTerms = filters.terms;
+        
+        console.log('Search query:', query);
+        console.log('Parsed filters:', filters);
+        
+        // Get search data (mock data for now)
+        const searchData = getSearchData();
+        
+        // Filter results based on query and filters
+        const results = filterSearchResults(searchData, searchTerms, filters);
+        
+        // Display results
+        displaySearchResults(results, query);
+    }
+    
+    // Parse search filters from query
+    function parseSearchFilters(query) {
+        const filters = {
+            type: null,
+            status: null,
+            priority: null,
+            terms: []
+        };
+        
+        const terms = query.split(/\s+/);
+        
+        terms.forEach(term => {
+            if (term.includes(':')) {
+                const [key, value] = term.split(':');
+                switch (key.toLowerCase()) {
+                    case 'type':
+                        filters.type = value.toLowerCase();
+                        break;
+                    case 'status':
+                        filters.status = value.toLowerCase();
+                        break;
+                    case 'priority':
+                        filters.priority = value.toLowerCase();
+                        break;
+                }
+            } else {
+                filters.terms.push(term.toLowerCase());
+            }
+        });
+        
+        return filters;
+    }
+    
+    // Get search data
+    function getSearchData() {
+        const data = {
+            tickets: [],
+            wiki: [
+                { type: 'wiki', title: 'WikiStart', content: 'Welcome to Trac project management', url: '/trac_env/wiki/WikiStart' },
+                { type: 'wiki', title: 'TracGuide', content: 'User guide for Trac', url: '/trac_env/wiki/TracGuide' },
+                { type: 'wiki', title: 'Installation', content: 'How to install and configure', url: '/trac_env/wiki/Installation' }
+            ],
+            milestones: [
+                { type: 'milestone', title: 'v1.0', description: 'First release milestone', url: '/trac_env/milestone/v1.0' },
+                { type: 'milestone', title: 'v2.0', description: 'Major feature release', url: '/trac_env/milestone/v2.0' }
+            ]
+        };
+        
+        // Add mock ticket data if available
+        if (window.TracMockData && window.TracMockData.tickets) {
+            data.tickets = window.TracMockData.tickets.map(ticket => ({
+                type: 'ticket',
+                id: ticket.id,
+                title: ticket.title,
+                summary: ticket.summary || ticket.title,
+                description: ticket.description,
+                status: ticket.status.toLowerCase(),
+                priority: ticket.priority.toLowerCase(),
+                ticketType: ticket.type ? ticket.type.toLowerCase() : 'task',
+                url: `/trac_env/ticket/${ticket.id}`
+            }));
+        } else {
+            // Fallback mock data
+            data.tickets = [
+                { type: 'ticket', id: '1', title: 'Mobile login authentication fails', summary: 'Login button not working on mobile', status: 'open', priority: 'high', ticketType: 'bug', url: '/trac_env/ticket/1' },
+                { type: 'ticket', id: '2', title: 'Implement dark mode toggle', summary: 'Add dark mode support', status: 'in-progress', priority: 'medium', ticketType: 'feature', url: '/trac_env/ticket/2' },
+                { type: 'ticket', id: '3', title: 'Database performance optimization', summary: 'Optimize slow queries', status: 'open', priority: 'high', ticketType: 'task', url: '/trac_env/ticket/3' }
+            ];
+        }
+        
+        return data;
+    }
+    
+    // Filter search results
+    function filterSearchResults(data, searchTerms, filters) {
+        let allItems = [
+            ...data.tickets,
+            ...data.wiki,
+            ...data.milestones
+        ];
+        
+        // Apply text filters
+        if (searchTerms.length > 0) {
+            allItems = allItems.filter(item => {
+                const searchableText = [
+                    item.title || '',
+                    item.summary || '',
+                    item.description || '',
+                    item.content || ''
+                ].join(' ').toLowerCase();
+                
+                return searchTerms.some(term => searchableText.includes(term));
+            });
+        }
+        
+        // Apply type filter
+        if (filters.type) {
+            allItems = allItems.filter(item => {
+                if (filters.type === 'bug' || filters.type === 'feature' || filters.type === 'task') {
+                    return item.ticketType === filters.type;
+                }
+                return item.type === filters.type;
+            });
+        }
+        
+        // Apply status filter
+        if (filters.status) {
+            allItems = allItems.filter(item => {
+                return item.status && item.status.includes(filters.status);
+            });
+        }
+        
+        // Apply priority filter
+        if (filters.priority) {
+            allItems = allItems.filter(item => {
+                return item.priority && item.priority.includes(filters.priority);
+            });
+        }
+        
+        return allItems.slice(0, 10); // Limit to 10 results
+    }
+    
+    // Display search results
+    function displaySearchResults(results, query) {
+        const searchResults = document.getElementById('searchResults');
+        if (!searchResults) return;
+        
+        if (results.length === 0) {
+            searchResults.innerHTML = `
+                <div class="no-results">
+                    <p>No results found for "${query}"</p>
+                    <small>Try different keywords or filters</small>
+                </div>
+            `;
+        } else {
+            const resultsHtml = results.map(item => {
+                const icon = getResultIcon(item.type, item.ticketType);
+                const subtitle = getResultSubtitle(item);
+                
+                return `
+                    <a href="${item.url}" class="search-result-item">
+                        <div class="result-icon">${icon}</div>
+                        <div class="result-content">
+                            <div class="result-title">${item.title || item.summary}</div>
+                            <div class="result-subtitle">${subtitle}</div>
+                        </div>
+                        <div class="result-type">${item.type}</div>
+                    </a>
+                `;
+            }).join('');
+            
+            searchResults.innerHTML = `
+                <div class="results-header">
+                    <span class="results-count">${results.length} result${results.length !== 1 ? 's' : ''}</span>
+                </div>
+                ${resultsHtml}
+            `;
+        }
+        
+        searchResults.style.display = 'block';
+    }
+    
+    // Get icon for result type
+    function getResultIcon(type, ticketType) {
+        if (type === 'ticket') {
+            switch (ticketType) {
+                case 'bug':
+                    return '<svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M7 3a1 1 0 000 2h6a1 1 0 100-2H7zM4 7a1 1 0 011-1h10a1 1 0 110 2H5a1 1 0 01-1-1zM2 11a2 2 0 012-2h12a2 2 0 012 2v4a2 2 0 01-2 2H4a2 2 0 01-2-2v-4z"/></svg>';
+                case 'feature':
+                    return '<svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>';
+                default:
+                    return '<svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+            }
+        } else if (type === 'wiki') {
+            return '<svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M9 4.804A7.968 7.968 0 005.5 4c-.979 0-1.92.13-2.82.38A1 1 0 012 5.295v9.41a1 1 0 001.022.979c.681-.02 1.364.06 2.042.19a1 1 0 001.023-.979V5.295z"/><path d="M11 4.804A7.968 7.968 0 0014.5 4c.979 0 1.92.13 2.82.38A1 1 0 0118 5.295v9.41a1 1 0 01-1.022.979c-.681-.02-1.364.06-2.042.19a1 1 0 01-1.023-.979V5.295z"/></svg>';
+        } else if (type === 'milestone') {
+            return '<svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20"><path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/></svg>';
+        }
+        return '';
+    }
+    
+    // Get subtitle for result
+    function getResultSubtitle(item) {
+        if (item.type === 'ticket') {
+            const parts = [];
+            if (item.status) parts.push(item.status);
+            if (item.priority) parts.push(item.priority);
+            if (item.ticketType) parts.push(item.ticketType);
+            return parts.join(' • ');
+        } else if (item.type === 'wiki') {
+            return item.content ? item.content.substring(0, 60) + '...' : 'Wiki page';
+        } else if (item.type === 'milestone') {
+            return item.description ? item.description.substring(0, 60) + '...' : 'Milestone';
+        }
+        return '';
+    }
+    
+    // Make setupSmartSearch available globally for testing
+    window.setupSmartSearch = setupSmartSearch;
+    window.performSmartSearch = performSmartSearch;
+    window.parseSearchFilters = parseSearchFilters;
+    window.getSearchData = getSearchData;
+    window.filterSearchResults = filterSearchResults;
+    window.displaySearchResults = displaySearchResults;
+    window.getResultIcon = getResultIcon;
+    window.getResultSubtitle = getResultSubtitle;
 })(); 
