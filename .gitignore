@@ -1,6 +1,9 @@
 # Ignore trac source directory (we only track our customizations in trac_env/)
 /trac/
 
+# Environment variables
+.env
+
 # macOS
 .DS_Store
 .DS_Store?
